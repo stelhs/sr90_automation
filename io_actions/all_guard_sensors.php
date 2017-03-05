@@ -58,7 +58,7 @@ function main($argv)
     // store sensor state
     $sensor_state = ($port_state == $sensor['normal_state'] ? 'normal' : 'action');
     $action_id = $db->insert('sensor_actions', array('sense_id' => $sensor['id'],
-                 									 'state' => $sensor_state,
+                                                     'state' => $sensor_state,
                                                      'guard_state' => $guard_state));
     
     // check for sensor is ignored
@@ -69,8 +69,8 @@ function main($argv)
                 goto out;
             }
    			
-    app_log(LOG_NOTICE, "change_sensor, guard_state = " . $guard_state['state'] . 
-    					", sensor_state = " . $sensor_state . "\n");
+    msg_log(LOG_NOTICE, "change_sensor, guard_state = " . $guard_state['state'] . 
+    				    ", sensor_state = " . $sensor_state . "\n");
 
     // check guard state and initiate ALARM if needed
     if ($guard_state['state'] == 'sleep')
