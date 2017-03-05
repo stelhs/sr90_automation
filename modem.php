@@ -85,7 +85,7 @@ function main($argv)
         $text = $argv[2];
         
         printf("sending $text\n");
-        $modem->send_ussd($text);
+        $ret = $modem->send_ussd($text);
         if ($ret) {
             msg_log(LOG_ERR, "Can't send USSD: " . $ret);
             $rc = -EBUSY;

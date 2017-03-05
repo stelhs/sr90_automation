@@ -1,5 +1,7 @@
 <?php
 
+require_once '/usr/local/lib/php/xml.php';
+
 class Modem3G {
     private $ip_addr;
 
@@ -39,8 +41,8 @@ class Modem3G {
         @$result = file_get_contents($full_url);
         if ($result == FALSE)
             return -EPARSE;
-
-        return parse_xml($result);
+        
+	return parse_xml($result);
     }
 
 
@@ -99,7 +101,7 @@ class Modem3G {
             return $data;
 
         if (isset($data['error']['content']['code'][0]['content']))
-            return $data['error']['content']['code'][0]['content'];
+            return -(int)$data['error']['content']['code'][0]['content'];
 
         return $data['response']['content']['content'][0]['content'];
     }
@@ -139,13 +141,13 @@ class Modem3G {
             app_log(LOG_ERR, 'Modem: Can\'t check SMS list reason: can\'t connect to modem');
             return -EPARSE;
         }
-
+        
         if (isset($data['error']['content']['code'][0]['content']))
             return $data['error']['content']['code'][0]['content'];
 
         $count_sms = $data['response']['content']['Count'][0]['content'];
         if (!$count_sms)
-            return null;
+            return [];
 
         $rows = $data['response']['content']['Messages'][0]['content']['Message'];
         
@@ -246,5 +248,3 @@ class Modem3G {
 
 }
 
-
-?>
