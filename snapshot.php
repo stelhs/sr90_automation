@@ -36,9 +36,9 @@ function main($argv)
         $cmd = 'ffmpeg -f video4linux2 -i ' . $cam['v4l_dev'] .
                ' -vf scale=' . $cam['resolution'] . 
                ' -vframes 1 ' . 
-               $path_for_store . $prefix . 'cam_' . $cam['id'] . '.jpeg';
+               $path_for_store . '/' . $prefix . 'cam_' . $cam['id'] . '.jpeg';
         $ret = run_cmd($cmd);
-        if ($rc['rc']) {
+        if ($ret['rc']) {
             msg_log(LOG_ERR, sprintf("Can't create snapshot for camera %d %s\n", 
                                      $cam['id'], $cam['v4l_dev']));
         }
@@ -47,8 +47,10 @@ function main($argv)
 
     if ($result) {
         msg_log(LOG_ERR, "Can't create snapshot\n");
+        return 1;
     }
-    return 1;
+    
+    return 0;
 }
 
 
