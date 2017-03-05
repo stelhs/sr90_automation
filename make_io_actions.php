@@ -10,7 +10,7 @@ define("MSG_LOG_LEVEL", LOG_NOTICE);
 function subscribers_get_list($action_port)
 {
     $list_scripts = [];
-    $files = scandir('./');
+    $files = scandir(IO_ACTIONS_DIR);
     
     // find brodcast subsribers
     foreach ($files as $file) {
@@ -42,8 +42,6 @@ function main($argv) {
     $action_port = $argv[1];
     $action_state = $argv[2];
     
-    chdir(IO_ACTIONS_DIR);
-    
     $list_subscribers = subscribers_get_list($action_port);
     if (!count($list_subscribers))
         return 0;
@@ -51,7 +49,7 @@ function main($argv) {
     foreach ($list_subscribers as $script_name) {
         $script = sprintf("%s %s %s", $script_name, 
                                       $action_port, $action_state);
-        $ret = run_cmd('./' . $script);
+        $ret = run_cmd(IO_ACTIONS_DIR . $script);
                         
         if ($ret['rc']) {
             msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 

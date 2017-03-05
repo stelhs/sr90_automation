@@ -3,9 +3,9 @@
 
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/database.php';
-require_once '../config.php';
-require_once '../guard_lib.php';
-require_once '../sequencer_lib.php';
+require_once 'config.php';
+require_once 'guard_lib.php';
+require_once 'sequencer_lib.php';
 $utility_name = $argv[0];
 
 
@@ -17,7 +17,7 @@ function main($argv)
         printf("a few scripts parameters\n");
         return -EINVAL;
     }
-        
+    
     $port = $argv[1];
     $port_state = $argv[2];
     
@@ -35,14 +35,13 @@ function main($argv)
         goto out;
     }
     $sensor = $ret;
-    
     $guard_state = get_guard_state($db);
     
     // run lighter if night
     $day_night = get_day_night($db);
     if ($sensor['run_lighter'] &&
              $day_night == 'night' &&
-             $guard_state == 'sleep') {
+             $guard_state['state'] == 'sleep') {
         $light_interval = conf_guard()['light_sleep_timeout'] * 1000;
         sequncer_start(conf_guard()['lamp_io_port'], 
                        array($light_interval, 0));
@@ -59,7 +58,7 @@ function main($argv)
     $sensor_state = ($port_state == $sensor['normal_state'] ? 'normal' : 'action');
     $action_id = $db->insert('sensor_actions', array('sense_id' => $sensor['id'],
                                                      'state' => $sensor_state,
-                                                     'guard_state' => $guard_state));
+                                                     'guard_state' => $guard_state['state']));
     
     // check for sensor is ignored
     if ($guard_state['ignore_sensors'])
@@ -77,7 +76,7 @@ function main($argv)
         goto out;
         
     // do ALARM!
-    run_cmd(sprintf("../guard.php %d", $action_id));
+    run_cmd(sprintf("./guard.php alarm %d", $action_id));
 out:
     $db->close();
     return $rc;

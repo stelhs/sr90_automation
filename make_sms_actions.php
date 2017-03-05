@@ -10,7 +10,7 @@ define("IO_ACTIONS_DIR", "sms_actions/");
 function subscribers_get_list()
 {
     $list_scripts = [];
-    $files = scandir('./');
+    $files = scandir(IO_ACTIONS_DIR);
     
     // find brodcast subsribers
     foreach ($files as $file) {
@@ -34,8 +34,6 @@ function main($argv) {
     $phone = $argv[2];
     $sms_text = $argv[3];
     
-    chdir(IO_ACTIONS_DIR);
-    
     $list_subscribers = subscribers_get_list();
     if (!count($list_subscribers))
         return 0;
@@ -43,7 +41,7 @@ function main($argv) {
     foreach ($list_subscribers as $script_name) {
         $script = sprintf("%s '%s' '%s' '%s'", $script_name, 
                                       $sms_date, $phone, $sms_text);
-        $ret = run_cmd('./' . $script);
+        $ret = run_cmd(IO_ACTIONS_DIR . $script);
                         
         if ($ret['rc']) {
             msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
