@@ -77,7 +77,7 @@ function main($argv)
             msg_log(LOG_NOTICE, "Guard started by " . $method);
             
             sequncer_stop(conf_guard()['sirena_io_port']);
-            $sensors = $db->query('SELECT * FROM sensors');
+            $sensors = $db->query_list('SELECT * FROM sensors');
             
             // check for incorrect sensor value state
             $ignore_sensors_list = [];
@@ -90,15 +90,15 @@ function main($argv)
                     $ignore_sensors_list[] = $sensor['id'];
             }
             
-            if (!count($ignore_sensors_list))
+            if (!count($ignore_sensors_list)) {
                 // one beep by sirena
                 sequncer_start(conf_guard()['sirena_io_port'],
                                array(200, 0));
-            else            
+            } else {
                 // two beep by sirena
                 sequncer_start(conf_guard()['sirena_io_port'],
                                array(200, 200, 1000, 0));
-            
+            }
                            
             notify_send_by_sms('guard_enable', 
                                array('method' => $method,
@@ -107,7 +107,7 @@ function main($argv)
             $db->insert('guard_states', 
                         array('state' => 'ready',
                               'method' => $method,
-                              'ignore_sensors' => $ignore_sensors_list));
+                              'ignore_sensors' => array_to_string($ignore_sensors_list)));
             goto out;
             
         default:
@@ -131,9 +131,8 @@ function main($argv)
             goto out;
         }
         
-        $sensor = sensor_get_by_io_id($action['sense_id']);
-        
-        run_cmd(sprintf('../snapshot.php %s %d_',
+        $sensor = sensor_get_by_io_id($db, $action['sense_id']);
+        run_cmd(sprintf('./snapshot.php %s %d_',
                         conf_guard()['camera_dir'], $action_id));
                         
         // run sirena

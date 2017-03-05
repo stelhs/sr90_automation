@@ -17,7 +17,7 @@ function notify_send_by_sms($type, $args)
     case 'guard_enable':
         $sms_text = sprintf("Охрана включена. Метод: %s.", $args['method']);
         if (isset($args['ignore_sensors']))
-            $sms_text .= spinntf("Игнор: %s.",
+            $sms_text .= sprintf("Игнор: %s.",
                                  array_to_string($args['ignore_sensors']));
         break;
         
@@ -71,16 +71,12 @@ function get_day_night($db)
 
 function sensor_get_by_io_port($db, $port)
 {
-    $ret = $db->query('SELECT * FROM sensors WHERE port = '. $port);
-    if (!is_array($ret))
-        return $ret;
+    return $db->query('SELECT * FROM sensors WHERE port = '. $port);
 }
 
 function sensor_get_by_io_id($db, $id)
 {
-    $ret = $db->query('SELECT * FROM sensors WHERE id = '. $id);
-    if (!is_array($ret))
-        return $ret;
+    return $db->query('SELECT * FROM sensors WHERE id = '. $id);
 }
 
 
