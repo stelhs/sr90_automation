@@ -27,7 +27,7 @@ function main($argv) {
     
     $cmd = parse_sms_command($sms_text);
     
-    switch ($cmd['cmd']) {
+    switch (strtolower($cmd['cmd'])) {
     case 'off':
         run_cmd("./guard.php state sleep sms");
         break;    
@@ -38,7 +38,7 @@ function main($argv) {
         break;    
 
     default:
-        $undefined_text = 1;
+        return -EINVAL;
     }    
     
 out:    

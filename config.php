@@ -3,6 +3,11 @@ require_once '/usr/local/lib/php/os.php';
 
 define("CONFIG_PATH", "/etc/sr90_automation/");
 
+function conf_global()
+{
+    return array('phones' => array('+375295051024'));
+}
+
 function conf_db()
 {
     $cfg_json = file_get_contents(CONFIG_PATH . 'database.json');
@@ -42,7 +47,6 @@ function conf_guard()
                                           array('id' => 2,
                                                 'v4l_dev' => '/dev/video15',
                                                 'resolution' => '1280:1024')),
-                 'phones' => array('+375295051024'),
 				);
 }
 
@@ -51,3 +55,4 @@ function conf_modem()
 {
     return array('ip_addr' => '192.168.1.1');
 }
+

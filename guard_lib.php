@@ -27,7 +27,7 @@ function notify_send_by_sms($type, $args)
     
     $modem = new Modem3G(conf_modem()['ip_addr']);
     
-    foreach (conf_guard()['phones'] as $phone) {
+    foreach (conf_global()['phones'] as $phone) {
         $ret = $modem->send_sms($phone, $sms_text);
         if ($ret) {
             msg_log(LOG_ERR, "Can't send SMS: " . $ret);

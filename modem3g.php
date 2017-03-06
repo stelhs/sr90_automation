@@ -244,6 +244,34 @@ class Modem3G {
         $info['curr_index'] = $data['response']['content']['CurIndex'][0]['content'];
         return $info;
     }
+    
+    function get_sim_balanse()
+    {
+        $ret = $this->send_ussd('*100#');
+        if ($ret) {
+            msg_log(LOG_ERR, "Can't get Balanse: " . $ret);
+            return -EBUSY;
+        }
+        
+        for ($i = 0; $i < 5; $i++) {
+            sleep(1);
+            $response = $this->check_for_new_ussd();
+            if ($response < 0)
+                continue;
+
+            break;
+        }
+        
+        if ($response < 0)
+            return -ECONNFAIL;
+
+        preg_match('/Balans\=([\w\.]+)/m', $text, $mathes);
+        
+        if (!isset($mathes[1]))
+            return -EPARSE;
+            
+        return $mathes[1];
+    }
 
 
 }
