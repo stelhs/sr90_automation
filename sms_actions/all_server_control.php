@@ -15,6 +15,13 @@ function main($argv) {
         printf("a few scripts parameters\n");
         return -EINVAL;
     }
+    
+    $db = new Database;
+    $rc = $db->connect(conf_db());
+    if ($rc) {
+        printf("can't connect to database");
+        return -EBASE;
+    }
         
     $sms_date = trim($argv[1]);
     $phone = trim($argv[2]);
@@ -31,7 +38,7 @@ function main($argv) {
     case 'stat':
         $modem = new Modem3G(conf_modem()['ip_addr']);
         
-        $guard_state = get_guard_state();
+        $guard_state = get_guard_state($db);
         $balance = $modem->get_sim_balanse();
         $modem_stat = $modem->get_global_status();
 

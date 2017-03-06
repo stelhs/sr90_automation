@@ -265,8 +265,7 @@ class Modem3G {
         if ($response < 0)
             return -ECONNFAIL;
 
-        preg_match('/Balans\=([\w\.]+)/m', $text, $mathes);
-        
+        preg_match('/Balans\=([\w\.]+)/m', $response, $mathes);
         if (!isset($mathes[1]))
             return -EPARSE;
             

@@ -20,7 +20,7 @@ function serv_ctrl_send_sms($type, $args)
             $args['guard_state'] = "включена";
             break;
         }
-        $sms_text = sprintf("Охрана: %s, Баланс счета: %d, Уровень сигнала: %s, uptime: %s", 
+        $sms_text = sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s", 
                             $args['guard_state'],
                             $args['balance'],
                             $args['radio_signal_level'],
