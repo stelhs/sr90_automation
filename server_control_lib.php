@@ -7,7 +7,7 @@ function serv_ctrl_send_sms($type, $args)
 {
     switch ($type) {
     case 'reboot_sms':
-        $sms_text = sprintf("Сервер ушел на перезагрузку по запросу по SMS");
+        $sms_text = sprintf("Сервер ушел на перезагрузку по запросу SMS");
         break;
         
     case 'status':
