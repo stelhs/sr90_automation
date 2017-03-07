@@ -74,6 +74,14 @@ function main($argv)
     // check guard state and initiate ALARM if needed
     if ($guard_state['state'] == 'sleep')
         goto out;
+
+    // ignore ALARM if already in ALARM state
+    $ret = $db->query(sprintf("SELECT id FROM guard_alarms " .
+                              "WHERE (created + interval %d second) > now() " .
+					          "ORDER BY created DESC LIMIT 1"), 
+                              conf_guard()['sirena_timeout']);
+    if (isset($ret['id']))
+        goto out;
         
     // do ALARM!
     run_cmd(sprintf("./guard.php alarm %d", $action_id));
