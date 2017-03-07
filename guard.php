@@ -116,11 +116,6 @@ function main($argv)
                               'ignore_sensors' => array_to_string($ignore_sensors_list)));
             goto out;
             
-        case 'stat':
-            $guard_state = get_guard_state($db);
-            dump($guard_state);
-            goto out;
-            
         default:
             printf("Invalid arguments: sleep/ready argument is not correct\n");
             $rc = -EINVAL;
@@ -166,6 +161,11 @@ function main($argv)
         // send SMS
         notify_send_by_sms('alarm', array('sensor' => $sensor['name'],
                                           'action_id' => $action_id));
+        goto out;
+        
+    case 'stat':
+        $guard_state = get_guard_state($db);
+        dump($guard_state);
         goto out;
     }
 
