@@ -16,9 +16,10 @@ function notify_send_by_sms($type, $args)
         
     case 'guard_enable':
         $sms_text = sprintf("Охрана включена. Метод: %s.", $args['method']);
-        if (isset($args['ignore_sensors']))
+        if (count($args['ignore_sensors'])) {
             $sms_text .= sprintf("Игнор: %s.",
                                  array_to_string($args['ignore_sensors']));
+        }
         break;
         
     default: 

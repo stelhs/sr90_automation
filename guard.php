@@ -20,6 +20,7 @@ function print_help()
                  "\t\t\texample: $utility_name state sleep\n" .
                  "\t\t alarm: Execute ALARM. Args: action_id\n" . 
                  "\t\t\texample: $utility_name alarm 71\n" .
+                 "\t\t stat: Return status information about Guard system\n" . 
     
              "\n\n";
 }
@@ -99,15 +100,25 @@ function main($argv)
                 sequncer_start(conf_guard()['sirena_io_port'],
                                array(200, 200, 1000, 0));
             }
-                           
+            
+            $ignore_sensors_list_names = array();
+            foreach ($ignore_sensors_list as $sensor_id) {
+                $sensor = sensor_get_by_io_id($db, $sensor_id);
+                $ignore_sensors_list_names[] = $sensor['name'];
+            }
             notify_send_by_sms('guard_enable', 
                                array('method' => $method,
-                                     'ignore_sensors' => $ignore_sensors_list));
+                                     'ignore_sensors' => $ignore_sensors_list_names));
 
             $db->insert('guard_states', 
                         array('state' => 'ready',
                               'method' => $method,
                               'ignore_sensors' => array_to_string($ignore_sensors_list)));
+            goto out;
+            
+        case 'stat':
+            $guard_state = get_guard_state($db);
+            dump($guard_state);
             goto out;
             
         default:
