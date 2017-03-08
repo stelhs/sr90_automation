@@ -13,8 +13,10 @@ function print_help()
     global $utility_name;
     echo "Usage: $utility_name <command> <args>\n" . 
              "\tcommands:\n" .
-                 "\t\t relay: set relay output state. Args: port_num, 0/1\n" . 
-                 "\t\t\texample: $utility_name relay 4 1\n" .
+                 "\t\t relay_set: set relay output state. Args: port_num, 0/1\n" . 
+                 "\t\t\texample: $utility_name relay_set 4 1\n" .
+                 "\t\t relay_get: get relay state. Args: port_num\n" . 
+                 "\t\t\texample: $utility_name relay_get 3\n" .
                  "\t\t input: get input state. Args: port_num\n" . 
                  "\t\t\texample: $utility_name input 3\n" .
     
@@ -44,7 +46,7 @@ function main($argv)
     $mio = new Mod_io($db);
     
     switch ($cmd) {
-    case 'relay':
+    case 'relay_set':
         if (!isset($argv[2]) || !isset($argv[3])) {
             printf("Invalid arguments: command arguments is not set\n");
             goto err;
@@ -67,6 +69,26 @@ function main($argv)
         if ($rc < 0) {
             printf("Can't set relay state\n");
         }
+        goto out;
+
+    case 'relay_get':
+        if (!isset($argv[2])) {
+            printf("Invalid arguments: command arguments is not set\n");
+            goto err;
+        }
+
+        $port = $argv[2];
+
+        if ($port < 1 || $port > 10) {
+            printf("Invalid arguments: port is not correct. port > 0 and port <= 7\n");
+            goto err;
+        }
+
+        $rc = $mio->relay_get_state($port);
+        if ($rc < 0) {
+            printf("Can't get relay state\n");
+        }
+        printf("Relay port %d = %d\n", $port, $rc);
         goto out;
         
     case 'input':

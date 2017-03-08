@@ -37,6 +37,16 @@ class Mod_io {
         msg_log(LOG_ERR, sprintf("can't set relay state: %s\n", $ret));
         return -EBUSY;
     }
+
+    public function relay_get_state($port)
+    {
+        $ret = $this->send_cmd(sprintf("relay_get %d\n", $port));
+        if ($ret == "0" || $ret == "1")
+            return $ret;
+
+        msg_log(LOG_ERR, sprintf("can't get relay state: %s\n", $ret));
+        return -EBUSY;
+    }
     
     public function input_get_state($port)
     {
