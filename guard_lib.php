@@ -67,7 +67,7 @@ function get_day_night($db)
 {
     $data = $db->query("SELECT * FROM day_night " .
                        "ORDER by created DESC LIMIT 1");
-    return is_array($data) ? $data['state'] : 'day';
+    return is_array($data) ? $data['state'] : 'night';
 }
 
 function sensor_get_by_io_port($db, $port)

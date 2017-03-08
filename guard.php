@@ -144,7 +144,7 @@ function main($argv)
         // run sirena
         sequncer_stop(conf_guard()['sirena_io_port']);
         sequncer_start(conf_guard()['sirena_io_port'],
-                       array(conf_guard()['sirena_timeout'] * 1000, 0));
+                       array($sensor['alarm_time'] * 1000, 0));
 
         // run lighter if night
         $day_night = get_day_night($db);

@@ -56,9 +56,10 @@ function main($argv)
     
     // store sensor state
     $sensor_state = ($port_state == $sensor['normal_state'] ? 'normal' : 'action');
-    $action_id = $db->insert('sensor_actions', array('sense_id' => $sensor['id'],
-                                                     'state' => $sensor_state,
-                                                     'guard_state' => $guard_state['state']));
+    $action_id = $db->insert('sensor_actions', 
+                             array('sense_id' => $sensor['id'],
+                                   'state' => $sensor_state,
+                                   'guard_state' => $guard_state['state']));
     
     // check for sensor is ignored
     if ($guard_state['ignore_sensors'])
@@ -75,14 +76,23 @@ function main($argv)
     if ($guard_state['state'] == 'sleep')
         goto out;
 
+    // ignore ALARM if set ready state a little time ago
+    $ret = $db->query(sprintf("SELECT id FROM guard_states " .
+                              "WHERE state = 'ready' AND " .
+                              "(created + interval %d second) > now() " .
+					          "ORDER BY created DESC LIMIT 1", 
+                              conf_guard()['ready_set_interval']));
+    if (isset($ret['id']))
+        goto out;
+
     // ignore ALARM if already in ALARM state
     $ret = $db->query(sprintf("SELECT id FROM guard_alarms " .
                               "WHERE (created + interval %d second) > now() " .
-					          "ORDER BY created DESC LIMIT 1"), 
-                              conf_guard()['sirena_timeout']);
+					          "ORDER BY created DESC LIMIT 1", 
+                              $sensor['alarm_time']));
     if (isset($ret['id']))
         goto out;
-        
+
     // do ALARM!
     run_cmd(sprintf("./guard.php alarm %d", $action_id));
 out:
