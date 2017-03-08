@@ -2,6 +2,10 @@
 <?php
 
 require_once '/usr/local/lib/php/common.php';
+require_once '/usr/local/lib/php/database.php';
+require_once 'config.php';
+require_once 'sequencer_lib.php';
+
 $utility_name = $argv[0];
 
 function main($argv) {
