@@ -42,3 +42,15 @@ function serv_ctrl_send_sms($type, $args)
     }
 }
 
+function get_day_night()
+{
+    $sun_info = date_sun_info(time(), 54.014634, 28.013484);
+    $curr_time = time();
+
+    if ($curr_time > $sun_info['nautical_twilight_begin'] && 
+        $curr_time < $sun_info['nautical_twilight_end'])
+            return 'day';
+
+    return 'night';
+}
+

@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'sequencer_lib.php';
+require_once 'server_control_lib.php';
 $utility_name = $argv[0];
 
 
@@ -38,7 +39,7 @@ function main($argv)
     $guard_state = get_guard_state($db);
     
     // run lighter if night
-    $day_night = get_day_night($db);
+    $day_night = get_day_night();
     if ($sensor['run_lighter'] &&
              $day_night == 'night' &&
              $guard_state['state'] == 'sleep') {

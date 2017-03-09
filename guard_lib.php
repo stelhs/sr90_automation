@@ -63,13 +63,6 @@ function get_sensor_locking_mode($db, $sensor_id)
     return $data ? $data['mode'] : 'unlock';
 }
 
-function get_day_night($db)
-{
-    $data = $db->query("SELECT * FROM day_night " .
-                       "ORDER by created DESC LIMIT 1");
-    return is_array($data) ? $data['state'] : 'night';
-}
-
 function sensor_get_by_io_port($db, $port)
 {
     return $db->query('SELECT * FROM sensors WHERE port = '. $port);

@@ -37,7 +37,7 @@ function conf_guard()
     return array('sirena_io_port' => 3,
 			     'lamp_io_port' => 4,
                  'ready_set_interval' => 30, /* in seconds */
-			     'light_ready_timeout' => 60, /* in seconds */
+			     'light_ready_timeout' => 60 * 5, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
                  'camera_dir' => '/var/spool/guard_system/images',
                  'video_cameras' => array(
