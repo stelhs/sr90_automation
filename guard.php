@@ -199,7 +199,8 @@ function main($argv)
 
         // run lighter if night
         $day_night = get_day_night($db);
-        if ($day_night == 'night') {
+        if ($day_night == 'night' &&
+                conf_guard()['light_mode'] == 'by_sensors') {
             $light_interval = conf_guard()['light_ready_timeout'] * 1000;
             sequncer_stop(conf_guard()['lamp_io_port']);
             sequncer_start(conf_guard()['lamp_io_port'], 

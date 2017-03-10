@@ -41,6 +41,7 @@ function main($argv)
     // run lighter if night
     $day_night = get_day_night();
     if ($sensor['run_lighter'] &&
+             conf_guard()['light_mode'] == 'by_sensors' &&
              $day_night == 'night' &&
              $guard_state['state'] == 'sleep') {
         $light_interval = conf_guard()['light_sleep_timeout'] * 1000;

@@ -27,6 +27,14 @@ function serv_ctrl_send_sms($type, $phones_list, $args)
                             $args['uptime']);
         break;
         
+    case 'lighting_on':
+        $sms_text = sprintf("Освещение участка включено.");
+        break;
+
+    case 'lighting_off':
+        $sms_text = sprintf("Освещение участка отключено.");
+        break;
+
     default: 
         return -EINVAL;
     }
