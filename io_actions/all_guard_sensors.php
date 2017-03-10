@@ -44,6 +44,7 @@ function main($argv)
              $day_night == 'night' &&
              $guard_state['state'] == 'sleep') {
         $light_interval = conf_guard()['light_sleep_timeout'] * 1000;
+        sequncer_stop(conf_guard()['lamp_io_port']);
         sequncer_start(conf_guard()['lamp_io_port'], 
                        array($light_interval, 0));
     }
