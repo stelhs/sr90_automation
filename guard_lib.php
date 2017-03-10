@@ -3,32 +3,42 @@
 require_once 'config.php';
 require_once 'modem3g.php';
 
-function notify_send_by_sms($type, $args)
+function notify_send_by_sms($type, $phones_list, $args)
 {
     switch ($type) {
     case 'alarm':
         $sms_text = sprintf("Внимание!\nСработал %s, событие: %d", 
                                 $args['sensor'], $args['action_id']);
         break;
+
     case 'guard_disable':
-        $sms_text = sprintf("Охрана отключена. Метод: %s.", $args['method']);
+        $sms_text = sprintf("Охрана отключена. Метод: %s",
+                            $args['method']);
+
+        if (isset($args['user_name']) && $args['user_name'])                            
+            $sms_text .= sprintf(" Отключил: %s.", $args['user_name']);
         break;
-        
+
     case 'guard_enable':
-        $sms_text = sprintf("Охрана включена. Метод: %s.", $args['method']);
+        $sms_text = sprintf("Охрана включена. Метод: %s.",
+                            $args['method']);
+
+        if (isset($args['user_name']) && $args['user_name'])
+            $sms_text .= sprintf(" Включил: %s.", $args['user_name']);
+
         if (count($args['ignore_sensors'])) {
-            $sms_text .= sprintf("Игнор: %s.",
+            $sms_text .= sprintf(" Игнор: %s.",
                                  array_to_string($args['ignore_sensors']));
         }
         break;
-        
+
     default: 
         return -EINVAL;
     }
-    
+
     $modem = new Modem3G(conf_modem()['ip_addr']);
-    
-    foreach (conf_global()['phones'] as $phone) {
+
+    foreach ($phones_list as $phone) {
         $ret = $modem->send_sms($phone, $sms_text);
         if ($ret) {
             msg_log(LOG_ERR, "Can't send SMS: " . $ret);

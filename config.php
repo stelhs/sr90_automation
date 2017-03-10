@@ -5,7 +5,6 @@ define("CONFIG_PATH", "/etc/sr90_automation/");
 
 function conf_global()
 {
-    return array('phones' => array('+375295051024'));
 }
 
 function conf_db()

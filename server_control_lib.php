@@ -3,7 +3,7 @@
 require_once 'config.php';
 require_once 'modem3g.php';
 
-function serv_ctrl_send_sms($type, $args)
+function serv_ctrl_send_sms($type, $phones_list, $args)
 {
     switch ($type) {
     case 'reboot_sms':
@@ -33,7 +33,7 @@ function serv_ctrl_send_sms($type, $args)
     
     $modem = new Modem3G(conf_modem()['ip_addr']);
     
-    foreach (conf_global()['phones'] as $phone) {
+    foreach ($phones_list as $phone) {
         $ret = $modem->send_sms($phone, $sms_text);
         if ($ret) {
             msg_log(LOG_ERR, "Can't send SMS: " . $ret);
@@ -54,3 +54,14 @@ function get_day_night()
     return 'night';
 }
 
+function user_get_by_phone($db, $phone)
+{
+    return $db->query("SELECT * FROM users " .
+                      "WHERE phones LIKE \"%" . $phone . "%\"");
+}
+
+function user_get_by_id($db, $user_id)
+{
+    return $db->query(sprintf("SELECT * FROM users " .
+                              "WHERE id = %d", $user_id));
+}

@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
+require_once 'server_control_lib.php';
 $utility_name = $argv[0];
 
 function main($argv) {
@@ -25,17 +26,20 @@ function main($argv) {
         return -EBASE;
     }
     
+    $user = user_get_by_phone($db, $phone);
+    if (!$user || !$user['guard_switch'])
+        return -EINVAL;
+
     $cmd = parse_sms_command($sms_text);
     
     switch (strtolower($cmd['cmd'])) {
     case 'off':
-        run_cmd("./guard.php state sleep sms");
-        break;    
+        run_cmd("./guard.php state sleep sms " . $user['id']);
+        break;
 
     case 'on':
-        dump("./guard.php state ready sms");
-        run_cmd("./guard.php state ready sms");
-        break;    
+        run_cmd("./guard.php state ready sms " . $user['id']);
+        break;
 
     default:
         return -EINVAL;
