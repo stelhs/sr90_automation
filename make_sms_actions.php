@@ -42,7 +42,7 @@ function main($argv) {
         $script = sprintf("%s '%s' '%s' '%s'", $script_name, 
                                       $sms_date, $phone, $sms_text);
         $ret = run_cmd(IO_ACTIONS_DIR . $script);
-                        
+        dump($ret['log']);                
         if ($ret['rc']) {
             msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
                                      $script, $ret['log']));

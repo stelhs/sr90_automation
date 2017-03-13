@@ -31,12 +31,9 @@ function main($argv) {
     if (!$user || !$user['serv_control'])
         return -EINVAL;
 
-    // get list phones for SMS subscribers
-    $users = $db->query_list('SELECT * FROM users '.
-                             'WHERE serv_control = 1');
-    $list_phones = array();
-    foreach ($users as $user)
-        $list_phones[] = string_to_array($user['phones'])[0];
+    $list_phones = get_users_phones_by_access_type('sms_observer');
+    if ($user['phones'][0] && !in_array($user['phones'][0], $list_phones))
+        $list_phones[] = $user['phones'][0];
 
     $cmd = parse_sms_command($sms_text);
 
@@ -47,22 +44,7 @@ function main($argv) {
         break;    
 
     case 'stat':
-        $modem = new Modem3G(conf_modem()['ip_addr']);
-
-        $guard_state = get_guard_state($db);
-        $balance = $modem->get_sim_balanse();
-        $modem_stat = $modem->get_global_status();
-
-        $ret = run_cmd('uptime');
-        preg_match('/up (.+),/U', $ret['log'], $mathes);
-        $uptime = $mathes[1];
-
-        $stat = array('guard_state' => $guard_state['state'],
-                      'balance' => $balance,
-                      'radio_signal_level' => $modem_stat['signal_strength'],
-                      'uptime' => $uptime,
-        );
-
+        $stat = get_formatted_global_status($db);
         serv_ctrl_send_sms('status', $list_phones, $stat);
         break;
 

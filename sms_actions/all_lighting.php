@@ -33,12 +33,9 @@ function main($argv) {
     if (!$user || !$user['serv_control'])
         return -EINVAL;
 
-    // get list phones for SMS subscribers
-    $users = $db->query_list('SELECT * FROM users '.
-                             'WHERE serv_control = 1');
-    $list_phones = array();
-    foreach ($users as $user)
-        $list_phones[] = string_to_array($user['phones'])[0];
+    $list_phones = get_users_phones_by_access_type('sms_observer');
+    if ($user['phones'][0] && !in_array($user['phones'][0], $list_phones))
+        $list_phones[] = $user['phones'][0];
 
     $cmd = parse_sms_command($sms_text);
 

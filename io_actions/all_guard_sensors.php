@@ -63,7 +63,11 @@ function main($argv)
                              array('sense_id' => $sensor['id'],
                                    'state' => $sensor_state,
                                    'guard_state' => $guard_state['state']));
-    
+                             
+    // make snapshots
+    run_cmd(sprintf('./snapshot.php %s %d_',
+                    conf_guard()['sensor_snapshot_dir'], $action_id));
+                                 
     // check for sensor is ignored
     if ($guard_state['ignore_sensors'])
    		foreach ($guard_state['ignore_sensors'] as $ignore_sensor_id)
@@ -72,8 +76,6 @@ function main($argv)
                 goto out;
             }
    			
-    msg_log(LOG_NOTICE, "change_sensor, guard_state = " . $guard_state['state'] . 
-    				    ", sensor_state = " . $sensor_state . "\n");
 
     // check guard state and initiate ALARM if needed
     if ($guard_state['state'] == 'sleep')

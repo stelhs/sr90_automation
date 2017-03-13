@@ -12,16 +12,19 @@ function notify_send_by_sms($type, $phones_list, $args)
         break;
 
     case 'guard_disable':
-        $sms_text = sprintf("Охрана отключена. Метод: %s",
-                            $args['method']);
+        $sms_text = sprintf("Охрана отключена. Метод: %s, state_id: %s.",
+                            $args['method'], $args['state_id']);
 
         if (isset($args['user_name']) && $args['user_name'])                            
             $sms_text .= sprintf(" Отключил: %s.", $args['user_name']);
+            
+        if (isset($args['global_status']))
+            $sms_text .= $args['global_status'];
         break;
 
     case 'guard_enable':
-        $sms_text = sprintf("Охрана включена. Метод: %s.",
-                            $args['method']);
+        $sms_text = sprintf("Охрана включена. Метод: %s, state_id: %s.",
+                            $args['method'], $args['state_id']);
 
         if (isset($args['user_name']) && $args['user_name'])
             $sms_text .= sprintf(" Включил: %s.", $args['user_name']);
@@ -30,6 +33,8 @@ function notify_send_by_sms($type, $phones_list, $args)
             $sms_text .= sprintf(" Игнор: %s.",
                                  array_to_string($args['ignore_sensors']));
         }
+        if (isset($args['global_status']))
+            $sms_text .= $args['global_status'];
         break;
 
     default: 

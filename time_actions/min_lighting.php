@@ -27,7 +27,6 @@ function main($argv) {
     
     if ($curr_mode == 'day') {
         $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
-        run_cmd("./modem.php sms_send_users 'Прожектор отключился потому что стало светло'");
         return 0;
     }
 
@@ -35,7 +34,6 @@ function main($argv) {
         return 0;
     
     $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
-    run_cmd("./modem.php sms_send_users 'Прожектор включился потому что стало темно'");
     return 0;
 }
 
