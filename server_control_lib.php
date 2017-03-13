@@ -97,11 +97,13 @@ function get_all_users_phones_by_access_type($db, $type)
 function get_global_status($db)
 {
     $modem = new Modem3G(conf_modem()['ip_addr']);
+    $mio = new Mod_io($db);
     
     $guard_state = get_guard_state($db);
     $balance = $modem->get_sim_balanse();
     $modem_stat = $modem->get_global_status();
-
+    $lighting = $mio->relay_get_state(conf_guard()['lamp_io_port']);
+        
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
     $uptime = $mathes[1];
@@ -110,6 +112,7 @@ function get_global_status($db)
                   'balance' => $balance,
                   'radio_signal_level' => $modem_stat['signal_strength'],
                   'uptime' => $uptime,
+                  'lighting' => $lighting,
                 );
 }
 
@@ -121,14 +124,26 @@ function get_formatted_global_status($db)
     case 'sleep':
         $stat['guard_state'] = "отключена";
         break;
-        
+
     case 'ready':
         $stat['guard_state'] = "включена";
         break;
     }
-    return sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s", 
+
+    switch ($stat['lighting']) {
+    case 0:
+        $stat['lighting'] = "отключено";
+        break;
+
+    case 1:
+        $stat['lighting'] = "включено";
+        break;
+    }
+
+    return sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s, Освещение: %s.", 
                    $stat['guard_state'],
                    $stat['balance'],
                    $stat['radio_signal_level'],
-                   $stat['uptime']);
+                   $stat['uptime'],
+                   $stat['lighting']);
 }
