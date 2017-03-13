@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 05, 2017 at 02:57 PM
--- Server version: 5.5.49-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4
+-- Generation Time: Mar 13, 2017 at 03:51 PM
+-- Server version: 5.5.53-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -52,19 +52,6 @@ CREATE TABLE IF NOT EXISTS `blocking_sensors` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `day_night`
---
-
-CREATE TABLE IF NOT EXISTS `day_night` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `state` enum('day','night') NOT NULL,
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `guard_alarms`
 --
 
@@ -74,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `guard_alarms` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `action_id` (`action_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Сработки сигнализации' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Сработки сигнализации' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -86,10 +73,12 @@ CREATE TABLE IF NOT EXISTS `guard_states` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `state` enum('sleep','ready') DEFAULT NULL,
   `method` enum('site','sms','remote','cli') DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
   `ignore_sensors` varchar(256) NOT NULL COMMENT 'Список ID сенсоров через запятую, которые необходимо игнорировать',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -104,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `incomming_sms` (
   `received_date` datetime NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -118,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `io_input_actions` (
   `state` tinyint(4) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Input ports change value actions' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Input ports change value actions' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `io_output_actions` (
   `state` tinyint(4) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -145,17 +134,22 @@ CREATE TABLE IF NOT EXISTS `sensors` (
   `name` varchar(100) NOT NULL,
   `port` tinyint(4) NOT NULL,
   `normal_state` tinyint(1) NOT NULL DEFAULT '0',
+  `alarm_time` int(11) NOT NULL COMMENT 'Время вопля сирены в секундах',
   `run_lighter` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `sensors`
 --
 
-INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `run_lighter`) VALUES
-(1, 'Датчик объема 1', 2, 1, 1),
-(2, 'Корпус датчика объема 1', 3, 1, 0);
+INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `alarm_time`, `run_lighter`) VALUES
+(1, 'Датчик объема передний', 2, 1, 30, 1),
+(2, 'Корпус переднего датчика объема', 3, 0, 180, 0),
+(3, 'Датчик двери кунга', 9, 1, 300, 1),
+(4, 'Датчик дверцы ВРУ', 10, 1, 300, 0),
+(5, 'Датчик объема задний', 4, 1, 30, 1),
+(6, 'Корпус заднего датчика объема', 5, 0, 300, 0);
 
 -- --------------------------------------------------------
 
@@ -171,7 +165,35 @@ CREATE TABLE IF NOT EXISTS `sensor_actions` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `sense_id` (`sense_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `phones` varchar(256) NOT NULL,
+  `guard_switch` tinyint(1) NOT NULL DEFAULT '0',
+  `guard_alarm` tinyint(1) NOT NULL DEFAULT '0',
+  `sms_observer` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Получает все уведомления о изменениях в системе',
+  `serv_control` tinyint(1) NOT NULL DEFAULT '0',
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `phones`, `guard_switch`, `guard_alarm`, `sms_observer`, `serv_control`, `enabled`) VALUES
+(1, 'Михаил', '+375295051024,+375296091024', 1, 1, 1, 1, 1),
+(2, 'Вероника', '+375295365072', 1, 1, 1, 1, 1),
+(3, 'Игорь', '+375293531402', 1, 1, 0, 0, 1),
+(4, 'Мама', '+375291651456', 0, 1, 0, 0, 1);
 
 --
 -- Constraints for dumped tables
