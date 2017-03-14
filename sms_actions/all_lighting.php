@@ -33,7 +33,7 @@ function main($argv) {
     if (!$user || !$user['serv_control'])
         return -EINVAL;
 
-    $list_phones = get_users_phones_by_access_type('sms_observer');
+    $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
     if ($user['phones'][0] && !in_array($user['phones'][0], $list_phones))
         $list_phones[] = $user['phones'][0];
 
