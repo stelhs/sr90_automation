@@ -38,7 +38,7 @@ function conf_guard()
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 60 * 5, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
-                 'light_mode' => 'auto', // 'by_sensors', 'auto', 'off'
+                 'light_mode' => 'by_sensors', // 'by_sensors', 'auto', 'off'
                  'alarm_snapshot_dir' => '/var/spool/sr90_automation/images/alarm_actions',
                  'sensor_snapshot_dir' => '/var/spool/sr90_automation/images/sensor_actions',
                  'video_cameras' => array(

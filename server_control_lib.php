@@ -2,6 +2,8 @@
 
 require_once 'config.php';
 require_once 'modem3g.php';
+require_once 'mod_io_lib.php';
+
 
 function serv_ctrl_send_sms($type, $phones_list, $args = array())
 {
