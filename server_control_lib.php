@@ -24,6 +24,32 @@ function serv_ctrl_send_sms($type, $phones_list, $args = array())
         $sms_text = sprintf("Освещение участка отключено.");
         break;
 
+    case 'mdadm':
+        switch ($args['mode']) {
+        case "resync":
+            $raid_stat = "синхронизируется " . $args['progress'] . '%';
+            break;
+
+        case "recovery":
+            $raid_stat = "восстанавливается " . $args['progress'] . '%';
+            break;
+
+        case "damage":
+            $raid_stat = "поврежден!";
+            break;
+
+        case "normal":
+            $raid_stat = "восстановлен!";
+            break;
+
+        case "no_exist":
+        default:
+            return;
+        }    
+
+        $sms_text = sprintf("RAID1: %s", $raid_stat);
+        break;
+
     default: 
         return -EINVAL;
     }
@@ -110,11 +136,14 @@ function get_global_status($db)
     preg_match('/up (.+),/U', $ret['log'], $mathes);
     $uptime = $mathes[1];
 
+    $mdstat = get_mdstat();
+
     return array('guard_state' => $guard_state['state'],
                   'balance' => $balance,
                   'radio_signal_level' => $modem_stat['signal_strength'],
                   'uptime' => $uptime,
                   'lighting' => $lighting,
+                  'mdadm' => $mdstat,
                 );
 }
 
@@ -142,10 +171,65 @@ function get_formatted_global_status($db)
         break;
     }
 
-    return sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s, Освещение: %s.", 
+    switch ($stat['mdadm']['mode']) {
+    case "normal":
+        $raid_stat = "исправен";
+        break;
+
+    case "no_exist":
+        $raid_stat = "отсутсвует";
+        break;
+
+    case "resync":
+        $raid_stat = "синхронизируется " . $mdstat['progress'] . '%';
+        break;
+
+    case "recovery":
+        $raid_stat = "восстанавливается " . $mdstat['progress'] . '%';
+        break;
+
+    case "damage":
+        $raid_stat = "поврежден";
+        break;
+    }
+
+    return sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s, Освещение: %s, RAID1: %s.", 
                    $stat['guard_state'],
                    $stat['balance'],
                    $stat['radio_signal_level'],
                    $stat['uptime'],
-                   $stat['lighting']);
+                   $stat['lighting'],
+                   $raid_stat);
+}
+
+
+function get_mdstat()
+{
+    $stat = file("/proc/mdstat");
+
+    if (!isset($stat[2]))
+        return array('mode' => 'no_exist');
+
+    if (isset($stat[3])) {
+        preg_match('/resync[ ]+=[ ]+([0-9\.]+)\%/', $stat[3], $matches);
+        if (isset($matches[1]))
+            return array('mode' => 'resync',
+                         'progress' => $matches[1]);
+
+        preg_match('/recovery[ ]+=[ ]+([0-9\.]+)\%/', $stat[3], $matches);
+        if (isset($matches[1]))
+            return array('mode' => 'recovery',
+                         'progress' => $matches[1]);
+    }
+
+    preg_match('/\[[U_]+\]/', $stat[2], $matches);
+    $mode = $matches[0];
+
+    if ($mode == '[UU]')
+        return array('mode' => 'normal');
+
+    if ($mode == '[_U]' || $mode == '[U_]')
+        return array('mode' => 'damage');
+
+    return array('mode' => 'parse_err');
 }
