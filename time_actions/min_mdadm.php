@@ -23,7 +23,7 @@ function main($argv) {
         return -EBASE;
     }
 
-    $list_phones = get_users_phones_by_access_type($db, 'serv_control');
+    $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
     serv_ctrl_send_sms('mdadm', $list_phones, $curr_stat);
     return 0;
 }
