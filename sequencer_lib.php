@@ -19,8 +19,6 @@ function sequncer_start($port, $sequence)
 function sequncer_stop($port)
 {
     $pid_file = sprintf(PID_DIR . 'seq_%d.pid', $port);
-    $cmd = './sequencer.php ' . $port . ' 0';
     
     stop_daemon($pid_file);
-    run_cmd($cmd);
 }

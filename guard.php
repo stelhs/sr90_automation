@@ -111,7 +111,6 @@ function main($argv)
 
             msg_log(LOG_NOTICE, "Guard started by " . $method);
 
-            sequncer_stop(conf_guard()['sirena_io_port']);
             $sensors = $db->query_list('SELECT * FROM sensors');
 
             // check for incorrect sensor value state
@@ -125,6 +124,7 @@ function main($argv)
                     $ignore_sensors_list[] = $sensor['id'];
             }
 
+            sequncer_stop(conf_guard()['sirena_io_port']);
             if (!count($ignore_sensors_list)) {
                 // one beep by sirena
                 sequncer_start(conf_guard()['sirena_io_port'], array(200, 0));
