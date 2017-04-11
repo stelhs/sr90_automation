@@ -67,8 +67,8 @@ class Modem3G {
         if (isset($data['response']['content'][0]) && $data['response']['content'][0] == 'OK')
             return 0;
 
-        app_log(LOG_ERR, "Modem: Can't send SMS " . $pnone_number . 
-                        ' text: ' . $text . ' reason code: ' . $data['error']['content']['code'][0]['content']);
+      //  app_log(LOG_ERR, "Modem: Can't send SMS " . $pnone_number . 
+        //                ' text: ' . $text . ' reason code: ' . $data['error']['content']['code'][0]['content']);
         return $data['error']['content']['code'][0]['content'];
     }
 

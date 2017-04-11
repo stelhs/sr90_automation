@@ -87,6 +87,12 @@ function main($argv)
                 $list_phones[] = $user_phone;
 
             $stat_text = get_formatted_global_status($db);
+            printf("Guard set sleep\n");
+            
+            if ($method == 'cli') {
+                printf("stat: %s\n", $stat_text);
+                goto out;
+            }
             notify_send_by_sms('guard_disable',
                                $list_phones,
                                array('method' => $method,
@@ -94,7 +100,6 @@ function main($argv)
                                      'state_id' => $state_id,
                                      'global_status' => $stat_text));
 
-            printf("Guard set sleep\n");
             goto out;
 
 
@@ -151,6 +156,11 @@ function main($argv)
             $list_phones[] = $user_phone;
 
             $stat_text = get_formatted_global_status($db);
+            printf("Guard set ready\n");
+            if ($method == 'cli') {
+                printf("stat: %s\n", $stat_text);
+                goto out;
+            }
             notify_send_by_sms('guard_enable',
                                 $list_phones,
                                 array('method' => $method,
@@ -159,7 +169,6 @@ function main($argv)
                                       'state_id' => $state_id,
                                       'global_status' => $stat_text));
 
-            printf("Guard set ready\n");
             goto out;
 
         default:
