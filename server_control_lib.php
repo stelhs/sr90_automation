@@ -50,6 +50,18 @@ function serv_ctrl_send_sms($type, $phones_list, $args = array())
         $sms_text = sprintf("RAID1: %s", $raid_stat);
         break;
 
+    case 'external_power':
+        switch ($args['mode']) {
+        case "on":
+            $sms_text = "Внешнее питание восстановлено";
+            break;
+
+        case "off":
+            $sms_text = "Отключено внешнее питание";
+            break;
+        }
+        break;
+
     default: 
         return -EINVAL;
     }
