@@ -17,8 +17,8 @@ function print_help()
     global $utility_name;
     echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
-                 "\t\t state: set guard state. Args: sleep/ready, method, user_id\n" . 
-                 "\t\t\texample: $utility_name state sleep cli 1\n" .
+                 "\t\t state: set guard state. Args: sleep/ready, method, user_id, [sms]\n" . 
+                 "\t\t\texample: $utility_name state sleep cli 1 sms\n" .
                  "\t\t alarm: Execute ALARM. Args: action_id\n" . 
                  "\t\t\texample: $utility_name alarm 71\n" .
                  "\t\t stat: Return status information about Guard system\n" . 
@@ -61,17 +61,25 @@ function main($argv)
 
         switch ($new_mode) {
         case "sleep":
-            $user_name = "";
-            $user_id = 0;
-            $user_phone = null;
-            if (isset($argv[4])) {
+            $user_id = 1; // stelhs
+            if (isset($argv[4]))
                 $user_id = $argv[4];
-                $user = user_get_by_id($db, $user_id);
-                $user_name = $user['name'];
-                $user_phone = $user['phones'][0];
-            }
+
+            $with_sms = false;
+            if (isset($argv[5]) && trim($argv[5]) == 'sms')
+                $with_sms = true;
+
+            $user = user_get_by_id($db, $user_id);
+            $user_name = $user['name'];
+            $user_phone = $user['phones'][0];
 
             msg_log(LOG_NOTICE, "Guard stoped by " . $method);
+
+            // disable container 220V
+            $rc = $mio->relay_set_state(conf_guard()['220v_io_port'], 1);
+            if ($rc < 0)
+                printf("Can't set relay state\n");
+
             // two beep by sirena
             sequncer_stop(conf_guard()['sirena_io_port']);
             sequncer_start(conf_guard()['sirena_io_port'],
@@ -88,35 +96,44 @@ function main($argv)
 
             $stat_text = get_formatted_global_status($db);
             printf("Guard set sleep\n");
-            
+
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);
                 goto out;
             }
-            notify_send_by_sms('guard_disable',
-                               $list_phones,
-                               array('method' => $method,
-                                     'user_name' => $user_name,
-                                     'state_id' => $state_id,
-                                     'global_status' => $stat_text));
+
+            if ($with_sms)
+                notify_send_by_sms('guard_disable',
+                                   $list_phones,
+                                   array('method' => $method,
+                                         'user_name' => $user_name,
+                                         'state_id' => $state_id,
+                                         'global_status' => $stat_text));
 
             goto out;
 
 
         case "ready":
-            $user_name = "";
-            $user_id = 0;
-            $user_phone = null;
-            if (isset($argv[4])) {
+            $user_id = 1; // stelhs
+            if (isset($argv[4]))
                 $user_id = $argv[4];
-                $user = user_get_by_id($db, $user_id);
-                $user_name = $user['name'];
-                $user_phone = $user['phones'][0];
-            }
+
+            $with_sms = false;
+            if (isset($argv[5]) && trim($argv[5]) == 'sms')
+                $with_sms = true;
+
+            $user = user_get_by_id($db, $user_id);
+            $user_name = $user['name'];
+            $user_phone = $user['phones'][0];
 
             msg_log(LOG_NOTICE, "Guard started by " . $method);
 
             $sensors = $db->query_list('SELECT * FROM sensors');
+
+            // enable container 220V
+            $rc = $mio->relay_set_state(conf_guard()['220v_io_port'], 0);
+            if ($rc < 0)
+                printf("Can't set relay state\n");
 
             // check for incorrect sensor value state
             $ignore_sensors_list = [];
@@ -161,13 +178,15 @@ function main($argv)
                 printf("stat: %s\n", $stat_text);
                 goto out;
             }
-            notify_send_by_sms('guard_enable',
-                                $list_phones,
-                                array('method' => $method,
-                                      'user_name' => $user_name,
-                                      'ignore_sensors' => $ignore_sensors_list_names,
-                                      'state_id' => $state_id,
-                                      'global_status' => $stat_text));
+
+            if ($with_sms || count($ignore_sensors_list_names))
+                notify_send_by_sms('guard_enable',
+                                    $list_phones,
+                                    array('method' => $method,
+                                          'user_name' => $user_name,
+                                          'ignore_sensors' => $ignore_sensors_list_names,
+                                          'state_id' => $state_id,
+                                          'global_status' => $stat_text));
 
             goto out;
 
