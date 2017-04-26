@@ -75,10 +75,16 @@ function main($argv)
 
             msg_log(LOG_NOTICE, "Guard stoped by " . $method);
 
-            // disable container 220V
-            $rc = $mio->relay_set_state(conf_guard()['220v_io_port'], 1);
+            // enable container 220V
+            $rc = $mio->relay_set_state(conf_guard()['220v_container_io_port'], 1);
             if ($rc < 0)
                 printf("Can't set relay state\n");
+
+            // enable kung padlock
+            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 0);
+            if ($rc < 0)
+                printf("Can't set relay state\n");
+
 
             // two beep by sirena
             sequncer_stop(conf_guard()['sirena_io_port']);
@@ -130,8 +136,13 @@ function main($argv)
 
             $sensors = $db->query_list('SELECT * FROM sensors');
 
-            // enable container 220V
-            $rc = $mio->relay_set_state(conf_guard()['220v_io_port'], 0);
+            // disable container 220V
+            $rc = $mio->relay_set_state(conf_guard()['220v_container_io_port'], 0);
+            if ($rc < 0)
+                printf("Can't set relay state\n");
+
+            // disable kung padlock
+            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 0);
             if ($rc < 0)
                 printf("Can't set relay state\n");
 

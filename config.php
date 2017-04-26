@@ -35,7 +35,8 @@ function conf_guard()
 {
     return array('sirena_io_port' => 3,
 			     'lamp_io_port' => 4,
-			     '220v_io_port' => 5,
+			     '220v_container_io_port' => 5,
+			     'kung_padlock_io_port'  => 6,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 60 * 5, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
@@ -45,10 +46,10 @@ function conf_guard()
                  'video_cameras' => array(
                                           array('id' => 1,
                                                 'v4l_dev' => '/dev/video14',
-                                                'resolution' => '1280:1024'),
+                                                'resolution' => '1920:1080'),
                                           array('id' => 2,
                                                 'v4l_dev' => '/dev/video15',
-                                                'resolution' => '1280:1024')),
+                                                'resolution' => '1920:1080')),
 				);
 }
 
