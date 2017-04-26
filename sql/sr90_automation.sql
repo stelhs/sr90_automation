@@ -3,18 +3,12 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 13, 2017 at 03:51 PM
+-- Generation Time: Apr 26, 2017 at 03:45 PM
 -- Server version: 5.5.53-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `sr90_automation`
@@ -48,6 +42,19 @@ CREATE TABLE IF NOT EXISTS `blocking_sensors` (
   PRIMARY KEY (`id`),
   KEY `sense_id` (`sense_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ext_power_log`
+--
+
+CREATE TABLE IF NOT EXISTS `ext_power_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `state` enum('on','off') NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Наличие внешнего питания' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -139,18 +146,6 @@ CREATE TABLE IF NOT EXISTS `sensors` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
---
--- Dumping data for table `sensors`
---
-
-INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `alarm_time`, `run_lighter`) VALUES
-(1, 'Датчик объема передний', 2, 1, 30, 1),
-(2, 'Корпус переднего датчика объема', 3, 0, 180, 0),
-(3, 'Датчик двери кунга', 9, 1, 300, 1),
-(4, 'Датчик дверцы ВРУ', 10, 1, 300, 0),
-(5, 'Датчик объема задний', 4, 1, 30, 1),
-(6, 'Корпус заднего датчика объема', 5, 0, 300, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -186,6 +181,23 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
+-- Constraints for dumped tables
+--
+
+--
+-- Dumping data for table `sensors`
+--
+
+INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `alarm_time`, `run_lighter`) VALUES
+(1, 'Датчик объема передний', 2, 1, 30, 1),
+(2, 'Корпус переднего датчика объема', 3, 0, 180, 0),
+(3, 'Датчик двери кунга', 9, 1, 300, 1),
+(4, 'Датчик дверцы ВРУ', 10, 1, 300, 0),
+(5, 'Датчик объема задний', 4, 1, 30, 1),
+(6, 'Корпус заднего датчика объема', 5, 0, 300, 0);
+
+
+--
 -- Dumping data for table `users`
 --
 
@@ -194,10 +206,6 @@ INSERT INTO `users` (`id`, `name`, `phones`, `guard_switch`, `guard_alarm`, `sms
 (2, 'Вероника', '+375295365072', 1, 1, 1, 1, 1),
 (3, 'Игорь', '+375293531402', 1, 1, 0, 0, 1),
 (4, 'Мама', '+375291651456', 0, 1, 0, 0, 1);
-
---
--- Constraints for dumped tables
---
 
 --
 -- Constraints for table `blocking_sensors`
@@ -216,7 +224,3 @@ ALTER TABLE `guard_alarms`
 --
 ALTER TABLE `sensor_actions`
   ADD CONSTRAINT `sensor_actions_ibfk_1` FOREIGN KEY (`sense_id`) REFERENCES `sensors` (`id`) ON UPDATE NO ACTION;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
