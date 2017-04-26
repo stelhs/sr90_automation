@@ -83,7 +83,7 @@ function get_day_night()
     $curr_time = time();
 
     if ($curr_time > $sun_info['nautical_twilight_begin'] && 
-        $curr_time < $sun_info['nautical_twilight_end'])
+        $curr_time < ($sun_info['nautical_twilight_end'] - 3600))
             return 'day';
 
     return 'night';
