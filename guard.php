@@ -81,7 +81,7 @@ function main($argv)
                 printf("Can't set relay state\n");
 
             // enable kung padlock
-            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 0);
+            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 1);
             if ($rc < 0)
                 printf("Can't set relay state\n");
 
