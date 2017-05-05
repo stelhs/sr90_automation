@@ -17,8 +17,12 @@ function main($argv) {
         return -EBASE;
     }
    
-    $res = $db->query('SELECT state FROM ext_power_log ' .
-                      'ORDER BY created DESC LIMIT 1');
+    $res = $db->query('SELECT * FROM `ext_power_log` ' . 
+                      'WHERE id = (SELECT MAX(id) FROM `ext_power_log`) AND ' .
+                      'created < (now() - interval 5 minute)');
+    if (!isset($res['state']))
+        return 0;
+        
     $curr_stat = $res['state'];
 
     @$prev_stat = file_get_contents(EXT_POWER_STATE_FILE);
