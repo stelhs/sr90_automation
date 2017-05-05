@@ -43,31 +43,31 @@ function main($argv)
     if ($sensor['run_lighter'] &&
              conf_guard()['light_mode'] == 'by_sensors' &&
              $day_night == 'night' &&
-             $guard_state['state'] == 'sleep') {
-        $light_interval = conf_guard()['light_sleep_timeout'] * 1000;
+             $guard_state['state'] == 'ready') {
+        $light_interval = conf_guard()['light_ready_timeout'] * 1000;
         sequncer_stop(conf_guard()['lamp_io_port']);
         sequncer_start(conf_guard()['lamp_io_port'], 
                        array($light_interval, 0));
     }
-    
+
     // check for sensor is lock
     $sense_locking_mode = get_sensor_locking_mode($db, $sensor['id']);
     if ($sense_locking_mode == 'lock') {
         $rc = 0;
         goto out;
     }
-    
+
     // store sensor state
     $sensor_state = ($port_state == $sensor['normal_state'] ? 'normal' : 'action');
     $action_id = $db->insert('sensor_actions', 
                              array('sense_id' => $sensor['id'],
                                    'state' => $sensor_state,
                                    'guard_state' => $guard_state['state']));
-                             
+
     // make snapshots
     run_cmd(sprintf('./snapshot.php %s %d_',
                     conf_guard()['sensor_snapshot_dir'], $action_id));
-                                 
+
     // check for sensor is ignored
     if ($guard_state['ignore_sensors'])
    		foreach ($guard_state['ignore_sensors'] as $ignore_sensor_id)
@@ -75,7 +75,6 @@ function main($argv)
                 $rc = 0;
                 goto out;
             }
-   			
 
     // check guard state and initiate ALARM if needed
     if ($guard_state['state'] == 'sleep')

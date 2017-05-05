@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'mod_io_lib.php';
+require_once 'guard_lib.php';
 require_once 'server_control_lib.php';
 
 define("DAY_NIGHT_MODE_FILE", "/tmp/day_night_mode");
@@ -24,15 +25,19 @@ function main($argv) {
         return -EBASE;
     }    
     $mio = new Mod_io($db);
-    
+
     if ($curr_mode == 'day') {
         $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
         return 0;
     }
 
-    if (conf_guard()['light_mode'] != 'auto')
+    if (conf_guard()['light_mode'] == 'off')
         return 0;
-    
+
+    $guard_info = get_guard_state($db);
+    if ($guard_info['state'] == 'ready' && conf_guard()['light_mode'] == 'by_sensors')
+        return 0;
+
     $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
     return 0;
 }
