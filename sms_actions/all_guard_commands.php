@@ -30,6 +30,8 @@ function main($argv) {
         return -EBASE;
     }
 
+    $mio = new Mod_io($db);
+    
     $user = user_get_by_phone($db, $phone);
     if (!$user || !$user['guard_switch'])
         return -EINVAL;
@@ -44,6 +46,20 @@ function main($argv) {
 
         printf("run cmd = '%s'\n", $cmd);
         $ret = run_cmd($cmd);
+
+        /* parse 'lock' parameter */
+        if (isset($action['args']) && ($action['args'][1] == 'lock')) {
+            // disable selected cam in doors
+            $list_doors = $action['args'];
+            unset($list_doors[0]);
+            unset($list_doors[1]);
+            foreach ($list_doors as $door) { 
+                $rc = $mio->relay_set_state(conf_guard()['doors'][$door - 1], 0);
+                if ($rc < 0)
+                    printf("Can't set relay state %d\n", $io_port);
+            }
+        }
+        
         dump($ret);
         break;
 

@@ -35,8 +35,10 @@ function conf_guard()
 {
     return array('sirena_io_port' => 3,
 			     'lamp_io_port' => 4,
-			     '220v_container_io_port' => 5,
-			     'kung_padlock_io_port'  => 6,
+                 
+                 // List cam in door's IO ports 
+                 'doors' => array(6, // Kung
+                                  5), // Container 20ft
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */

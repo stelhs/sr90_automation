@@ -75,16 +75,12 @@ function main($argv)
 
             msg_log(LOG_NOTICE, "Guard stoped by " . $method);
 
-            // enable container 220V
-            $rc = $mio->relay_set_state(conf_guard()['220v_container_io_port'], 1);
-            if ($rc < 0)
-                printf("Can't set relay state\n");
-
-            // enable kung padlock
-            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 1);
-            if ($rc < 0)
-                printf("Can't set relay state\n");
-
+            // enable all cam in doors
+            foreach (conf_guard()['doors'] as $io_port) { 
+                $rc = $mio->relay_set_state($io_port, 1);
+                if ($rc < 0)
+                    printf("Can't set relay state %d\n", $io_port);
+            }
 
             // two beep by sirena
             sequncer_stop(conf_guard()['sirena_io_port']);
@@ -136,15 +132,12 @@ function main($argv)
 
             $sensors = $db->query_list('SELECT * FROM sensors');
 
-            // disable container 220V
-            $rc = $mio->relay_set_state(conf_guard()['220v_container_io_port'], 0);
-            if ($rc < 0)
-                printf("Can't set relay state\n");
-
-            // disable kung padlock
-            $rc = $mio->relay_set_state(conf_guard()['kung_padlock_io_port'], 0);
-            if ($rc < 0)
-                printf("Can't set relay state\n");
+            // disable all cam in doors
+            foreach (conf_guard()['doors'] as $io_port) { 
+                $rc = $mio->relay_set_state($io_port, 0);
+                if ($rc < 0)
+                    printf("Can't set relay state %d\n", $io_port);
+            }
 
             // check for incorrect sensor value state
             $ignore_sensors_list = [];
