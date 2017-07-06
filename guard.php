@@ -87,6 +87,11 @@ function main($argv)
             sequncer_start(conf_guard()['sirena_io_port'],
                            array(100, 100, 100, 0));
 
+            /* enable lighter if night */
+            $day_night = get_day_night($db);
+            if ($day_night == 'night')
+                $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
+
             $state_id = $db->insert('guard_states',
                                     array('state' => 'sleep',
                                           'user_id' => $user_id,
@@ -111,11 +116,6 @@ function main($argv)
                                          'user_name' => $user_name,
                                          'state_id' => $state_id,
                                          'global_status' => $stat_text));
-
-            /* enable lighter if night */
-            $day_night = get_day_night($db);
-            if ($day_night == 'night')
-                $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
 
             goto out;
 
@@ -165,6 +165,10 @@ function main($argv)
                                array(200, 200, 1000, 0));
             }
 
+            /* disable lighter if this disable */
+            if (conf_guard()['light_mode'] != 'auto')
+                $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
+
             $ignore_sensors_list_names = array();
             foreach ($ignore_sensors_list as $sensor_id) {
                 $sensor = sensor_get_by_io_id($db, $sensor_id);
@@ -196,10 +200,6 @@ function main($argv)
                                           'ignore_sensors' => $ignore_sensors_list_names,
                                           'state_id' => $state_id,
                                           'global_status' => $stat_text));
-
-            /* disable lighter if this disable */
-            if (conf_guard()['light_mode'] != 'auto')
-                $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
 
             goto out;
 
