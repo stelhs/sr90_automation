@@ -112,6 +112,11 @@ function main($argv)
                                          'state_id' => $state_id,
                                          'global_status' => $stat_text));
 
+            /* enable lighter if night */
+            $day_night = get_day_night($db);
+            if ($day_night == 'night')
+                $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
+
             goto out;
 
 
@@ -191,6 +196,10 @@ function main($argv)
                                           'ignore_sensors' => $ignore_sensors_list_names,
                                           'state_id' => $state_id,
                                           'global_status' => $stat_text));
+
+            /* disable lighter if this disable */
+            if (conf_guard()['light_mode'] != 'auto')
+                $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
 
             goto out;
 
