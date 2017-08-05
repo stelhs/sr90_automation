@@ -35,8 +35,9 @@ function main($argv) {
     if ($guard_info['state'] == 'sleep')
         return 0;
 
-    $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
-    serv_ctrl_send_sms('external_power', $list_phones, array('mode' => $curr_stat));
+    serv_ctrl_send_sms('external_power',
+                       ['groups' => ['sms_observer']], 
+                       ['mode' => $curr_stat]);
     return 0;
 }
 

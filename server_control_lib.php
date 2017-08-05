@@ -1,17 +1,25 @@
 <?php
 
+require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'modem3g.php';
 require_once 'mod_io_lib.php';
 
 
-function serv_ctrl_send_sms($type, $phones_list, $args = array())
+function serv_ctrl_send_sms($type, $recepient, $args = array())
 {
+    $db = new Database;
+    $rc = $db->connect(conf_db());
+    if ($rc) {
+        printf("can't connect to database");
+        return -EBASE;
+    }
+
     switch ($type) {
     case 'reboot_sms':
         $sms_text = sprintf("Сервер ушел на перезагрузку по запросу SMS");
         break;
-        
+
     case 'status':
         $sms_text = $args;
         break;
@@ -65,10 +73,27 @@ function serv_ctrl_send_sms($type, $phones_list, $args = array())
     default: 
         return -EINVAL;
     }
-    
+
     $modem = new Modem3G(conf_modem()['ip_addr']);
-    
-    foreach ($phones_list as $phone) {
+
+    // creating phones list
+    $list_phones = [];
+    if (isset($recepient['user_id']) && $recepient['user_id']) {
+        $user = user_get_by_id($db, $user_id);
+        $list_phones = $user['phones']; 
+    }
+
+    // applying phones list by groups
+    if (isset($recepient['groups']))
+        foreach ($recepient['groups'] as $group) {
+            $group_phones = get_users_phones_by_access_type($db, $group);
+            $list_phones = array_unique(array_merge($list_phones, $group_phones));
+        }
+
+    if (!count($list_phones))
+        return -EINVAL;
+        
+    foreach ($list_phones as $phone) {
         $ret = $modem->send_sms($phone, $sms_text);
         if ($ret) {
             msg_log(LOG_ERR, "Can't send SMS: " . $ret);
@@ -94,6 +119,9 @@ function user_get_by_phone($db, $phone)
     $user = $db->query("SELECT * FROM users " .
                       "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
     
+    if (!$user)
+        return NULL;
+        
     $user['phones'] = string_to_array($user['phones']);
     return $user;
 }

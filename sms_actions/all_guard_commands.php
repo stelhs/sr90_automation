@@ -6,7 +6,6 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'server_control_lib.php';
-$utility_name = $argv[0];
 
 function main($argv) {
     $rc = 0;
@@ -16,11 +15,11 @@ function main($argv) {
     }
 
     $sms_date = trim($argv[1]);
-    $phone = trim($argv[2]);
+    $user_id = trim($argv[2]);
     $sms_text = trim($argv[3]);
 
     printf("sms_date = '%s'\n", $sms_date);
-    printf("phone = '%s'\n", $phone);
+    printf("user_id = '%s'\n", $user_id);
     printf("sms_text = '%s'\n", $sms_text);
 
     $db = new Database;
@@ -32,32 +31,38 @@ function main($argv) {
 
     $mio = new Mod_io($db);
     
-    $user = user_get_by_phone($db, $phone);
+    if (!$user_id)
+        return -EINVAL;
+        
+    $user = user_get_by_id($db, $user_id);
     if (!$user || !$user['guard_switch'])
         return -EINVAL;
 
-    $action = parse_sms_command($sms_text);
-    printf("action = '%s'\n", $action['cmd']);
-    switch (strtolower($action['cmd'])) {
+    $args = strings_to_args($sms_text);
+    
+    switch ($args[0]) {
     case 'off':
         $cmd = "./guard.php state sleep sms " . $user['id'];
-        if (isset($action['args']) && ($action['args'][0] == 'sms'))
+        if ($args[1] == 'sms')
             $cmd .= " sms";
 
         printf("run cmd = '%s'\n", $cmd);
         $ret = run_cmd($cmd);
 
         /* parse 'lock' parameter */
-        if (isset($action['args']) && ($action['args'][1] == 'lock')) {
+        if (isset($args[2]) && $args[2] == 'lock') {
             // disable selected cam in doors
-            $list_doors = $action['args'];
+            unset($args[1]);
+            unset($args[2]);
+            $list_doors = $args;
             unset($list_doors[0]);
             unset($list_doors[1]);
-            foreach ($list_doors as $door) { 
-                $rc = $mio->relay_set_state(conf_guard()['doors'][$door - 1], 0);
-                if ($rc < 0)
-                    printf("Can't set relay state %d\n", $io_port);
-            }
+            if ($list_doors)
+                foreach ($list_doors as $door) { 
+                    $rc = $mio->relay_set_state(conf_guard()['doors'][$door - 1], 0);
+                    if ($rc < 0)
+                        printf("Can't set relay state %d\n", $io_port);
+                }
         }
         
         dump($ret);
@@ -65,7 +70,7 @@ function main($argv) {
 
     case 'on':
         $cmd = "./guard.php state ready sms " . $user['id'];
-        if (isset($action['args']) && ($action['args'][0] == 'sms'))
+        if (isset($args[1]) && $args[1] == 'sms')
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
@@ -74,9 +79,8 @@ function main($argv) {
 
     default:
         return -EINVAL;
-    }    
+    }
 
-out:    
     $db->close();
     return $rc;
 }

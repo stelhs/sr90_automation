@@ -16,15 +16,7 @@ function main($argv) {
 
     file_put_contents(MDSTAT_FILE, $curr_stat['mode']);
 
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        printf("can't connect to database");
-        return -EBASE;
-    }
-
-    $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
-    serv_ctrl_send_sms('mdadm', $list_phones, $curr_stat);
+    serv_ctrl_send_sms('mdadm', ['groups' => ['sms_observer']], $curr_stat);
     return 0;
 }
 

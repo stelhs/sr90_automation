@@ -52,24 +52,6 @@ function notify_send_by_sms($type, $phones_list, $args)
     }
 }
 
-function parse_sms_command($text)
-{
-    $words = split_string($text);
-    if (!$words)
-        return false;
-
-    $cmd['cmd'] = $words[0];
-    unset($words[0]);
-
-    if (!count($words))
-        return $cmd;
-
-    foreach ($words as $word)
-        $cmd['args'][] = $word;
-
-    return $cmd;
-}
-
 function get_sensor_locking_mode($db, $sensor_id)
 {
     $data = $db->query("SELECT * FROM blocking_sensors " .
