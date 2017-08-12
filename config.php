@@ -1,4 +1,5 @@
 <?php
+require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 define("CONFIG_PATH", "/etc/sr90_automation/");
@@ -9,21 +10,11 @@ function conf_global()
 
 function conf_db()
 {
-    $cfg_json = file_get_contents(CONFIG_PATH . 'database.json');
-    if (!$cfg_json) {
-        msg_log(LOG_ERR, sprintf("Can't open config file %s\n",
-                                 CONFIG_PATH . 'database.json'));
-        return null;
-    }
-    
-    $ret = json_decode($cfg_json);
-    if (!$ret) {
-        msg_log(LOG_ERR, sprintf("Can't parse config file %s\n",
-                                 CONFIG_PATH . 'database.json'));
-        return null;
-    }
-    
-    return (array)$ret;
+    static $config = NULL;
+    if (!isarray($config))
+        $config = parse_json_config(CONFIG_PATH . 'database.json');
+
+    return $config;
 }
 
 function conf_io()
@@ -59,5 +50,14 @@ function conf_guard()
 function conf_modem()
 {
     return array('ip_addr' => '192.168.1.1');
+}
+
+function conf_telegram_bot()
+{
+    static $config = NULL;
+    if (!isarray($config))
+        $config = parse_json_config(CONFIG_PATH . 'telegram.json');
+
+    return $config;
 }
 
