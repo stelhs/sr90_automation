@@ -118,10 +118,10 @@ function user_get_by_phone($db, $phone)
 {
     $user = $db->query("SELECT * FROM users " .
                       "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
-    
+
     if (!$user)
         return NULL;
-        
+
     $user['phones'] = string_to_array($user['phones']);
     return $user;
 }
@@ -130,6 +130,21 @@ function user_get_by_id($db, $user_id)
 {
     $user = $db->query(sprintf("SELECT * FROM users " .
                               "WHERE id = %d", $user_id));
+
+    if (!$user)
+        return NULL;
+
+    $user['phones'] = string_to_array($user['phones']);
+    return $user;
+}
+
+function user_get_by_telegram_id($db, $telegram_user_id)
+{
+    $user = $db->query(sprintf("SELECT * FROM users " .
+                              "WHERE telegram_id = %d", $telegram_user_id));
+
+    if (!$user)
+        return NULL;
 
     $user['phones'] = string_to_array($user['phones']);
     return $user;

@@ -46,7 +46,7 @@ function main($argv)
 
     $modem = new Modem3G(conf_modem()['ip_addr']);
 
-    $cmd = $argv[1];
+    $cmd = strtolower($argv[1]);
     switch ($cmd) {
     case 'sms_send':
         $phone = $argv[2];

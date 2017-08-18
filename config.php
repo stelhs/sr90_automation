@@ -11,7 +11,7 @@ function conf_global()
 function conf_db()
 {
     static $config = NULL;
-    if (!isarray($config))
+    if (!is_array($config))
         $config = parse_json_config(CONFIG_PATH . 'database.json');
 
     return $config;
@@ -55,7 +55,7 @@ function conf_modem()
 function conf_telegram_bot()
 {
     static $config = NULL;
-    if (!isarray($config))
+    if (!is_array($config))
         $config = parse_json_config(CONFIG_PATH . 'telegram.json');
 
     return $config;
