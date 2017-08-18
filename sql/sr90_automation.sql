@@ -172,6 +172,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `phones` varchar(256) NOT NULL,
+  `telegram_id` bigint(20) NOT NULL,
   `guard_switch` tinyint(1) NOT NULL DEFAULT '0',
   `guard_alarm` tinyint(1) NOT NULL DEFAULT '0',
   `sms_observer` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Получает все уведомления о изменениях в системе',
@@ -179,7 +180,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
 --
 -- Constraints for dumped tables
 --
@@ -201,11 +201,32 @@ INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `alarm_time`, `run_
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `phones`, `guard_switch`, `guard_alarm`, `sms_observer`, `serv_control`, `enabled`) VALUES
-(1, 'Михаил', '+375295051024,+375296091024', 1, 1, 1, 1, 1),
-(2, 'Вероника', '+375295365072', 1, 1, 1, 1, 1),
-(3, 'Игорь', '+375293531402', 1, 1, 0, 0, 1),
-(4, 'Мама', '+375291651456', 0, 1, 0, 0, 1);
+INSERT INTO `users` (`id`, `name`, `phones`, `telegram_id`, `guard_switch`, `guard_alarm`, `sms_observer`, `serv_control`, `enabled`) VALUES
+(1, 'Михаил', '+375295051024,+375296091024', 186579253, 1, 1, 1, 1, 1),
+(2, 'Вероника', '+375295365072', 0, 1, 1, 0, 1, 1),
+(3, 'Игорь', '+375293531402', 0, 1, 1, 0, 0, 1),
+(4, 'Мама', '+375291651456', 0, 0, 1, 0, 0, 1);
+
+
+--
+-- Table structure for table `telegram_msg`
+--
+
+CREATE TABLE IF NOT EXISTS `telegram_msg` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `update_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского запроса UPDATE',
+  `msg_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского сообщения',
+  `date` bigint(20) DEFAULT NULL COMMENT 'Дата сообщения',
+  `from_name` varchar(64) CHARACTER SET latin1 NOT NULL,
+  `from_id` bigint(20) NOT NULL,
+  `chat_name` varchar(128) CHARACTER SET latin1 NOT NULL,
+  `chat_id` bigint(20) NOT NULL,
+  `chat_type` varchar(16) CHARACTER SET latin1 NOT NULL,
+  `text` text CHARACTER SET latin1 NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 
 --
 -- Constraints for table `blocking_sensors`
