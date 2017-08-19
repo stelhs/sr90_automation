@@ -3,10 +3,12 @@ require_once 'config.php';
 
 class Telegram_api {
     private $db;
+    private $last_update_id;
 
     function __construct($db)
     {
         $this->db = $db;
+        $this->last_update_id = 0;
     }
 
     function post_request($method_name, $params = [])
@@ -31,15 +33,23 @@ class Telegram_api {
         return json_decode($result, true);
     }
 
+    function get_last_update_id()
+    {
+        if (!$this->last_update_id)
+            @$this->last_update_id = file_get_contents(getenv("HOME") . 
+                                                       '/.telegram_last_update_id');
+        return $this->last_update_id;
+    }
+
+    function set_last_update_id($last_update_id)
+    {
+        file_put_contents(getenv("HOME") . '/.telegram_last_update_id', $last_update_id);
+        $this->last_update_id = $last_update_id;
+    }
+
     function get_new_messages()
     {
-        $last_msg = $this->db->query('SELECT * FROM telegram_msg ' .
-                               'ORDER BY update_id DESC LIMIT 1');
-        $last_update_id = 0;
-
-        if ($last_msg)
-            $last_update_id = $last_msg['update_id'];
-
+        $last_update_id = $this->get_last_update_id();
         $resp = $this->post_request('getUpdates', ['offset' => $last_update_id + 1,
                                                    'limit' => 10,
                                                    'timeout' => 10]);
@@ -58,8 +68,18 @@ class Telegram_api {
 
         $list_msg = [];
         foreach ($resp['result'] as $row) {
-            dump($row);
-            //TODO: edited_message
+            if (!isset($row['update_id']))
+                continue;
+
+            $this->set_last_update_id($row['update_id']);
+
+            if (!isset($row['message']))
+                continue;
+
+            if (!isset($row['message']['text']))
+                continue;
+
+            printf("Processed message: %d\n", $row['message']['message_id']);
             $msg = ['update_id' =>   $row['update_id'],
                     'msg_id' =>      $row['message']['message_id'],
                     'date' =>        $row['message']['date'],

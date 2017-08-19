@@ -51,10 +51,11 @@ function main($argv) {
     if (!$words)
         return -EINVAL;
 
-    if ($words[0] != "sr90")
+    $arg1 = strtolower($words[0]);
+    if ($arg1 != "sky" && $arg1 != "skynet")
         return -EINVAL;
     
-    $cmd = $words[1];
+    $cmd = strtolower($words[1]);
     $list_subscribers = subscribers_get_list($cmd);
     if (!count($list_subscribers))
         return 0;
