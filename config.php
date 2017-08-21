@@ -25,11 +25,6 @@ function conf_io()
 function conf_guard()
 {
     return array('sirena_io_port' => 3,
-			     'lamp_io_port' => 4,
-                 
-                 // List cam in door's IO ports 
-                 'doors' => array(6, // Kung
-                                  5), // Container 20ft
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
@@ -61,3 +56,17 @@ function conf_telegram_bot()
     return $config;
 }
 
+function conf_padlocks()
+{
+    return [
+                ['num' => 1, 'name' => 'kung', 'io_port' => 6],
+                ['num' => 2, 'name' => 'container 20ft', 'io_port' => 5],
+           ];
+}
+
+function conf_street_light()
+{
+    return [
+                ['zone' => 1, 'name' => 'all plato', 'io_port' => 4],
+           ];
+}
