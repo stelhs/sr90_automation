@@ -17,7 +17,7 @@ function print_help()
              "\tcommands:\n" .
              "\tmsg_recv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_recv make_telegram_actions.php\n" .
+             "\t\t\t $utility_name msg_recv ./make_telegram_actions.php\n" .
              "\tmsg_send <chat_id> <message_text> - Send message\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send 186579253 'hello world'\n" .
