@@ -78,7 +78,7 @@ function main($argv)
                 printf("Can't get relay state %d\n", $row['io_port']);
                 continue;
             }
-            printf("\tpadlock %s %s\n", $row['name'], ($ret == "1" ? "opened" : "close"));
+            printf("\tstree light zone %s %s\n", $row['name'], ($ret == "1" ? "enable" : "disable"));
         }
         
         break;

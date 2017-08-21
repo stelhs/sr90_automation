@@ -185,7 +185,7 @@ function get_global_status($db)
     $guard_state = get_guard_state($db);
     $balance = $modem->get_sim_balanse();
     $modem_stat = $modem->get_global_status();
-    $lighting = $mio->relay_get_state(conf_guard()['lamp_io_port']);
+    //$lighting = $mio->relay_get_state(conf_guard()['lamp_io_port']);
         
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
@@ -197,7 +197,7 @@ function get_global_status($db)
                   'balance' => $balance,
                   'radio_signal_level' => $modem_stat['signal_strength'],
                   'uptime' => $uptime,
-                  'lighting' => $lighting,
+                  'lighting' => 0, // $lighting,
                   'mdadm' => $mdstat,
                 );
 }
