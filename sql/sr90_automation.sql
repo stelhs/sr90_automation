@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `guard_alarms` (
 CREATE TABLE IF NOT EXISTS `guard_states` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `state` enum('sleep','ready') DEFAULT NULL,
-  `method` enum('site','sms','remote','cli') DEFAULT NULL,
+  `method` enum('site','sms','remote','cli','telegram') DEFAULT NULL,
   `user_id` bigint(20) NOT NULL,
   `ignore_sensors` varchar(256) NOT NULL COMMENT 'Список ID сенсоров через запятую, которые необходимо игнорировать',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
