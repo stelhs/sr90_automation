@@ -75,12 +75,10 @@ function main($argv)
 
             msg_log(LOG_NOTICE, "Guard stoped by " . $method);
 
-            // enable all cam in doors
-            foreach (conf_guard()['doors'] as $io_port) { 
-                $rc = $mio->relay_set_state($io_port, 1);
-                if ($rc < 0)
-                    printf("Can't set relay state %d\n", $io_port);
-            }
+            // open all padlocks
+            $ret = run_cmd('./padlock.php open');
+            if ($ret['rc'])
+                msg_log(LOG_ERR, "Can't open padlocks: " . $ret['log']);
 
             // two beep by sirena
             sequncer_stop(conf_guard()['sirena_io_port']);
@@ -89,8 +87,11 @@ function main($argv)
 
             /* enable lighter if night */
             $day_night = get_day_night($db);
-            if ($day_night == 'night')
-                $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
+            if ($day_night == 'night') {
+                $ret = run_cmd('./street_light.php enable');
+                if ($ret['rc'])
+                    msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+            }
 
             $state_id = $db->insert('guard_states',
                                     array('state' => 'sleep',
@@ -137,12 +138,10 @@ function main($argv)
 
             $sensors = $db->query_list('SELECT * FROM sensors');
 
-            // disable all cam in doors
-            foreach (conf_guard()['doors'] as $io_port) { 
-                $rc = $mio->relay_set_state($io_port, 0);
-                if ($rc < 0)
-                    printf("Can't set relay state %d\n", $io_port);
-            }
+            // close all padlocks
+            $ret = run_cmd('./padlock.php close');
+            if ($ret['rc'])
+                msg_log(LOG_ERR, "Can't open padlocks: " . $ret['log']);
 
             // check for incorrect sensor value state
             $ignore_sensors_list = [];
@@ -166,8 +165,11 @@ function main($argv)
             }
 
             /* disable lighter if this disable */
-            if (conf_guard()['light_mode'] != 'auto')
-                $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
+            if (conf_guard()['light_mode'] != 'auto') {
+                $ret = run_cmd('./street_light.php disable');
+                if ($ret['rc'])
+                    msg_log(LOG_ERR, "Can't disable street_light: " . $ret['log']);
+            }
 
             $ignore_sensors_list_names = array();
             foreach ($ignore_sensors_list as $sensor_id) {
