@@ -27,7 +27,9 @@ function main($argv) {
     $mio = new Mod_io($db);
 
     if ($curr_mode == 'day') {
-        $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
+        $ret = run_cmd('./street_light.php disable');
+        if ($ret['rc'])
+            msg_log(LOG_ERR, "Can't disable street_light: " . $ret['log']);
         return 0;
     }
 
@@ -38,7 +40,10 @@ function main($argv) {
     if ($guard_info['state'] == 'ready' && conf_guard()['light_mode'] == 'by_sensors')
         return 0;
 
-    $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
+    $ret = run_cmd('./street_light.php enable');
+    if ($ret['rc'])
+        msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+
     return 0;
 }
 
