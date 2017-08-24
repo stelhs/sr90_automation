@@ -21,6 +21,9 @@ function print_help()
              "\tmsg_send <chat_id> <message_text> - Send message\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send 186579253 'hello world'\n" .
+             "\tmsg_send_all <message_text> - Send message in all chats\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name msg_send_all 'hello world'\n" .
     "\n\n";
 }
 
@@ -91,6 +94,20 @@ function main($argv)
         $msg = strtolower(trim($argv[3]));
 
         $telegram->send_message($chat_id, $msg);
+        break;
+        
+    case 'msg_send_all':
+        if (!isset($argv[2])) {
+            msg_log(LOG_ERR, "incorrect params");
+            return -EINVAL;
+        }
+        
+        $msg = strtolower(trim($argv[2]));
+        
+        $chat_list = $db->query_list("SELECT * FROM telegram_chats");
+        foreach ($chat_list as $row)
+            $telegram->send_message($row['chat_id'], $msg);
+        
         break;
 
     default:
