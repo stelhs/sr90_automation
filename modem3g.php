@@ -48,6 +48,16 @@ class Modem3G {
 
     function send_sms($pnone_number, $text)
     {
+        // remove stored outgoing sms
+        $rows = $this->get_sms_list(2); 
+        if (is_array($rows) && count($rows)) {
+            foreach ($rows as $row) {
+                $sms_index = $row['content']['Index'][0]['content'];
+                printf("remove outgoing sms index=%d\n", $sms_index);
+                $this->remove_sms($sms_index);
+            }
+        }
+
         $query =  '<Index>-1</Index>' .
                   '<Phones>' .
                       '<Phone>' . $pnone_number . '</Phone>' .
@@ -126,12 +136,13 @@ class Modem3G {
         return -EPARSE;
     }
 
-
-    function check_for_new_sms()
+    function get_sms_list($box_type)
     {
+        // $box_type: 1 - incomming, 2 - outgoing
+
         $query =    '<PageIndex>1</PageIndex>' .
-                    '<ReadCount>20</ReadCount>' .
-                    '<BoxType>1</BoxType>' .
+                    '<ReadCount>50</ReadCount>' .
+                    '<BoxType>' . $box_type . '</BoxType>' .
                     '<SortType>0</SortType>' .
                     '<Ascending>0</Ascending>' .
                     '<UnreadPreferred>0</UnreadPreferred>';
@@ -149,8 +160,18 @@ class Modem3G {
         if (!$count_sms)
             return [];
 
-        $rows = $data['response']['content']['Messages'][0]['content']['Message'];
-        
+        return $data['response']['content']['Messages'][0]['content']['Message'];
+    }
+
+    function check_for_new_sms()
+    {
+        $rows = $this->get_sms_list(1); 
+        if (!is_array($rows))
+            return $rows;
+
+        if (!count($rows))
+            return [];
+
         $sms_list = [];
         $row_num = 0;
         foreach ($rows as $row) {
