@@ -58,9 +58,8 @@ function mk_help()
 {
     global $commands;
 
-    $msg = "Возможные варианты: \n";
     foreach($commands as $row) {
-        $msg .= sprintf("   - '%s'\n", $row['cmd'][0]);
+        $msg .= sprintf("   - 'skynet %s'\n", $row['cmd'][0]);
         if (isset($row['wr']))
             for ($i = 0; $i < $row['wr']; $i++)
                 $msg .= "\n";
@@ -94,10 +93,20 @@ function main($argv) {
     if (!$words)
         return -EINVAL;
 
-    $arg1 = strtolower($words[0]);
-    unset($words[0]);
+    $arg1 = mb_strtolower($words[0], 'utf8');
+    $arg2 = mb_strtolower($words[1], 'utf8');
     if ($arg1 != "skynet" && $arg1 != "скайнет")
         return -EINVAL;
+
+    if ($arg2 == "голос") {
+        $telegram->send_message($chat_id, "Слушаю вас внимательно\n", $msg_id);
+        return 0;
+    }
+
+    if ($arg2 == "команды" || $arg2 == "что умеешь?" || $arg2 == "help") {
+        $telegram->send_message($chat_id, "Я умею следующее:\n\n" . mk_help(), $msg_id);
+        return 0;
+    }
     
     $query = strtolower(array_to_string($words, ' '));
     printf("query = %s\n", $query);
@@ -118,8 +127,12 @@ function main($argv) {
     printf("args = %s\n", $args);
 
     if (!$script) {
-        msg_log(LOG_ERR, "can't recognize query\n");
-        $telegram->send_message($chat_id, "Что сделать?\n\n" . mk_help(), $msg_id);
+        if (!$arg2)
+            $telegram->send_message($chat_id, "Что сделать?\n\nВозможные варианты:\n" . mk_help(), $msg_id);
+        else {
+            $telegram->send_message($chat_id, "Не поняла\n\n", $msg_id);
+            msg_log(LOG_ERR, "can't recognize query\n");
+        }
         return -EINVAL;
     }
 
@@ -130,6 +143,7 @@ function main($argv) {
     if ($ret['rc']) {
         msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
                                  $script, $ret['log']));
+        $telegram->send_message($chat_id, "Ошибка: " . $ret['log'], $msg_id);
         return -EINVAL;
     }
 

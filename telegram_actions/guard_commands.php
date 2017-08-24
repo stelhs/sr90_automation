@@ -32,6 +32,12 @@ function main($argv) {
     }
 
     $telegram = new Telegram_api($db);
+
+    if ($user_id == 0) {
+            $telegram->send_message($chat_id,
+                "У вас недостаточно прав чтобы выполнить эту операцию\n", $msg_id);
+            return 0;
+    }
     
     switch ($cmd) {
     case 'on':
@@ -40,7 +46,7 @@ function main($argv) {
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
-        if ($ret['rc'])
+        if ($ret['rc'] == '0')
             $telegram->send_message($chat_id, "Охрана включена\n", $msg_id);
         else
             $telegram->send_message($chat_id,
@@ -53,7 +59,7 @@ function main($argv) {
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
-        if ($ret['rc'])
+        if ($ret['rc'] == '0')
             $telegram->send_message($chat_id, "Охрана отключена\n", $msg_id);
         else
             $telegram->send_message($chat_id,
@@ -61,8 +67,6 @@ function main($argv) {
         break;
     }
     
-    $telegram->send_message($chat_id, $msg, $msg_id);
-
     return 0;
 }
 

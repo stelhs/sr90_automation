@@ -194,7 +194,8 @@ function main($argv)
                 goto out;
             }
 
-            if ($with_sms || count($ignore_sensors_list_names))
+            if (($with_sms || count($ignore_sensors_list_names)) && 
+                                                    $argv[3] != 'telegram')
                 notify_send_by_sms('guard_enable',
                                     $list_phones,
                                     array('method' => $method,
