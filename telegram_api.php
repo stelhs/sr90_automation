@@ -23,6 +23,7 @@ class Telegram_api {
                 'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
                 'method'  => 'POST',
                 'content' => $query,
+                'timeout' => 60,
             )
         );
         $context = stream_context_create($options);
@@ -52,7 +53,7 @@ class Telegram_api {
         $last_update_id = $this->get_last_update_id();
         $resp = $this->post_request('getUpdates', ['offset' => $last_update_id + 1,
                                                    'limit' => 10,
-                                                   'timeout' => 10]);
+                                                   'timeout' => 30]);
         if (!is_array($resp)) {
             msg_log(LOG_ERR, "telegram: Can't make POST request " . $resp);
             return $resp;

@@ -64,6 +64,9 @@ function main($argv)
             if (is_array($user))
                 $user_id = $user['id'];
 
+            if ($user_id == 0)
+                printf("unrecognized user ID: %d\n", $msg['from_id']);
+
             $ret = run_cmd(sprintf("%s '%d' '%s' '%s' '%s'", 
                                    $action_script, $user_id, $msg['chat_id'],
                                    $msg['text'], $msg['msg_id']));
