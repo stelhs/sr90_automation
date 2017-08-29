@@ -16,7 +16,7 @@ function main($argv) {
 
     file_put_contents(MDSTAT_FILE, $curr_stat['mode']);
 
-    serv_ctrl_send_sms('mdadm', ['groups' => ['sms_observer']], $curr_stat);
+    sms_send('mdadm', ['groups' => ['sms_observer']], $curr_stat);
     return 0;
 }
 

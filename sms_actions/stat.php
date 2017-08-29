@@ -30,11 +30,10 @@ function main($argv) {
     if (!$user_id)
         return -EINVAL;
     
-    $stat = get_formatted_global_status($db);
-    serv_ctrl_send_sms('status', 
-                       ['user_id' => $user_id, 
-                        'groups' => ['sms_observer']],
-                       $stat);
+    $stat = format_global_status_for_sms(get_global_status($db));
+    sms_send('status', 
+             ['user_id' => $user_id, 
+              'groups' => ['sms_observer']], $stat);
 
     return 0;
 }

@@ -71,14 +71,12 @@ function main($argv)
 
             $user = user_get_by_id($db, $user_id);
             $user_name = $user['name'];
-            $user_phone = $user['phones'][0];
 
             msg_log(LOG_NOTICE, "Guard stoped by " . $method);
 
             // open all padlocks
             $ret = run_cmd('./padlock.php open');
-            if ($ret['rc'])
-                msg_log(LOG_ERR, "Can't open padlocks: " . $ret['log']);
+            printf("open all padlocks: %s\n", $ret['log']);
 
             // two beep by sirena
             sequncer_stop(conf_guard()['sirena_io_port']);
@@ -89,8 +87,7 @@ function main($argv)
             $day_night = get_day_night($db);
             if ($day_night == 'night') {
                 $ret = run_cmd('./street_light.php enable');
-                if ($ret['rc'])
-                    msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+                printf("enable lighter: %s\n", $ret['log']);
             }
 
             $state_id = $db->insert('guard_states',
@@ -98,11 +95,7 @@ function main($argv)
                                           'user_id' => $user_id,
                                           'method' => $method));
 
-            $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
-            if ($user_phone && !in_array($user_phone, $list_phones))
-                $list_phones[] = $user_phone;
-
-            $stat_text = get_formatted_global_status($db);
+            $stat_text = format_global_status_for_sms(get_global_status($db));
             printf("Guard set sleep\n");
 
             if ($method == 'cli') {
@@ -111,12 +104,12 @@ function main($argv)
             }
 
             if ($with_sms)
-                notify_send_by_sms('guard_disable',
-                                   $list_phones,
-                                   array('method' => $method,
-                                         'user_name' => $user_name,
-                                         'state_id' => $state_id,
-                                         'global_status' => $stat_text));
+                sms_send('guard_disable',
+                         ['user_id' => $user_id, 'groups' => ['sms_observer']],
+                         ['method' => $method,
+                          'user_name' => $user_name,
+                          'state_id' => $state_id,
+                          'global_status' => $stat_text]);
 
             goto out;
 
@@ -132,25 +125,29 @@ function main($argv)
 
             $user = user_get_by_id($db, $user_id);
             $user_name = $user['name'];
-            $user_phone = $user['phones'][0];
 
             msg_log(LOG_NOTICE, "Guard started by " . $method);
 
-            $sensors = $db->query_list('SELECT * FROM sensors');
-
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
-            if ($ret['rc'])
-                msg_log(LOG_ERR, "Can't open padlocks: " . $ret['log']);
+            printf("close all padlocks: %s\n", $ret['log']);
 
             // check for incorrect sensor value state
+            $sensors = conf_guard()['sensors'];
             $ignore_sensors_list = [];
             foreach ($sensors as $sensor) {
                 if (get_sensor_locking_mode($db, $sensor['id']) == 'lock')
                         continue;
 
-                $port_state = $mio->input_get_state($sensor['port']);
-                if ($port_state != $sensor['normal_state'])
+                $total_ports_cnt = 0;
+                $incorrect_ports_cnt = 0;
+                foreach ($sensor['io'] as $row) {
+                    $total_ports_cnt++;
+                    $state = $mio->input_get_state($row['port']);
+                    if ($state != $row['normal_state'])
+                        $incorrect_ports_cnt++;
+                }
+                if ($incorrect_ports_cnt == $total_ports_cnt)
                     $ignore_sensors_list[] = $sensor['id'];
             }
 
@@ -167,8 +164,7 @@ function main($argv)
             /* disable lighter if this disable */
             if (conf_guard()['light_mode'] != 'auto') {
                 $ret = run_cmd('./street_light.php disable');
-                if ($ret['rc'])
-                    msg_log(LOG_ERR, "Can't disable street_light: " . $ret['log']);
+                printf("disable lighter: %s\n", $ret['log']);
             }
 
             $ignore_sensors_list_names = array();
@@ -183,11 +179,7 @@ function main($argv)
                                           'user_id' => $user_id,
                                           'ignore_sensors' => array_to_string($ignore_sensors_list)));
 
-            $list_phones = get_users_phones_by_access_type($db, 'sms_observer');
-            if ($user_phone && !in_array($user_phone, $list_phones))
-            $list_phones[] = $user_phone;
-
-            $stat_text = get_formatted_global_status($db);
+            $stat_text = format_global_status_for_sms(get_global_status($db));
             printf("Guard set ready\n");
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);
@@ -196,13 +188,13 @@ function main($argv)
 
             if (($with_sms || count($ignore_sensors_list_names)) && 
                                                     $argv[3] != 'telegram')
-                notify_send_by_sms('guard_enable',
-                                    $list_phones,
-                                    array('method' => $method,
-                                          'user_name' => $user_name,
-                                          'ignore_sensors' => $ignore_sensors_list_names,
-                                          'state_id' => $state_id,
-                                          'global_status' => $stat_text));
+                sms_send('guard_enable',
+                         ['user_id' => $user_id, 'groups' => ['sms_observer']],
+                         array('method' => $method,
+                               'user_name' => $user_name,
+                               'ignore_sensors' => $ignore_sensors_list_names,
+                               'state_id' => $state_id,
+                               'global_status' => $stat_text));
 
             goto out;
 
@@ -218,17 +210,17 @@ function main($argv)
             $rc = -EINVAL;
             goto out;
         }
-        $sensor_action_id = $argv[2];
+        $guard_action_id = $argv[2];
 
-        $action = $db->query('SELECT * FROM sensor_actions WHERE id = ' . $sensor_action_id);
+        $action = $db->query('SELECT * FROM guard_actions WHERE id = ' . $guard_action_id);
         if (!is_array($action)) {
-            printf("Invalid arguments: Incorrect sensor_action_id. sensor_action_id not found in DB\n");
+            printf("Invalid arguments: Incorrect guard_action_id. guard_action_id not found in DB\n");
             $rc = -EINVAL;
             goto out;
         }
 
         // run sirena
-        $sensor = sensor_get_by_io_id($db, $action['sense_id']);
+        $sensor = sensor_get_by_io_id($action['sense_id']);
         sequncer_stop(conf_guard()['sirena_io_port']);
         sequncer_start(conf_guard()['sirena_io_port'],
         array($sensor['alarm_time'] * 1000, 0));
@@ -243,26 +235,24 @@ function main($argv)
                            array($light_interval, 0));
         }
 
-        // store alarm to database
-        $alarm_action_id = $db->insert('guard_alarms',
-        array('action_id' => $sensor_action_id));
-
         // make snapshots
-        run_cmd(sprintf('./snapshot.php %s %d_',
-                        conf_guard()['alarm_snapshot_dir'], $alarm_action_id));
+        $ret = run_cmd(sprintf('./snapshot.php %s %d_',
+                        conf_guard()['alarm_snapshot_dir'], $guard_action_id));
+        printf("make snapshots: %s\n", $ret['log']);
+
         // send SMS
-        $list_phones = get_all_users_phones_by_access_type($db, 'guard_alarm');
-        notify_send_by_sms('alarm',
-                           $list_phones,
-                           array('sensor' => $sensor['name'],
-                                 'action_id' => $alarm_action_id));
+        sms_send('alarm',
+                 ['groups' => ['guard_alarm']],
+                 ['sensor' => $sensor['zone'],
+                  'action_id' => $guard_action_id]);
+
         printf("Guard set Alarm\n");
         goto out;
 
     case 'stat':
         $guard_state = get_guard_state($db);
         dump($guard_state);
-        $stat_text = get_formatted_global_status($db);
+        $stat_text = format_global_status_for_sms(get_global_status($db));
         printf("%s\n", $stat_text);
         goto out;
     }

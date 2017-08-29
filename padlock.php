@@ -50,7 +50,7 @@ function main($argv)
 
         foreach (conf_padlocks() as $row) {
             if ($padlock_num && $padlock_num != $row['num'])
-                contnue;    
+                continue;
 
             $rc = $mio->relay_set_state($row['io_port'], 1);
             if ($rc < 0)
@@ -63,7 +63,7 @@ function main($argv)
 
         foreach (conf_padlocks() as $row) {
             if ($padlock_num && $padlock_num != $row['num'])
-                contnue;    
+                continue;
 
             $rc = $mio->relay_set_state($row['io_port'], 0);
             if ($rc < 0)

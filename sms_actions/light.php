@@ -24,8 +24,6 @@ function main($argv) {
         return -EBASE;
     }
     
-    $mio = new Mod_io($db);
-
     $sms_date = trim($argv[1]);
     $user_id = trim($argv[2]);
     $sms_text = trim($argv[3]);
@@ -37,17 +35,21 @@ function main($argv) {
 
     switch ($mode) {
     case "on":
-        $mio->relay_set_state(conf_guard()['lamp_io_port'], 1);
-        serv_ctrl_send_sms('lighting_on',
-                           ['user_id' => $user_id, 
-                            'groups' => ['sms_observer']]);
+        $ret = run_cmd('./street_light.php enable');
+        if ($ret['rc'])
+            msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+        sms_send('lighting_on',
+                 ['user_id' => $user_id, 
+                  'groups' => ['sms_observer']]);
         break;
 
     case "off":
-        $mio->relay_set_state(conf_guard()['lamp_io_port'], 0);
-        serv_ctrl_send_sms('lighting_off',
-                           ['user_id' => $user_id, 
-                            'groups' => ['sms_observer']]);
+        $ret = run_cmd('./street_light.php disable');
+        if ($ret['rc'])
+            msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+        sms_send('lighting_off',
+                 ['user_id' => $user_id, 
+                  'groups' => ['sms_observer']]);
         break;
         
     default:

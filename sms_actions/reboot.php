@@ -19,9 +19,9 @@ function main($argv) {
     $user_id = trim($argv[2]);
     $sms_text = trim($argv[3]);
 
-    serv_ctrl_send_sms('reboot_sms',
-                       ['user_id' => $user_id, 
-                        'groups' => ['sms_observer']]);
+    sms_send('reboot_sms',
+             ['user_id' => $user_id, 
+              'groups' => ['sms_observer']]);
     run_cmd('halt');
     return 0;
 }

@@ -48,6 +48,11 @@ class Modem3G {
 
     function send_sms($pnone_number, $text)
     {
+        if (DISABLE_HW) {
+            printf("modem.send_sms %s, %s\n", $pnone_number, $text);
+            return 0;
+        }
+
         // remove stored outgoing sms
         $rows = $this->get_sms_list(2); 
         if (is_array($rows) && count($rows)) {
@@ -85,6 +90,11 @@ class Modem3G {
 
     function send_ussd($text)
     {
+        if (DISABLE_HW) {
+            printf("modem.send_ussd %s\n", $text);
+            return 0;
+        }
+
         $query = '<content>' . $text . '</content>' .
                  '<codeType>CodeType</codeType>';
 
@@ -106,6 +116,11 @@ class Modem3G {
 
     function check_for_new_ussd()
     {
+        if (DISABLE_HW) {
+            printf("modem.check_for_new_ussd\n");
+            return 0;
+        }
+
         $data = $this->get_request('/api/ussd/get');
         if ($data < 0)
             return $data;
@@ -119,6 +134,11 @@ class Modem3G {
 
     function remove_sms($sms_index)
     {
+        if (DISABLE_HW) {
+            printf("modem.remove_sms %d\n", $sms_index);
+            return 0;
+        }
+
         $query = '<Index>' . $sms_index . '</Index>';
 
         $data = $this->post_request('/api/sms/delete-sms', $query);
@@ -138,6 +158,11 @@ class Modem3G {
 
     function get_sms_list($box_type)
     {
+        if (DISABLE_HW) {
+            printf("modem.get_sms_list\n");
+            return [];
+        }
+
         // $box_type: 1 - incomming, 2 - outgoing
 
         $query =    '<PageIndex>1</PageIndex>' .
@@ -187,8 +212,21 @@ class Modem3G {
         return $sms_list;
     }
 
-    function get_global_status()
+    function get_status()
     {
+        if (DISABLE_HW) {
+            printf("modem.get_status\n");
+            $info = [];
+            $info['connection_status'] = '';
+            $info['signal_strength'] = '';
+            $info['signal_icon'] = '';
+            $info['cur_net_type'] = '';
+            $info['wan_ip_addr'] = '';
+            $info['primary_dns'] = '';
+            $info['secondary_dns'] = '';
+            return $info; 
+        }
+
         $data = $this->get_request('/api/monitoring/status');
         if ($data < 0)
             return $data;
@@ -209,6 +247,20 @@ class Modem3G {
 
     function get_traffic_statistics()
     {
+        if (DISABLE_HW) {
+            printf("modem.get_traffic_statistics\n");
+            $info = [];
+            $info['curr_connect_time'] = '';
+            $info['curr_upload'] = '';
+            $info['curr_download'] = '';
+            $info['curr_download_rate'] = '';
+            $info['curr_upload_rate'] = '';
+            $info['total_upload'] = '';
+            $info['total_download'] = '';
+            $info['total_connect_time'] = '';
+            return $info; 
+        }
+
         $data = $this->get_request('/api/monitoring/traffic-statistics');
         if ($data < 0)
             return $data;
@@ -230,6 +282,11 @@ class Modem3G {
 
     function reset_traffic_statistics()
     {
+        if (DISABLE_HW) {
+            printf("modem.reset_traffic_statistics\n");
+            return 0;
+        }
+
         $query = '<ClearTraffic>1</ClearTraffic>';
 
         $data = $this->post_request('/api/monitoring/clear-traffic', $query);
@@ -250,6 +307,17 @@ class Modem3G {
 
     function check_sended_sms_status()
     {
+        if (DISABLE_HW) {
+            printf("modem.check_sended_sms_status\n");
+            $info = [];
+            $info['curr_phone'] = '';
+            $info['success_phone'] = '';
+            $info['fail_phone'] = '';
+            $info['total_cnt'] = '';
+            $info['curr_index'] = '';
+            return $info;
+        }
+
         $data = $this->get_request('/api/sms/send-status');
         if ($data < 0)
             return $data;
@@ -268,6 +336,11 @@ class Modem3G {
     
     function get_sim_balanse()
     {
+        if (DISABLE_HW) {
+            printf("modem.get_sim_balanse\n");
+            return '0';
+        }
+
         $ret = $this->send_ussd('*100#');
         if ($ret) {
             msg_log(LOG_ERR, "Can't get Balanse: " . $ret);

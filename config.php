@@ -3,6 +3,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 define("CONFIG_PATH", "/etc/sr90_automation/");
+define("DISABLE_HW", 0);
 
 function conf_global()
 {
@@ -24,7 +25,35 @@ function conf_io()
 
 function conf_guard()
 {
-    return array('sirena_io_port' => 3,
+    return array('sensors' => [
+                                ['id' => '1',
+                                 'zone' => 'зона 1',
+                                 'diff_interval' => 10,
+                                 'alarm_time' => 30,
+                                 'run_lighter' => 1,
+                                 'io' => [['port' => 2,
+                                          'normal_state' => 1],
+                                          ['port' => 4,
+                                           'normal_state' => 1]]
+                                ],
+                                ['id' => '2',
+                                 'zone' => 'Датчик дверцы ВРУ',
+                                 'diff_interval' => 10,
+                                 'alarm_time' => 300,
+                                 'run_lighter' => 1,
+                                 'io' => [['port' => 10,
+                                          'normal_state' => 1]]
+                                ],
+                                ['id' => '3',
+                                 'zone' => 'Датчик двери Кунга',
+                                 'diff_interval' => 10,
+                                 'alarm_time' => 300,
+                                 'run_lighter' => 1,
+                                 'io' => [['port' => 9,
+                                          'normal_state' => 1]]
+                                ]
+                               ],
+                 'sirena_io_port' => 3,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */

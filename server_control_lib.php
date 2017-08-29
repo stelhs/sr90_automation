@@ -6,7 +6,7 @@ require_once 'modem3g.php';
 require_once 'mod_io_lib.php';
 
 
-function serv_ctrl_send_sms($type, $recepient, $args = array())
+function sms_send($type, $recepient, $args = array())
 {
     $db = new Database;
     $rc = $db->connect(conf_db());
@@ -25,11 +25,11 @@ function serv_ctrl_send_sms($type, $recepient, $args = array())
         break;
         
     case 'lighting_on':
-        $sms_text = sprintf("Освещение участка включено.");
+        $sms_text = sprintf("Освещение %s включено.", $args['name']);
         break;
 
     case 'lighting_off':
-        $sms_text = sprintf("Освещение участка отключено.");
+        $sms_text = sprintf("Освещение %s отключено.", $args['name']);
         break;
 
     case 'mdadm':
@@ -68,6 +68,37 @@ function serv_ctrl_send_sms($type, $recepient, $args = array())
             $sms_text = "Отключено внешнее питание";
             break;
         }
+        break;
+
+    case 'alarm':
+        $sms_text = sprintf("Внимание!\nСработала %s, событие: %d", 
+                                $args['sensor'], $args['action_id']);
+        break;
+
+    case 'guard_disable':
+        $sms_text = sprintf("Охрана отключена. Метод: %s, state_id: %s.",
+                            $args['method'], $args['state_id']);
+
+        if (isset($args['user_name']) && $args['user_name'])
+            $sms_text .= sprintf(" Отключил: %s.", $args['user_name']);
+
+        if (isset($args['global_status']))
+            $sms_text .= $args['global_status'];
+        break;
+
+    case 'guard_enable':
+        $sms_text = sprintf("Охрана включена. Метод: %s, state_id: %s.",
+                            $args['method'], $args['state_id']);
+
+        if (isset($args['user_name']) && $args['user_name'])
+            $sms_text .= sprintf(" Включил: %s.", $args['user_name']);
+
+        if (count($args['ignore_sensors'])) {
+            $sms_text .= sprintf(" Игнор: %s.",
+                                 array_to_string($args['ignore_sensors']));
+        }
+        if (isset($args['global_status']))
+            $sms_text .= $args['global_status'];
         break;
 
     default: 
@@ -182,10 +213,11 @@ function get_global_status($db)
     $modem = new Modem3G(conf_modem()['ip_addr']);
     $mio = new Mod_io($db);
     
-    $guard_state = get_guard_state($db);
+    $guard_stat = get_guard_state($db);
     $balance = $modem->get_sim_balanse();
-    $modem_stat = $modem->get_global_status();
-    //$lighting = $mio->relay_get_state(conf_guard()['lamp_io_port']);
+    $modem_stat = $modem->get_status();
+    $lighting_stat = get_street_light_stat($db);
+    $padlocks_stat = get_padlocks_stat($db);
         
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
@@ -193,68 +225,162 @@ function get_global_status($db)
 
     $mdstat = get_mdstat();
 
-    return array('guard_state' => $guard_state['state'],
-                  'balance' => $balance,
-                  'radio_signal_level' => $modem_stat['signal_strength'],
-                  'uptime' => $uptime,
-                  'lighting' => 0, // $lighting,
-                  'mdadm' => $mdstat,
-                );
+    return ['guard_stat' => $guard_stat,
+            'balance' => $balance,
+            'modem_stat' => $modem_stat,
+            'uptime' => $uptime,
+            'lighting_stat' => $lighting_stat,
+            'padlocks_stat' => $padlocks_stat,
+            'mdadm' => $mdstat];
 }
 
 
-function get_formatted_global_status($db)
+function format_global_status_for_sms($stat)
 {
-    $stat = get_global_status($db);
-    switch ($stat['guard_state']) {
-    case 'sleep':
-        $stat['guard_state'] = "отключена";
-        break;
+    $text = '';
+    if (isset($stat['guard_stat'])) {
+        switch ($stat['guard_stat']['state']) {
+        case 'sleep':
+            $mode = "отключена";
+            break;
 
-    case 'ready':
-        $stat['guard_state'] = "включена";
-        break;
+        case 'ready':
+            $mode = "включена";
+            break;
+        }
+        $text .= sprintf("Охрана: %s, ", $mode); 
     }
 
-    switch ($stat['lighting']) {
-    case 0:
-        $stat['lighting'] = "отключено";
-        break;
+    if (isset($stat['lighting_stat'])) {
+        foreach ($stat['lighting_stat'] as $row) {
+            switch ($row['state']) {
+            case 0:
+                $mode = "отключено";
+                break;
 
-    case 1:
-        $stat['lighting'] = "включено";
-        break;
+            case 1:
+                $mode = "включено";
+                break;
+            }
+            $text .= sprintf("Освещение: %s %s, ", $row['name'], $mode);
+        }
+    }
+    if (isset($stat['padlocks_stat'])) {
+        foreach ($stat['padlocks_stat'] as $row) {
+            switch ($row['state']) {
+            case 0:
+                $mode = "закрыт";
+                break;
+
+            case 1:
+                $mode = "открыт";
+                break;
+            }
+            $text .= sprintf("Замок: %s %s, ", $row['name'], $mode);
+        }
     }
 
-    switch ($stat['mdadm']['mode']) {
-    case "normal":
-        $raid_stat = "исправен";
-        break;
+    if (isset($stat['mdadm'])) {
+        switch ($stat['mdadm']['mode']) {
+        case "normal":
+            $mode = "исправен";
+            break;
 
-    case "no_exist":
-        $raid_stat = "отсутсвует";
-        break;
+        case "no_exist":
+            $mode = "отсутсвует";
+            break;
 
-    case "resync":
-        $raid_stat = "синхронизируется " . $mdstat['progress'] . '%';
-        break;
+        case "resync":
+            $mode = "синхронизируется " . $mdstat['progress'] . '%';
+            break;
 
-    case "recovery":
-        $raid_stat = "восстанавливается " . $mdstat['progress'] . '%';
-        break;
+        case "recovery":
+            $mode = "восстанавливается " . $mdstat['progress'] . '%';
+            break;
 
-    case "damage":
-        $raid_stat = "поврежден";
-        break;
+        case "damage":
+            $mode = "поврежден";
+            break;
+        }
+        $text .= sprintf("RAID1: %s, ", $mode);
     }
 
-    return sprintf("Охрана: %s, Баланс счета: %s, Уровень сигнала: %s, uptime: %s, Освещение: %s, RAID1: %s.", 
-                   $stat['guard_state'],
-                   $stat['balance'],
-                   $stat['radio_signal_level'],
-                   $stat['uptime'],
-                   $stat['lighting'],
-                   $raid_stat);
+    return $text;
+}
+
+
+function format_global_status_for_telegram($stat)
+{
+    $text = '';
+    if (isset($stat['guard_stat'])) {
+        switch ($stat['guard_stat']['guard_state']) {
+        case 'sleep':
+            $mode = "отключена";
+            break;
+
+        case 'ready':
+            $mode = "включена";
+            break;
+        }
+        $text .= sprintf("Охрана: %s\n", $mode); 
+    }
+
+    if (isset($stat['lighting_stat'])) {
+        foreach ($stat['lighting_stat'] as $row) {
+            switch ($row['state']) {
+            case 0:
+                $mode = "отключено";
+                break;
+
+            case 1:
+                $mode = "включено";
+                break;
+            }
+            $text .= sprintf("Освещение: %s %s\n", $row['name'], $mode);
+        }
+    }
+
+    if (isset($stat['padlocks_stat'])) {
+        foreach ($stat['padlocks_stat'] as $row) {
+            switch ($row['state']) {
+            case 0:
+                $mode = "закрыт";
+                break;
+
+            case 1:
+                $mode = "открыт";
+                break;
+            }
+            $text .= sprintf("Замок: %s %s\n", $row['name'], $mode);
+        }
+    }
+
+    if (isset($stat['mdadm'])) {
+        switch ($stat['mdadm']['mode']) {
+        case "normal":
+            $mode = "исправен";
+            break;
+
+        case "no_exist":
+            $mode = "отсутсвует";
+            break;
+
+        case "resync":
+            $mode = "синхронизируется " . $mdstat['progress'] . '%';
+            break;
+
+        case "recovery":
+            $mode = "восстанавливается " . $mdstat['progress'] . '%';
+            break;
+
+        case "damage":
+            $mode = "поврежден";
+            break;
+        }
+        $text .= sprintf("RAID1: %s\n", $mode);
+    }
+
+    return $text;
 }
 
 
@@ -287,4 +413,37 @@ function get_mdstat()
         return array('mode' => 'damage');
 
     return array('mode' => 'parse_err');
+}
+
+
+function get_street_light_stat($db)
+{
+    $mio = new Mod_io($db);
+
+    $report = [];
+    foreach (conf_street_light() as $zone) {
+        $zone['state'] = $mio->relay_get_state($zone['io_port']);
+        if ($zone['state'] < 0)
+            printf("Can't get relay state %d\n", $zone['io_port']);
+
+        $report[] = $zone; 
+    }
+
+    return $report; 
+}
+
+function get_padlocks_stat($db)
+{
+    $mio = new Mod_io($db);
+
+    $report = [];
+    foreach (conf_padlocks() as $zone) {
+        $zone['state'] = $mio->relay_get_state($zone['io_port']);
+        if ($zone['state'] < 0)
+            printf("Can't get relay state %d\n", $zone['io_port']);
+
+        $report[] = $zone; 
+    }
+
+    return $report;
 }

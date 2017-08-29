@@ -35,9 +35,9 @@ function main($argv) {
     if ($guard_info['state'] == 'sleep')
         return 0;
 
-    serv_ctrl_send_sms('external_power',
-                       ['groups' => ['sms_observer']], 
-                       ['mode' => $curr_stat]);
+    sms_send('external_power',
+             ['groups' => ['sms_observer']], 
+             ['mode' => $curr_stat]);
     return 0;
 }
 

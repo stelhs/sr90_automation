@@ -3,54 +3,6 @@
 require_once 'config.php';
 require_once 'modem3g.php';
 
-function notify_send_by_sms($type, $phones_list, $args)
-{
-    switch ($type) {
-    case 'alarm':
-        $sms_text = sprintf("Внимание!\nСработал %s, событие: %d", 
-                                $args['sensor'], $args['action_id']);
-        break;
-
-    case 'guard_disable':
-        $sms_text = sprintf("Охрана отключена. Метод: %s, state_id: %s.",
-                            $args['method'], $args['state_id']);
-
-        if (isset($args['user_name']) && $args['user_name'])                            
-            $sms_text .= sprintf(" Отключил: %s.", $args['user_name']);
-            
-        if (isset($args['global_status']))
-            $sms_text .= $args['global_status'];
-        break;
-
-    case 'guard_enable':
-        $sms_text = sprintf("Охрана включена. Метод: %s, state_id: %s.",
-                            $args['method'], $args['state_id']);
-
-        if (isset($args['user_name']) && $args['user_name'])
-            $sms_text .= sprintf(" Включил: %s.", $args['user_name']);
-
-        if (count($args['ignore_sensors'])) {
-            $sms_text .= sprintf(" Игнор: %s.",
-                                 array_to_string($args['ignore_sensors']));
-        }
-        if (isset($args['global_status']))
-            $sms_text .= $args['global_status'];
-        break;
-
-    default: 
-        return -EINVAL;
-    }
-
-    $modem = new Modem3G(conf_modem()['ip_addr']);
-
-    foreach ($phones_list as $phone) {
-        $ret = $modem->send_sms($phone, $sms_text);
-        if ($ret) {
-            msg_log(LOG_ERR, "Can't send SMS: " . $ret);
-            return -EBUSY;
-        }
-    }
-}
 
 function get_sensor_locking_mode($db, $sensor_id)
 {
@@ -62,12 +14,24 @@ function get_sensor_locking_mode($db, $sensor_id)
 
 function sensor_get_by_io_port($db, $port)
 {
-    return $db->query('SELECT * FROM sensors WHERE port = '. $port);
+    $sensors = conf_guard()['sensors'];
+    foreach ($sensors as $sensor) {
+        foreach ($sensor['io'] as $rows) {
+            if ($rows['port'] == $port)
+                return $sensor;
+        }
+    }
+    return null;
 }
 
-function sensor_get_by_io_id($db, $id)
+function sensor_get_by_io_id($id)
 {
-    return $db->query('SELECT * FROM sensors WHERE id = '. $id);
+    $sensors = conf_guard()['sensors'];
+    foreach ($sensors as $sensor) {
+        if ($sensor['id'] == $id)
+            return $sensor;
+    }
+    return null;
 }
 
 
@@ -89,3 +53,4 @@ function get_guard_state($db)
 
     return $data;
 }
+
