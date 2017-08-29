@@ -59,18 +59,19 @@ CREATE TABLE IF NOT EXISTS `ext_power_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `guard_alarms`
+-- Table structure for table `guard_actions`
 --
 
-CREATE TABLE IF NOT EXISTS `guard_alarms` (
+CREATE TABLE IF NOT EXISTS `guard_actions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `action_id` bigint(20) NOT NULL,
+  `sense_id` bigint(20) NOT NULL,
+  `guard_state` enum('sleep','ready') DEFAULT NULL,
+  `alarm` tinyint(1) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `action_id` (`action_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Сработки сигнализации' AUTO_INCREMENT=1 ;
+  KEY `sense_id` (`sense_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `guard_states`
@@ -133,38 +134,6 @@ CREATE TABLE IF NOT EXISTS `io_output_actions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sensors`
---
-
-CREATE TABLE IF NOT EXISTS `sensors` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `port` tinyint(4) NOT NULL,
-  `normal_state` tinyint(1) NOT NULL DEFAULT '0',
-  `alarm_time` int(11) NOT NULL COMMENT 'Время вопля сирены в секундах',
-  `run_lighter` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sensor_actions`
---
-
-CREATE TABLE IF NOT EXISTS `sensor_actions` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `sense_id` bigint(20) NOT NULL,
-  `state` enum('normal','action') DEFAULT NULL,
-  `guard_state` enum('sleep','ready') DEFAULT NULL,
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `sense_id` (`sense_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -183,19 +152,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 -- Constraints for dumped tables
 --
-
---
--- Dumping data for table `sensors`
---
-
-INSERT INTO `sensors` (`id`, `name`, `port`, `normal_state`, `alarm_time`, `run_lighter`) VALUES
-(1, 'Датчик объема передний', 2, 1, 30, 1),
-(2, 'Корпус переднего датчика объема', 3, 0, 180, 0),
-(3, 'Датчик двери кунга', 9, 1, 300, 1),
-(4, 'Датчик дверцы ВРУ', 10, 1, 300, 0),
-(5, 'Датчик объема задний', 4, 1, 30, 1),
-(6, 'Корпус заднего датчика объема', 5, 0, 300, 0);
-
 
 --
 -- Dumping data for table `users`
@@ -228,20 +184,3 @@ CREATE TABLE IF NOT EXISTS `telegram_msg` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
---
--- Constraints for table `blocking_sensors`
---
-ALTER TABLE `blocking_sensors`
-  ADD CONSTRAINT `blocking_sensors_ibfk_1` FOREIGN KEY (`sense_id`) REFERENCES `sensors` (`id`) ON UPDATE NO ACTION;
-
---
--- Constraints for table `guard_alarms`
---
-ALTER TABLE `guard_alarms`
-  ADD CONSTRAINT `guard_alarms_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `sensor_actions` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `sensor_actions`
---
-ALTER TABLE `sensor_actions`
-  ADD CONSTRAINT `sensor_actions_ibfk_1` FOREIGN KEY (`sense_id`) REFERENCES `sensors` (`id`) ON UPDATE NO ACTION;
