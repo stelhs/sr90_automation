@@ -27,7 +27,6 @@ function main($argv)
     }
 
     $mode = $argv[1];
-    $alarm_id = $argv[2];
 
     $db = new Database;
     $rc = $db->connect(conf_db());
@@ -38,14 +37,15 @@ function main($argv)
 
     switch ($mode) {
     case 'alarm':
+        $alarm_id = $argv[2];
         // copy images to sr38.org
         $ret = run_cmd(sprintf('scp %s/%d_*.jpeg stelhs@sr38.org:/var/www/plato/alarm_img/', 
                                conf_guard()['alarm_snapshot_dir'], $alarm_id));
         printf("scp to sr38.org: %s\n", $ret['log']);
 
         foreach (conf_guard()['video_cameras'] as $cam) {
-            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg'", 
-                                   $alarm_id, $cam['id']));
+            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg'", 
+                                   $cam['id'], $alarm_id, $cam['id']));
             printf("send URL to telegram: %s\n", $ret['log']);
         }        
         goto out;
@@ -60,7 +60,7 @@ function main($argv)
         }
 
         foreach ($ret as $cam_num => $file) {
-            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%s'", 
+            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n %s'", 
                                    $cam_num, $file));
             printf("send URL to telegram: %s\n", $ret['log']);
         }
