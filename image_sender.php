@@ -51,6 +51,19 @@ function main($argv)
         goto out;
 
     case 'current':
+        $ret = file_get_contents('http://sr38.org/plato/?no_view');
+        $ret = json_decode($ret, true);
+        if ($ret === NULL) {
+            $rc = -1;
+            printf("can't getting images: %s\n", $ret);
+            goto out;
+        }
+
+        foreach ($ret as $cam_num => $file) {
+            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%s'", 
+                                   $cam_num, $file));
+            printf("send URL to telegram: %s\n", $ret['log']);
+        }
         goto out;
 
     default:
