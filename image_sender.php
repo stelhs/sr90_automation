@@ -28,13 +28,6 @@ function main($argv)
 
     $mode = $argv[1];
 
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        printf("can't connect to database");
-        return -EBASE;
-    }
-
     switch ($mode) {
     case 'alarm':
         $alarm_id = $argv[2];
