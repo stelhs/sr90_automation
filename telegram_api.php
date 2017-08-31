@@ -20,7 +20,9 @@ class Telegram_api {
 
         $options = array(
             'http' => array(
-                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+                'protocol_version' => 1.1,
+                'header'  => ["Content-Type: application/x-www-form-urlencoded", 
+                              "Connection: close"],
                 'method'  => 'POST',
                 'content' => $query,
                 'timeout' => 60,
