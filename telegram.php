@@ -45,6 +45,7 @@ function main($argv)
     $cmd = strtolower(trim($argv[1]));
     switch ($cmd) {
     case 'msg_recv':
+        set_time_limit(90); // set timeout 90 seconds
         $list_msg = $telegram->get_new_messages();
 
         if (!is_array($list_msg))
