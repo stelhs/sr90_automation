@@ -305,6 +305,10 @@ function format_global_status_for_sms($stat)
         $text .= sprintf("RAID1: %s, ", $mode);
     }
 
+    if (isset($stat['uptime'])) {
+        $text .= sprintf("Uptime: %s, ", $stat['uptime'], $mode);
+    }
+
     return $text;
 }
 
@@ -378,6 +382,10 @@ function format_global_status_for_telegram($stat)
             break;
         }
         $text .= sprintf("RAID1: %s\n", $mode);
+    }
+
+    if (isset($stat['uptime'])) {
+        $text .= sprintf("Uptime: %s\n", $stat['uptime'], $mode);
     }
 
     return $text;
