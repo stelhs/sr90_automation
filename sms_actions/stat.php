@@ -29,7 +29,6 @@ function main($argv) {
 
     if (!$user_id)
         return -EINVAL;
-    
     $stat = format_global_status_for_sms(get_global_status($db));
     sms_send('status', 
              ['user_id' => $user_id, 

@@ -76,27 +76,17 @@ function sms_send($type, $recepient, $args = array())
         break;
 
     case 'guard_disable':
-        $sms_text = sprintf("Охрана отключена. Метод: %s, state_id: %s.",
+        $sms_text = sprintf("Метод: %s, state_id: %s.",
                             $args['method'], $args['state_id']);
-
-        if (isset($args['user_name']) && $args['user_name'])
-            $sms_text .= sprintf(" Отключил: %s.", $args['user_name']);
 
         if (isset($args['global_status']))
             $sms_text .= $args['global_status'];
         break;
 
     case 'guard_enable':
-        $sms_text = sprintf("Охрана включена. Метод: %s, state_id: %s.",
+        $sms_text = sprintf("Метод: %s, state_id: %s.",
                             $args['method'], $args['state_id']);
 
-        if (isset($args['user_name']) && $args['user_name'])
-            $sms_text .= sprintf(" Включил: %s.", $args['user_name']);
-
-        if (count($args['ignore_sensors'])) {
-            $sms_text .= sprintf(" Игнор: %s.",
-                                 array_to_string($args['ignore_sensors']));
-        }
         if (isset($args['global_status']))
             $sms_text .= $args['global_status'];
         break;
@@ -110,8 +100,8 @@ function sms_send($type, $recepient, $args = array())
     // creating phones list
     $list_phones = [];
     if (isset($recepient['user_id']) && $recepient['user_id']) {
-        $user = user_get_by_id($db, $user_id);
-        $list_phones = $user['phones']; 
+        $user = user_get_by_id($db, $recepient['user_id']);
+        $list_phones = $user['phones'];
     }
 
     // applying phones list by groups
@@ -239,44 +229,58 @@ function format_global_status_for_sms($stat)
 {
     $text = '';
     if (isset($stat['guard_stat'])) {
+        $text_who = '';
         switch ($stat['guard_stat']['state']) {
         case 'sleep':
-            $mode = "отключена";
+            $mode = "откл.";
             break;
 
         case 'ready':
-            $mode = "включена";
+            $mode = "вкл.";
             break;
         }
-        $text .= sprintf("Охрана: %s, ", $mode); 
+        $text .= sprintf("Охрана: %s, ", $mode);
+
+        if (count($stat['guard_stat']['ignore_sensors'])) {
+            $text .= sprintf("Игнор: ");
+            foreach ($stat['guard_stat']['ignore_sensors'] as $zone_id) {
+                $zone = sensor_get_by_io_id($zone_id);
+                $text .= sprintf("%s, ", $zone['zone']);
+            }
+            $text .= '.';
+        }
+
+        if (isset($stat['guard_stat']['user_name']) && $mode)
+            $text .= sprintf("%s: %s, ", $mode,
+                                              $stat['guard_stat']['user_name']);
     }
 
     if (isset($stat['lighting_stat'])) {
         foreach ($stat['lighting_stat'] as $row) {
             switch ($row['state']) {
             case 0:
-                $mode = "отключено";
+                $mode = "откл.";
                 break;
 
             case 1:
-                $mode = "включено";
+                $mode = "вкл.";
                 break;
             }
-            $text .= sprintf("Освещение: %s %s, ", $row['name'], $mode);
+            $text .= sprintf("Освещение '%s': %s, ", $row['name'], $mode);
         }
     }
     if (isset($stat['padlocks_stat'])) {
         foreach ($stat['padlocks_stat'] as $row) {
             switch ($row['state']) {
             case 0:
-                $mode = "закрыт";
+                $mode = "закр.";
                 break;
 
             case 1:
-                $mode = "открыт";
+                $mode = "откр.";
                 break;
             }
-            $text .= sprintf("Замок: %s %s, ", $row['name'], $mode);
+            $text .= sprintf("Замок '%s': %s, ", $row['name'], $mode);
         }
     }
 
@@ -306,7 +310,11 @@ function format_global_status_for_sms($stat)
     }
 
     if (isset($stat['uptime'])) {
-        $text .= sprintf("Uptime: %s, ", $stat['uptime'], $mode);
+        $text .= sprintf("Uptime: %s, ", $stat['uptime']);
+    }
+
+    if (isset($stat['balance'])) {
+        $text .= sprintf("Баланс: %s, ", $stat['balance']);
     }
 
     return $text;
@@ -317,16 +325,33 @@ function format_global_status_for_telegram($stat)
 {
     $text = '';
     if (isset($stat['guard_stat'])) {
-        switch ($stat['guard_stat']['guard_state']) {
+        $text_who = '';
+        switch ($stat['guard_stat']['state']) {
         case 'sleep':
             $mode = "отключена";
+            $text_who = "Отключил охрану";
             break;
 
         case 'ready':
             $mode = "включена";
+            $text_who = "Включил охрану";
             break;
         }
         $text .= sprintf("Охрана: %s\n", $mode); 
+
+        if (count($stat['guard_stat']['ignore_sensors'])) {
+            $text .= sprintf("Игнорированные зоны:\n");
+            foreach ($stat['guard_stat']['ignore_sensors'] as $zone_id) {
+                $zone = sensor_get_by_io_id($zone_id);
+                $text .= sprintf("               %s\n", $zone['zone']);
+            }
+        }
+
+        if (isset($stat['guard_stat']['user_name']) && $text_who)
+            $text .= sprintf("%s: %s через %s в %s\n", $text_who, 
+                                              $stat['guard_stat']['user_name'], 
+                                              $stat['guard_stat']['method'],
+                                              $stat['guard_stat']['created']);
     }
 
     if (isset($stat['lighting_stat'])) {
@@ -340,7 +365,7 @@ function format_global_status_for_telegram($stat)
                 $mode = "включено";
                 break;
             }
-            $text .= sprintf("Освещение: %s %s\n", $row['name'], $mode);
+            $text .= sprintf("Освещение '%s': %s\n", $row['name'], $mode);
         }
     }
 
@@ -355,7 +380,7 @@ function format_global_status_for_telegram($stat)
                 $mode = "открыт";
                 break;
             }
-            $text .= sprintf("Замок: %s %s\n", $row['name'], $mode);
+            $text .= sprintf("Замок '%s': %s\n", $row['name'], $mode);
         }
     }
 
@@ -385,7 +410,11 @@ function format_global_status_for_telegram($stat)
     }
 
     if (isset($stat['uptime'])) {
-        $text .= sprintf("Uptime: %s\n", $stat['uptime'], $mode);
+        $text .= sprintf("Uptime: %s\n", $stat['uptime']);
+    }
+
+    if (isset($stat['balance'])) {
+        $text .= sprintf("Баланс счета SIM карты: %s\n", $stat['balance']);
     }
 
     return $text;

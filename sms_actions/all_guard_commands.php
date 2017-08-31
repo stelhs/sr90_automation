@@ -43,7 +43,7 @@ function main($argv) {
     switch ($args[0]) {
     case 'off':
         $cmd = "./guard.php state sleep sms " . $user['id'];
-        if ($args[1] == 'sms')
+        if (isset($args[1]) && ($args[1] == 'sms'))
             $cmd .= " sms";
 
         printf("run cmd = '%s'\n", $cmd);

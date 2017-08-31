@@ -46,6 +46,9 @@ function get_guard_state($db)
         $data['state'] = 'sleep';
     }
 
+    if (isset($data['user_id']))
+        $data['user_name'] = user_get_by_id($db, $data['user_id'])['name'];
+
     if (isset($data['ignore_sensors']) && $data['ignore_sensors']) 
         $data['ignore_sensors'] = string_to_array($data['ignore_sensors']);
     else

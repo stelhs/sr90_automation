@@ -77,7 +77,6 @@ function main($argv) {
     foreach ($list_subscribers as $script_name) {
         $script = sprintf("%s '%s' '%s' '%s'", $script_name, 
                                       $sms_date, $user_id, $sms_text);
-        dump("run " . $script . "\n");                
         $ret = run_cmd(SMS_ACTIONS_DIR . $script);
         if ($ret['rc']) {
             msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
@@ -85,7 +84,7 @@ function main($argv) {
             continue;
         }
 
-        msg_log(LOG_NOTICE, sprintf("script %s: return:\n%s\n", $script, $ret['log']));
+        printf("run %s subscriber: %s\n", $script, $ret['log']);
     }
 
     $db->close();

@@ -88,14 +88,14 @@ function conf_telegram_bot()
 function conf_padlocks()
 {
     return [
-                ['num' => 1, 'name' => 'kung', 'io_port' => 6],
-                ['num' => 2, 'name' => 'container 20ft', 'io_port' => 5],
+                ['num' => 1, 'name' => 'кунг', 'io_port' => 6],
+                ['num' => 2, 'name' => 'коричневый контейнер', 'io_port' => 5],
            ];
 }
 
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'all plato', 'io_port' => 4],
+                ['zone' => 1, 'name' => 'весь участок', 'io_port' => 4],
            ];
 }
