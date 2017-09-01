@@ -20,12 +20,10 @@ class Telegram_api {
 
         $options = array(
             'http' => array(
-                'protocol_version' => 1.1,
-                'header'  => ["Content-Type: application/x-www-form-urlencoded", 
-                              "Connection: close"],
+                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
                 'method'  => 'POST',
                 'content' => $query,
-                'timeout' => 60,
+                'timeout' => 45,
             )
         );
         $context = stream_context_create($options);

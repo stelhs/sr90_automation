@@ -46,7 +46,6 @@ function main($argv)
 
     $end_time = time() + $timeout;
     printf("timeout = %d\n", $timeout);
-    printf("end_time = %d\n", $end_time);
     while (time() < $end_time);
     printf("kill %d\n", $pid);
     run_cmd(sprintf('kill -- -$(ps -o pgid= %d | grep -o [0-9]*)', $pid));
