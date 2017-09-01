@@ -96,6 +96,6 @@ function conf_padlocks()
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'весь участок', 'io_port' => 4],
+                ['zone' => 1, 'name' => 'уличное', 'io_port' => 4],
            ];
 }
