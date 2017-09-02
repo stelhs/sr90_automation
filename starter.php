@@ -41,7 +41,7 @@ function main($argv)
     unset($argv[0]);
     unset($argv[1]);
     printf("run: %s\n", array_to_string($argv, ' '));
-    $pid = run_cmd(array_to_string($argv, ' '), true, '', 1);
+    $pid = run_cmd(array_to_string($argv, ' '), true);
     printf("pid = %d\n", $pid);
 
     $end_time = time() + $timeout;
