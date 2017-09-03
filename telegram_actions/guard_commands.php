@@ -46,9 +46,7 @@ function main($argv) {
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
-        if ($ret['rc'] == '0')
-            $telegram->send_message($chat_id, "Охрана включена\n", $msg_id);
-        else
+        if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
         break;
@@ -59,9 +57,7 @@ function main($argv) {
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
-        if ($ret['rc'] == '0')
-            $telegram->send_message($chat_id, "Охрана отключена\n", $msg_id);
-        else
+        if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
         break;
