@@ -49,7 +49,7 @@ function get_guard_state($db)
     if (isset($data['user_id']))
         $data['user_name'] = user_get_by_id($db, $data['user_id'])['name'];
 
-    if (isset($data['ignore_sensors']) && $data['ignore_sensors']) 
+    if (isset($data['ignore_zones']) && $data['ignore_zones']) 
         $data['ignore_zones'] = string_to_array($data['ignore_zones']);
     else
         $data['ignore_zones'] = [];
