@@ -132,27 +132,27 @@ function main($argv)
             $ret = run_cmd('./padlock.php close');
             printf("close all padlocks: %s\n", $ret['log']);
 
-            // check for incorrect sensor value state
-            $sensors = conf_guard()['sensors'];
-            $ignore_sensors_list = [];
-            foreach ($sensors as $sensor) {
-                if (get_sensor_locking_mode($db, $sensor['id']) == 'lock')
+            // check for incorrect sensors value state
+            $zones = conf_guard()['zones'];
+            $ignore_zones_list = [];
+            foreach ($zones as $zone) {
+                if (get_zone_locking_mode($db, $zone['id']) == 'lock')
                         continue;
 
                 $total_ports_cnt = 0;
                 $incorrect_ports_cnt = 0;
-                foreach ($sensor['io'] as $row) {
+                foreach ($zone['sensors'] as $row) {
                     $total_ports_cnt++;
                     $state = $mio->input_get_state($row['port']);
                     if ($state != $row['normal_state'])
                         $incorrect_ports_cnt++;
                 }
                 if ($incorrect_ports_cnt == $total_ports_cnt)
-                    $ignore_sensors_list[] = $sensor['id'];
+                    $ignore_zones_list[] = $zone;
             }
 
             sequncer_stop(conf_guard()['sirena_io_port']);
-            if (!count($ignore_sensors_list)) {
+            if (!count($ignore_zones_list)) {
                 // one beep by sirena
                 sequncer_start(conf_guard()['sirena_io_port'], array(200, 0));
             } else {
@@ -167,17 +167,15 @@ function main($argv)
                 printf("disable lighter: %s\n", $ret['log']);
             }
 
-            $ignore_sensors_list_names = array();
-            foreach ($ignore_sensors_list as $sensor_id) {
-                $sensor = sensor_get_by_io_id($db, $sensor_id);
-                $ignore_sensors_list_names[] = $sensor['name'];
-            }
+            $ignore_zones_list_id = [];
+            foreach ($ignore_zones_list as $zone)
+                $ignore_sensors_list_id[] = $zone['id'];
 
             $state_id = $db->insert('guard_states',
-                                    array('state' => 'ready',
-                                          'method' => $method,
-                                          'user_id' => $user_id,
-                                          'ignore_sensors' => array_to_string($ignore_sensors_list)));
+                                    ['state' => 'ready',
+                                     'method' => $method,
+                                     'user_id' => $user_id,
+                                     'ignore_zones' => array_to_string($ignore_zones_list_id)]);
 
             $stat_text = format_global_status_for_sms(get_global_status($db));
             printf("Guard set ready\n");
@@ -186,15 +184,14 @@ function main($argv)
                 goto out;
             }
 
-            if (($with_sms || count($ignore_sensors_list_names)) && 
+            if (($with_sms || count($ignore_zones_list_names)) && 
                                                     $argv[3] != 'telegram')
                 sms_send('guard_enable',
                          ['user_id' => $user_id, 'groups' => ['sms_observer']],
-                         array('method' => $method,
-                               'user_name' => $user_name,
-                               'ignore_sensors' => $ignore_sensors_list_names,
-                               'state_id' => $state_id,
-                               'global_status' => $stat_text));
+                         ['method' => $method,
+                          'user_name' => $user_name,
+                          'state_id' => $state_id,
+                          'global_status' => $stat_text]);
 
             goto out;
 
@@ -220,10 +217,10 @@ function main($argv)
         }
 
         // run sirena
-        $sensor = sensor_get_by_io_id($action['sense_id']);
+        $zone = zone_get_by_io_id($action['zone_id']);
         sequncer_stop(conf_guard()['sirena_io_port']);
         sequncer_start(conf_guard()['sirena_io_port'],
-        array($sensor['alarm_time'] * 1000, 0));
+        array($zone['alarm_time'] * 1000, 0));
 
         // run lighter if night
         $day_night = get_day_night($db);
@@ -241,7 +238,7 @@ function main($argv)
         printf("make snapshots: %s\n", $ret['log']);
 
         // send to Telegram
-        telegram_send('alarm', ['sensor' => $sensor['zone'],
+        telegram_send('alarm', ['zone' => $zone['name'],
                                 'action_id' => $guard_action_id]);
         $ret = run_cmd(sprintf("./image_sender.php alarm %d", $guard_action_id));
         printf("send images to sr38: %s\n", $ret['log']);
@@ -249,7 +246,7 @@ function main($argv)
         // send SMS
         sms_send('alarm',
                  ['groups' => ['guard_alarm']],
-                 ['sensor' => $sensor['zone'],
+                 ['zone' => $zone['name'],
                   'action_id' => $guard_action_id]);
 
         printf("Guard set Alarm\n");

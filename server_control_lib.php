@@ -79,7 +79,7 @@ function sms_send($type, $recepient, $args = array())
 
     case 'alarm':
         $sms_text = sprintf("Внимание!\nСработала %s, событие: %d", 
-                                $args['sensor'], $args['action_id']);
+                                $args['zone'], $args['action_id']);
         break;
 
     case 'guard_disable':
@@ -208,7 +208,7 @@ function telegram_send($type, $args = array())
 
     case 'alarm':
         $text = sprintf("!!! Внимание, Тревога !!!\nСработала %s, событие: %d\n",
-                                $args['sensor'], $args['action_id']);
+                                $args['zone'], $args['action_id']);
         break;
 
     default: 
@@ -350,11 +350,11 @@ function format_global_status_for_sms($stat)
         }
         $text .= sprintf("Охрана: %s, ", $mode);
 
-        if (count($stat['guard_stat']['ignore_sensors'])) {
+        if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнор: ");
-            foreach ($stat['guard_stat']['ignore_sensors'] as $zone_id) {
-                $zone = sensor_get_by_io_id($zone_id);
-                $text .= sprintf("%s, ", $zone['zone']);
+            foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
+                $zone = zone_get_by_io_id($zone_id);
+                $text .= sprintf("%s, ", $zone['name']);
             }
             $text .= '.';
         }
@@ -448,11 +448,11 @@ function format_global_status_for_telegram($stat)
         }
         $text .= sprintf("Охрана: %s\n", $mode); 
 
-        if (count($stat['guard_stat']['ignore_sensors'])) {
+        if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнорированные зоны:\n");
-            foreach ($stat['guard_stat']['ignore_sensors'] as $zone_id) {
-                $zone = sensor_get_by_io_id($zone_id);
-                $text .= sprintf("               %s\n", $zone['zone']);
+            foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
+                $zone = zone_get_by_io_id($zone_id);
+                $text .= sprintf("               %s\n", $zone['name']);
             }
         }
 

@@ -31,16 +31,16 @@ CREATE TABLE IF NOT EXISTS `app_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `blocking_sensors`
+-- Table structure for table `blocking_zones`
 --
 
-CREATE TABLE IF NOT EXISTS `blocking_sensors` (
+CREATE TABLE IF NOT EXISTS `blocking_zones` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `sense_id` bigint(20) NOT NULL,
+  `zone_id` bigint(20) NOT NULL,
   `mode` enum('lock','unlock') NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `sense_id` (`sense_id`)
+  KEY `zone_id` (`zone_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -64,12 +64,12 @@ CREATE TABLE IF NOT EXISTS `ext_power_log` (
 
 CREATE TABLE IF NOT EXISTS `guard_actions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `sense_id` bigint(20) NOT NULL,
+  `zone_id` bigint(20) NOT NULL,
   `guard_state` enum('sleep','ready') DEFAULT NULL,
   `alarm` tinyint(1) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `sense_id` (`sense_id`)
+  KEY `zone_id` (`zone_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `guard_states` (
   `state` enum('sleep','ready') DEFAULT NULL,
   `method` enum('site','sms','remote','cli','telegram') DEFAULT NULL,
   `user_id` bigint(20) NOT NULL,
-  `ignore_sensors` varchar(256) NOT NULL COMMENT 'Список ID сенсоров через запятую, которые необходимо игнорировать',
+  `ignore_zones` varchar(256) NOT NULL COMMENT 'Список ID зон через запятую, которые необходимо игнорировать',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)

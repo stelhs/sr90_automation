@@ -4,32 +4,32 @@ require_once 'config.php';
 require_once 'modem3g.php';
 
 
-function get_sensor_locking_mode($db, $sensor_id)
+function get_zone_locking_mode($db, $zone_id)
 {
-    $data = $db->query("SELECT * FROM blocking_sensors " .
-                       "WHERE sense_id = " . $sensor_id . " " .
+    $data = $db->query("SELECT * FROM blocking_zones " .
+                       "WHERE zone_id = " . $zone_id . " " .
                        "ORDER by created DESC LIMIT 1");
     return $data ? $data['mode'] : 'unlock';
 }
 
-function sensor_get_by_io_port($db, $port)
+function zone_get_by_io_port($db, $port)
 {
-    $sensors = conf_guard()['sensors'];
-    foreach ($sensors as $sensor) {
-        foreach ($sensor['io'] as $rows) {
+    $zones = conf_guard()['zones'];
+    foreach ($zones as $zone) {
+        foreach ($zone['sensors'] as $rows) {
             if ($rows['port'] == $port)
-                return $sensor;
+                return $zone;
         }
     }
     return null;
 }
 
-function sensor_get_by_io_id($id)
+function zone_get_by_io_id($id)
 {
-    $sensors = conf_guard()['sensors'];
-    foreach ($sensors as $sensor) {
-        if ($sensor['id'] == $id)
-            return $sensor;
+    $zones = conf_guard()['zones'];
+    foreach ($zones as $zone) {
+        if ($zone['id'] == $id)
+            return $zone;
     }
     return null;
 }
@@ -50,9 +50,9 @@ function get_guard_state($db)
         $data['user_name'] = user_get_by_id($db, $data['user_id'])['name'];
 
     if (isset($data['ignore_sensors']) && $data['ignore_sensors']) 
-        $data['ignore_sensors'] = string_to_array($data['ignore_sensors']);
+        $data['ignore_zones'] = string_to_array($data['ignore_zones']);
     else
-        $data['ignore_sensors'] = [];
+        $data['ignore_zones'] = [];
 
     return $data;
 }

@@ -25,32 +25,32 @@ function conf_io()
 
 function conf_guard()
 {
-    return array('sensors' => [
+    return array('zones' => [
                                 ['id' => '1',
-                                 'zone' => 'зона 1',
+                                 'name' => 'зона 1',
                                  'diff_interval' => 10,
                                  'alarm_time' => 30,
                                  'run_lighter' => 1,
-                                 'io' => [['port' => 2,
-                                          'normal_state' => 1],
-                                          ['port' => 4,
-                                           'normal_state' => 1]]
+                                 'sensors' => [['port' => 2,
+                                                'normal_state' => 1],
+                                               ['port' => 4,
+                                                'normal_state' => 1]]
                                 ],
                                 ['id' => '2',
-                                 'zone' => 'Датчик дверцы ВРУ',
+                                 'name' => 'Датчик дверцы ВРУ',
                                  'diff_interval' => 10,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
-                                 'io' => [['port' => 10,
-                                          'normal_state' => 1]]
+                                 'sensors' => [['port' => 10,
+                                                'normal_state' => 1]]
                                 ],
                                 ['id' => '3',
-                                 'zone' => 'Датчик двери Кунга',
+                                 'name' => 'Датчик двери Кунга',
                                  'diff_interval' => 10,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
-                                 'io' => [['port' => 9,
-                                          'normal_state' => 1]]
+                                 'sensors' => [['port' => 9,
+                                                'normal_state' => 1]]
                                 ]
                                ],
                  'sirena_io_port' => 3,

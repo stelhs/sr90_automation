@@ -12,7 +12,6 @@ $utility_name = $argv[0];
 
 function main($argv)
 {
-    global $sensors;
     $rc = 0;
     
     if (count($argv) < 3) {
@@ -31,18 +30,18 @@ function main($argv)
     }
     
     // check for sensors
-    $ret = sensor_get_by_io_port($db, $port);
+    $ret = zone_get_by_io_port($db, $port);
     if (!is_array($ret)) {
         $rc = 0;
         goto out;
     }
-    $sensor = $ret;
+    $zone = $ret;
 
     $guard_state = get_guard_state($db);
 
     // define normal state for current port
     $normal_state = -1;
-    foreach ($sensor['io'] as $row)
+    foreach ($zone['sensors'] as $row)
         if ($row['port'] == $port)
             $normal_state = $row['normal_state'];
 
@@ -54,7 +53,7 @@ function main($argv)
 
     // check activity any ports
     $total_cnt = $active_cnt = 0; 
-    foreach ($sensor['io'] as $row) {
+    foreach ($zone['sensors'] as $row) {
         if ($row['port'] == $port)
             continue;
 
@@ -80,7 +79,7 @@ function main($argv)
                            'SELECT id FROM io_input_actions ' .
                            'WHERE id = %d ' .
                                  'AND (created + INTERVAL %d SECOND) > now()',
-                           $state_id, $sensor['diff_interval']));
+                           $state_id, $zone['diff_interval']));
         if (!is_array($ret))
             continue;
 
@@ -94,7 +93,7 @@ function main($argv)
         if ($guard_state['state'] == 'sleep')
             goto out;
 
-        telegram_send('false_alarm', ['name' => $sensor['zone'],
+        telegram_send('false_alarm', ['name' => $zone['name'],
                                       'port' => $port]);
         $rc = 0;
         goto out;
@@ -102,36 +101,36 @@ function main($argv)
 
     // run lighter if night
     $day_night = get_day_night();
-    if ($sensor['run_lighter'] &&
+    if ($zone['run_lighter'] &&
              conf_guard()['light_mode'] == 'by_sensors' &&
              $day_night == 'night' &&
              $guard_state['state'] == 'ready') {
         $light_interval = conf_guard()['light_ready_timeout'] * 1000;
         printf("run lighter for %d seconds\n", $light_interval);
         $ret = run_cmd(sprintf("./street_light.php %d %d", 
-                               $sensor['id'], $light_interval));
+                               $zone['id'], $light_interval));
         printf("do ALARM: %s\n", $ret['log']);
     }
 
     // check for sensor is lock
-    $sense_locking_mode = get_sensor_locking_mode($db, $sensor['id']);
-    if ($sense_locking_mode == 'lock') {
-        printf("sensor %d is locked\n", $sensor['id']);
+    $zone_locking_mode = get_zone_locking_mode($db, $zone['id']);
+    if ($zone_locking_mode == 'lock') {
+        printf("zone %d is locked\n", $zone['id']);
         $rc = 0;
         goto out;
     }
 
     // store guard action
     $action_id = $db->insert('guard_actions', 
-                             array('sense_id' => $sensor['id'],
+                             array('zone_id' => $zone['id'],
                                    'alarm' => 0,
                                    'guard_state' => $guard_state['state']));
 
     // check for sensor is ignored
-    if ($guard_state['ignore_sensors'])
-   		foreach ($guard_state['ignore_sensors'] as $ignore_sensor_id)
-   			if ($ignore_sensor_id == $sensor['id']) {
-                printf("sensor %d is ignored\n", $sensor['id']);
+    if ($guard_state['ignore_zones'])
+   		foreach ($guard_state['ignore_zones'] as $ignore_zone_id)
+   	        if ($ignore_zone_id == $zone['id']) {
+                printf("zone %d is ignored\n", $zone['id']);
                 $rc = 0;
                 goto out;
             }
@@ -154,16 +153,16 @@ function main($argv)
     }
 
     // ignore ALARM if already in ALARM state
-    $ret = $db->query("SELECT id, sense_id FROM guard_actions " .
+    $ret = $db->query("SELECT id, zone_id FROM guard_actions " .
                       "WHERE alarm = 1 " .
 			          "ORDER BY created DESC LIMIT 1");
-    if (isset($ret['sense_id'])) {
+    if (isset($ret['zone_id'])) {
         $alarm_id = $ret['id'];
-        $alarm_sensor = sensor_get_by_io_id($ret['sense_id']);
+        $alarm_zone = zone_get_by_io_id($ret['zone_id']);
         $ret = $db->query(sprintf("SELECT id FROM guard_actions " .
                                   "WHERE id = %d " .
                                       "AND (created + interval %d second) > now() ", 
-                                  $alarm_id, $alarm_sensor['alarm_time']));
+                                  $alarm_id, $alarm_zone['alarm_time']));
         if (isset($ret['id'])) {
             printf("alarm was ignored because system already in alarm state\n");
             goto out;
