@@ -211,6 +211,16 @@ function telegram_send($type, $args = array())
                                 $args['zone'], $args['action_id']);
         break;
 
+    case 'guard_disable':
+        $text = sprintf("Охрана отключена, отключил %s с помощью %s.",
+                            $args['user'], $args['method']);
+        break;
+
+    case 'guard_enable':
+        $text = sprintf("Охрана включена, включил %s с помощью %s.",
+                            $args['user'], $args['method']);
+        break;
+
     default: 
         return -EINVAL;
     }

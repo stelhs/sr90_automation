@@ -98,6 +98,9 @@ function main($argv)
             $stat_text = format_global_status_for_sms(get_global_status($db));
             printf("Guard set sleep\n");
 
+            telegram_send('guard_disable', ['user' => $user['name'],
+                                            'method' => $method]);
+
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);
                 goto out;
@@ -179,6 +182,10 @@ function main($argv)
 
             $stat_text = format_global_status_for_sms(get_global_status($db));
             printf("Guard set ready\n");
+
+            telegram_send('guard_enable', ['user' => $user['name'],
+                                           'method' => $method]);
+
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);
                 goto out;

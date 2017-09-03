@@ -40,7 +40,7 @@ function main($argv)
             $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg'", 
                                    $cam['id'], $alarm_id, $cam['id']));
             printf("send URL to telegram: %s\n", $ret['log']);
-        }        
+        }
         goto out;
 
     case 'current':
