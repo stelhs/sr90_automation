@@ -7,7 +7,7 @@ require_once 'config.php';
 require_once 'server_control_lib.php';
 require_once 'guard_lib.php';
 
-define("EXT_POWER_STATE_FILE", "/tmp/ext_power_state");
+define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
 
 function main($argv) {
     $db = new Database;
