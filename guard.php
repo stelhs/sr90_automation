@@ -240,6 +240,12 @@ function main($argv)
                         conf_guard()['alarm_snapshot_dir'], $guard_action_id));
         printf("make snapshots: %s\n", $ret['log']);
 
+        // send to Telegram
+        telegram_send('alarm', ['sensor' => $sensor['zone'],
+                                'action_id' => $guard_action_id]);
+        $ret = run_cmd(sprintf("./image_sender.php alarm %d", $guard_action_id));
+        printf("send images to sr38: %s\n", $ret['log']);
+
         // send SMS
         sms_send('alarm',
                  ['groups' => ['guard_alarm']],
@@ -257,7 +263,7 @@ function main($argv)
         goto out;
     }
 
-    out:
+out:
     $db->close();
     return $rc;
 }

@@ -38,6 +38,8 @@ function main($argv)
     }
     $sensor = $ret;
 
+    $guard_state = get_guard_state($db);
+
     // define normal state for current port
     $normal_state = -1;
     foreach ($sensor['io'] as $row)
@@ -89,11 +91,14 @@ function main($argv)
     // if not all ports active 
     if ($active_cnt != $total_cnt) {
         printf("not all sensors is active\n");
+        if ($guard_state['state'] == 'sleep')
+            goto out;
+
+        telegram_send('false_alarm', ['name' => $sensor['zone'],
+                                      'port' => $port]);
         $rc = 0;
         goto out;
     }
-
-    $guard_state = get_guard_state($db);
 
     // run lighter if night
     $day_night = get_day_night();

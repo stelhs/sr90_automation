@@ -200,6 +200,17 @@ function telegram_send($type, $args = array())
         }
         break;
 
+    case 'false_alarm':
+        $text = sprintf("Срабатал датчик на порту %d из группы \"%s\".\n" .
+                        "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
+                                $args['port'], $args['name']);
+        break;
+
+    case 'alarm':
+        $text = sprintf("!!! Внимание, Тревога !!!\nСработала %s, событие: %d\n",
+                                $args['sensor'], $args['action_id']);
+        break;
+
     default: 
         return -EINVAL;
     }
