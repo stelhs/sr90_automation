@@ -184,3 +184,16 @@ CREATE TABLE IF NOT EXISTS `telegram_msg` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
+--
+-- Table structure for table `telegram_chats`
+--
+
+CREATE TABLE IF NOT EXISTS `telegram_chats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` bigint(20) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список чатов куда рассылать уведомления' AUTO_INCREMENT=1 ;
+
+

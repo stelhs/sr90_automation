@@ -104,7 +104,7 @@ function main($argv)
         }
         
         $msg = trim($argv[2]);
-        $chat_list = $db->query_list("SELECT * FROM telegram_chats");
+        $chat_list = $db->query_list("SELECT * FROM telegram_chats WHERE enabled = 1");
         foreach ($chat_list as $row)
             $telegram->send_message($row['chat_id'], $msg);
         
