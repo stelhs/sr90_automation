@@ -48,7 +48,7 @@ function main($argv)
     printf("timeout = %d\n", $timeout);
     while (time() < $end_time);
     printf("kill %d\n", $pid);
-    run_cmd(sprintf('kill -- -$(ps -o pgid= %d | grep -o [0-9]*)', $pid));
+    run_cmd(sprintf('pkill -9 -P %d', $pid));
     posix_kill($pid, SIGKILL);
 
 out:
