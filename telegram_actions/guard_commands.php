@@ -45,6 +45,8 @@ function main($argv) {
         if (isset($args[5]) && $args[5] == 'sms')
             $cmd .= " sms";
 
+        $telegram->send_message($chat_id, "ok, попробую\n", $msg_id);
+            
         $ret = run_cmd($cmd);
         if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
@@ -55,6 +57,8 @@ function main($argv) {
         $cmd = "./guard.php state sleep telegram " . $user_id;
         if (isset($args[5]) && $args[5] == 'sms')
             $cmd .= " sms";
+
+        $telegram->send_message($chat_id, "ok, попробую\n", $msg_id);
 
         $ret = run_cmd($cmd);
         if ($ret['rc'] != '0')
