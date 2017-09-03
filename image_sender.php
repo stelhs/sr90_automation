@@ -44,10 +44,12 @@ function main($argv)
         goto out;
 
     case 'current':
-        $ret = file_get_contents('http://sr38.org/plato/?no_view');
-        $ret = json_decode($ret, true);
+        $content = file_get_contents('http://sr38.org/plato/?no_view');
+        $ret = json_decode($content, true);
         if ($ret === NULL) {
             $rc = -1;
+            run_cmd(sprintf("./telegram.php msg_send_all 'Не удалось получить изобрадение с камер: %s'", 
+                                   $content));
             printf("can't getting images: %s\n", $ret);
             goto out;
         }
