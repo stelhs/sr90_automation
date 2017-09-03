@@ -19,10 +19,10 @@ function main($argv) {
     $user_id = trim($argv[2]);
     $sms_text = trim($argv[3]);
 
-    sms_send('reboot_sms',
-             ['user_id' => $user_id, 
-              'groups' => ['sms_observer']]);
-    run_cmd('halt');
+    if (!$user_id)
+        return -EINVAL;
+
+    server_reboot('SMS', $user_id);
     return 0;
 }
 

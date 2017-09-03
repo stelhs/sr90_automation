@@ -103,8 +103,7 @@ function main($argv)
             return -EINVAL;
         }
         
-        $msg = strtolower(trim($argv[2]));
-        
+        $msg = trim($argv[2]);
         $chat_list = $db->query_list("SELECT * FROM telegram_chats");
         foreach ($chat_list as $row)
             $telegram->send_message($row['chat_id'], $msg);

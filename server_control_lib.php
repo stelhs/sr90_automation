@@ -8,6 +8,7 @@ require_once 'mod_io_lib.php';
 
 function sms_send($type, $recepient, $args = array())
 {
+    $sms_text = '';
     $db = new Database;
     $rc = $db->connect(conf_db());
     if ($rc) {
@@ -16,8 +17,14 @@ function sms_send($type, $recepient, $args = array())
     }
 
     switch ($type) {
-    case 'reboot_sms':
-        $sms_text = sprintf("Сервер ушел на перезагрузку по запросу SMS");
+    case 'reboot':
+        if (isset($recepient['user_id'])) {
+            $user = user_get_by_id($db, $recepient['user_id']);
+            $sms_text = sprintf("%s отправил сервер на перезагрузку через %s",
+                                $user['name'], $args);
+            break;
+        }
+        $sms_text = sprintf("Сервер ушел на перезагрузку по запросу %s", $args);
         break;
 
     case 'status':
@@ -121,6 +128,97 @@ function sms_send($type, $recepient, $args = array())
             return -EBUSY;
         }
     }
+}
+
+
+function telegram_send($type, $args = array())
+{
+    $db = new Database;
+    $rc = $db->connect(conf_db());
+    if ($rc) {
+        printf("can't connect to database");
+        return -EBASE;
+    }
+
+    switch ($type) {
+    case 'reboot':
+        if (isset($args['user_id']) && $args['user_id']) {
+            $user = user_get_by_id($db, $args['user_id']);
+            $text = sprintf("%s отправил сервер на перезагрузку через %s",
+                                $user['name'], $args['method']);
+            break;
+        }
+        $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $args['method']);
+        break;
+
+    case 'lighting_on':
+        $text = sprintf("Освещение %s включено.", $args['name']);
+        break;
+
+    case 'lighting_off':
+        $text = sprintf("Освещение %s отключено.", $args['name']);
+        break;
+
+    case 'mdadm':
+        switch ($args['mode']) {
+        case "resync":
+            $raid_stat = "синхронизируется " . $args['progress'] . '%';
+            break;
+
+        case "recovery":
+            $raid_stat = "восстанавливается " . $args['progress'] . '%';
+            break;
+
+        case "damage":
+            $raid_stat = "поврежден!";
+            break;
+
+        case "normal":
+            $raid_stat = "восстановлен!";
+            break;
+
+        case "no_exist":
+            $raid_stat = "отсутствует";
+            break;
+
+        default:
+            return;
+        }    
+
+        $text = sprintf("RAID1: %s", $raid_stat);
+        break;
+
+    case 'external_power':
+        switch ($args['mode']) {
+        case "on":
+            $text = "Внешнее питание восстановлено";
+            break;
+
+        case "off":
+            $text = "Отключено внешнее питание";
+            break;
+        }
+        break;
+
+    default: 
+        return -EINVAL;
+    }
+
+    run_cmd(sprintf("./telegram.php msg_send_all '%s'", $text));
+}
+
+
+function server_reboot($method, $user_id = NULL)
+{
+    sms_send('reboot',
+             ['user_id' => $user_id,
+              'groups' => ['sms_observer']],
+             $method);
+    
+    telegram_send('reboot', ['method' => $method, 
+                             'user_id' => $user_id]);
+   // run_cmd('halt');
+    for(;;);
 }
 
 function get_day_night()

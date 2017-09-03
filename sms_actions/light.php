@@ -27,17 +27,18 @@ function main($argv) {
     $sms_date = trim($argv[1]);
     $user_id = trim($argv[2]);
     $sms_text = trim($argv[3]);
-
+    
     $args = strings_to_args($sms_text);
-    $mode = isset($args[1]) ? $args[1] : NULL;
+    $mode = $sms_text;
     if (!$mode)
         return -EINVAL;
 
     switch ($mode) {
     case "on":
         $ret = run_cmd('./street_light.php enable');
-        if ($ret['rc'])
-            msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+        printf("enable light: %s\n", $ret['log']);
+
+        telegram_send('lighting_on');
         sms_send('lighting_on',
                  ['user_id' => $user_id, 
                   'groups' => ['sms_observer']]);
@@ -45,8 +46,8 @@ function main($argv) {
 
     case "off":
         $ret = run_cmd('./street_light.php disable');
-        if ($ret['rc'])
-            msg_log(LOG_ERR, "Can't enable street_light: " . $ret['log']);
+        printf("disable light: %s\n", $ret['log']);
+        telegram_send('lighting_off');
         sms_send('lighting_off',
                  ['user_id' => $user_id, 
                   'groups' => ['sms_observer']]);

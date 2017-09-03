@@ -35,6 +35,7 @@ function main($argv) {
     if ($guard_info['state'] == 'sleep')
         return 0;
 
+    telegram_send('external_power', ['mode' => $curr_stat]);
     sms_send('external_power',
              ['groups' => ['sms_observer']], 
              ['mode' => $curr_stat]);

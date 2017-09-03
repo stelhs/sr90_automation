@@ -13,9 +13,10 @@ function main($argv) {
     $curr_stat = get_mdstat();
     if ($curr_stat['mode'] == $prev_mode)
         return 0;
-
+printf("curr_stat = %s\n", $curr_stat['mode']);
     file_put_contents(MDSTAT_FILE, $curr_stat['mode']);
 
+    telegram_send('mdadm', $curr_stat);
     sms_send('mdadm', ['groups' => ['sms_observer']], $curr_stat);
     return 0;
 }
