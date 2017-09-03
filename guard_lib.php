@@ -54,6 +54,13 @@ function get_guard_state($db)
     else
         $data['ignore_zones'] = [];
 
+    $data['blocking_zones'] = [];
+    foreach (conf_guard()['zones'] as $zone) {
+        $mode = get_zone_locking_mode($db, $zone['id']);
+        if ($mode == 'lock')
+            $data['blocking_zones'][] = $zone;
+    }
+
     return $data;
 }
 

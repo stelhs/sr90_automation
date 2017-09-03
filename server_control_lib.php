@@ -359,6 +359,14 @@ function format_global_status_for_sms($stat)
             $text .= '.';
         }
 
+        if (count($stat['guard_stat']['blocking_zones'])) {
+            $text .= sprintf("Заблокир: ");
+            foreach ($stat['guard_stat']['blocking_zones'] as $zone) {
+                $text .= sprintf("%s, ", $zone['name']);
+            }
+            $text .= '.';
+        }
+
         if (isset($stat['guard_stat']['user_name']) && $mode)
             $text .= sprintf("%s: %s, ", $mode,
                                               $stat['guard_stat']['user_name']);
@@ -454,6 +462,12 @@ function format_global_status_for_telegram($stat)
                 $zone = zone_get_by_io_id($zone_id);
                 $text .= sprintf("               %s\n", $zone['name']);
             }
+        }
+
+        if (count($stat['guard_stat']['blocking_zones'])) {
+            $text .= sprintf("Заблокированные зоны: ");
+            foreach ($stat['guard_stat']['blocking_zones'] as $zone)
+                $text .= sprintf("               %s\n", $zone['name']);
         }
 
         if (isset($stat['guard_stat']['user_name']) && $text_who)
