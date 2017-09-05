@@ -51,6 +51,8 @@ function main($argv) {
         if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
+
+        run_cmd(sprintf("./image_sender.php current");
         break;
 
     case 'off':
@@ -70,6 +72,8 @@ function main($argv) {
             printf("close all padlocks: %s\n", $ret['log']);
             $telegram->send_message($chat_id, "все замки закрыла\n", $msg_id);
         }
+
+        run_cmd(sprintf("./image_sender.php current");
         break;
     }
     

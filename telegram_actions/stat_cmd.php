@@ -41,19 +41,7 @@ function main($argv) {
     
     $stat_text = format_global_status_for_telegram(get_global_status($db));
     $telegram->send_message($chat_id, $stat_text, $msg_id);
-    
-    $ret = file_get_contents('http://sr38.org/plato/?no_view');
-    $ret = json_decode($ret, true);
-    if ($ret === NULL)
-        printf("can't getting images: %s\n", $ret);
-
-    if (is_array($ret)) {
-        foreach ($ret as $cam_num => $file) {
-            $telegram->send_message($chat_id, sprintf("Камера %d:\n %s\n", 
-                                                      $cam_num, $file), $msg_id);
-        }
-    }
-    
+    run_cmd(sprintf("./image_sender.php current");
 
     return 0;
 }
