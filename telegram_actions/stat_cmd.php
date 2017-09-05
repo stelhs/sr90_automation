@@ -41,7 +41,7 @@ function main($argv) {
     
     $stat_text = format_global_status_for_telegram(get_global_status($db));
     $telegram->send_message($chat_id, $stat_text, $msg_id);
-    run_cmd(sprintf("./image_sender.php current"));
+    run_cmd(sprintf("./image_sender.php current %d", $chat_id));
 
     return 0;
 }
