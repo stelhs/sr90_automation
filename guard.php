@@ -100,6 +100,7 @@ function main($argv)
 
             telegram_send('guard_disable', ['user' => $user['name'],
                                             'method' => $method]);
+            run_cmd(sprintf("./image_sender.php current"));
 
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);
@@ -185,6 +186,7 @@ function main($argv)
 
             telegram_send('guard_enable', ['user' => $user['name'],
                                            'method' => $method]);
+            run_cmd(sprintf("./image_sender.php current"));
 
             if ($method == 'cli') {
                 printf("stat: %s\n", $stat_text);

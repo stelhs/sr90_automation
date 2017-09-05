@@ -48,24 +48,11 @@ function main($argv) {
 
         printf("run cmd = '%s'\n", $cmd);
         $ret = run_cmd($cmd);
-
-        /* parse 'lock' parameter */
-        if (isset($args[2]) && $args[2] == 'lock') {
-            // disable selected cam in doors
-            unset($args[1]);
-            unset($args[2]);
-            $list_doors = $args;
-            unset($list_doors[0]);
-            unset($list_doors[1]);
-            if ($list_doors)
-                foreach ($list_doors as $door) { 
-                    $rc = $mio->relay_set_state(conf_guard()['doors'][$door - 1], 0);
-                    if ($rc < 0)
-                        printf("Can't set relay state %d\n", $io_port);
-                }
+        if ($ret['rc'] != '0') {
+            run_cmd(sprintf("./telegram.php msg_send_all 'Неполучилось отключить охрану через SMS: %s'", 
+                            $ret['log']));
+            return $ret['rc'];
         }
-        
-        dump($ret);
         break;
 
     case 'on':
@@ -74,7 +61,11 @@ function main($argv) {
             $cmd .= " sms";
 
         $ret = run_cmd($cmd);
-        dump($ret);
+        if ($ret['rc'] != '0') {
+            run_cmd(sprintf("./telegram.php msg_send_all 'Неполучилось включить охрану через SMS: %s'", 
+                            $ret['log']));
+            return $ret['rc'];
+        }
         break;
 
     default:
