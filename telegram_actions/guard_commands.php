@@ -55,8 +55,7 @@ function main($argv) {
 
     case 'off':
         $cmd = "./guard.php state sleep telegram " . $user_id;
-        if (isset($args[5]) && $args[5] == 'sms')
-            $cmd .= " sms";
+        $lock = isset($args[5]) ? $args[5] : false;
 
         $telegram->send_message($chat_id, "ok, попробую\n", $msg_id);
 
@@ -64,6 +63,13 @@ function main($argv) {
         if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
+
+        if ($lock) {
+            // close all padlocks
+            $ret = run_cmd('./padlock.php close');
+            printf("close all padlocks: %s\n", $ret['log']);
+            $telegram->send_message($chat_id, "все замки закрыла\n", $msg_id);
+        }
         break;
     }
     
