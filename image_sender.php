@@ -65,6 +65,7 @@ function main($argv)
                 $ret = run_cmd(sprintf("./telegram.php msg_send %d 'Камера %d:\n %s'",
                                        $chat_id, $cam_num, $file));
                 printf("send URL to telegram: %s\n", $ret['log']);
+                continue;
             }
             $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n %s'",
                                    $cam_num, $file));
