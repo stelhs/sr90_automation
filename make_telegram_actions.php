@@ -108,7 +108,7 @@ function main($argv) {
         return 0;
     }
     
-    $query = strtolower(array_to_string($words, ' '));
+    $query = mb_strtolower(array_to_string($words, ' '), 'utf8');
     printf("query = %s\n", $query);
 
     $script = NULL;
