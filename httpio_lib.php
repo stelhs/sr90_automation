@@ -2,11 +2,13 @@
 
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
+require_once 'common_lib.php';
 
 class Httpio {
     private $debug_output_states = [];
     public $ip_addr;
     public $tcp_port;
+    public $io;
 
     function __construct($ip_addr, $tcp_port)
     {
@@ -43,6 +45,9 @@ class Httpio {
 
     public function relay_set_state($port, $state)
     {
+        db()->insert('io_output_actions', ['io_name' => $this->io,
+                                           'port' => $port,
+                                           'state' => $state]);
         if (DISABLE_HW) {
             perror("FAKE: httpio.relay_set_state %s: %d to %d\n", $this->ip_addr, $port, $state);
             $this->debug_output_states[$this->ip_addr][$port] = $state;
@@ -104,12 +109,14 @@ function httpio($name)
     $tcp_port = conf_io()[$name]['tcp_port'];
 
     if ($httpio) {
+        $httpio->io = $name;
         $httpio->ip_addr = $ip_addr;
         $httpio->tcp_port = $tcp_port;
         return $httpio;
     }
 
     $httpio = new Httpio($ip_addr, $tcp_port);
+    $httpio->io = $name;
     return $httpio;
 }
 
