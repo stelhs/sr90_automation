@@ -52,7 +52,7 @@ $commands = [
 
                 ['cmd' => ['статус', 'stat'],
                  'script' => 'stat_cmd.php'],
-            ];
+];
 
 function mk_help()
 {
@@ -61,8 +61,8 @@ function mk_help()
     foreach($commands as $row) {
         $msg .= sprintf("   - 'skynet %s'\n", $row['cmd'][0]);
         if (isset($row['wr']))
-            for ($i = 0; $i < $row['wr']; $i++)
-                $msg .= "\n";
+        for ($i = 0; $i < $row['wr']; $i++)
+        $msg .= "\n";
     }
 
     return $msg;
@@ -101,7 +101,7 @@ function main($argv) {
         return 0;
     }
 
-    $query = strtolower(array_to_string($words, ' '));
+    $query = mb_strtolower(array_to_string($words, ' '), 'utf8');
     pnotice("query = %s\n", $query);
 
     $script = NULL;
@@ -115,7 +115,7 @@ function main($argv) {
             $script = $row['script'];
             $args = $row['args'] . substr($query, $p + strlen($cmd));
             break;
-       }
+        }
     pnotice("script = %s\n", $script);
     pnotice("args = %s\n", $args);
 
@@ -130,7 +130,7 @@ function main($argv) {
     }
 
     $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
-                                  $from_user_id, $chat_id, $msg_id, $args);
+    $from_user_id, $chat_id, $msg_id, $args);
 
     $ret = run_cmd($cmd);
     if ($ret['rc']) {
