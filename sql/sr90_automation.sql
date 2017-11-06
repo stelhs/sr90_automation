@@ -2,36 +2,22 @@
 -- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Apr 26, 2017 at 03:45 PM
--- Server version: 5.5.53-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.20
+-- Хост: localhost
+-- Время создания: Ноя 06 2017 г., 04:14
+-- Версия сервера: 5.5.53-0ubuntu0.14.04.1
+-- Версия PHP: 5.5.9-1ubuntu4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- Database: `sr90_automation`
+-- База данных: `sr90_automation`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `app_logs`
---
-
-CREATE TABLE IF NOT EXISTS `app_logs` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `text` text NOT NULL,
-  `type` enum('urgent','error','warning','notice') NOT NULL,
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='События в приложении' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `blocking_zones`
+-- Структура таблицы `blocking_zones`
 --
 
 CREATE TABLE IF NOT EXISTS `blocking_zones` (
@@ -39,14 +25,13 @@ CREATE TABLE IF NOT EXISTS `blocking_zones` (
   `zone_id` bigint(20) NOT NULL,
   `mode` enum('lock','unlock') NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `zone_id` (`zone_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ext_power_log`
+-- Структура таблицы `ext_power_log`
 --
 
 CREATE TABLE IF NOT EXISTS `ext_power_log` (
@@ -59,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `ext_power_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `guard_actions`
+-- Структура таблицы `guard_actions`
 --
 
 CREATE TABLE IF NOT EXISTS `guard_actions` (
@@ -68,13 +53,13 @@ CREATE TABLE IF NOT EXISTS `guard_actions` (
   `guard_state` enum('sleep','ready') DEFAULT NULL,
   `alarm` tinyint(1) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `zone_id` (`zone_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
 --
--- Table structure for table `guard_states`
+-- Структура таблицы `guard_states`
 --
 
 CREATE TABLE IF NOT EXISTS `guard_states` (
@@ -91,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `guard_states` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `incomming_sms`
+-- Структура таблицы `incomming_sms`
 --
 
 CREATE TABLE IF NOT EXISTS `incomming_sms` (
@@ -106,11 +91,12 @@ CREATE TABLE IF NOT EXISTS `incomming_sms` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `io_input_actions`
+-- Структура таблицы `io_input_actions`
 --
 
 CREATE TABLE IF NOT EXISTS `io_input_actions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `io_name` varchar(64) NOT NULL,
   `port` tinyint(4) NOT NULL,
   `state` tinyint(4) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -120,11 +106,12 @@ CREATE TABLE IF NOT EXISTS `io_input_actions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `io_output_actions`
+-- Структура таблицы `io_output_actions`
 --
 
 CREATE TABLE IF NOT EXISTS `io_output_actions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `io_name` varchar(64) NOT NULL,
   `port` tinyint(4) NOT NULL,
   `state` tinyint(4) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -134,7 +121,42 @@ CREATE TABLE IF NOT EXISTS `io_output_actions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Структура таблицы `telegram_chats`
+--
+
+CREATE TABLE IF NOT EXISTS `telegram_chats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` bigint(20) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список чатов куда рассылать уведомления' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `telegram_msg`
+--
+
+CREATE TABLE IF NOT EXISTS `telegram_msg` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `update_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского запроса UPDATE',
+  `msg_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского сообщения',
+  `date` bigint(20) DEFAULT NULL COMMENT 'Дата сообщения',
+  `from_name` varchar(64) NOT NULL,
+  `from_id` bigint(20) NOT NULL,
+  `chat_name` varchar(128) NOT NULL,
+  `chat_id` bigint(20) NOT NULL,
+  `chat_type` varchar(16) NOT NULL,
+  `text` text NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users`
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -148,52 +170,4 @@ CREATE TABLE IF NOT EXISTS `users` (
   `serv_control` tinyint(1) NOT NULL DEFAULT '0',
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
---
--- Constraints for dumped tables
---
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `phones`, `telegram_id`, `guard_switch`, `guard_alarm`, `sms_observer`, `serv_control`, `enabled`) VALUES
-(1, 'Михаил', '+375295051024,+375296091024', 186579253, 1, 1, 1, 1, 1),
-(2, 'Вероника', '+375295365072', 0, 1, 1, 0, 1, 1),
-(3, 'Игорь', '+375293531402', 0, 1, 1, 0, 0, 1),
-(4, 'Мама', '+375291651456', 0, 0, 1, 0, 0, 1);
-
-
---
--- Table structure for table `telegram_msg`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_msg` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `update_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского запроса UPDATE',
-  `msg_id` bigint(20) NOT NULL COMMENT 'ID телеграмовского сообщения',
-  `date` bigint(20) DEFAULT NULL COMMENT 'Дата сообщения',
-  `from_name` varchar(64) CHARACTER SET latin1 NOT NULL,
-  `from_id` bigint(20) NOT NULL,
-  `chat_name` varchar(128) CHARACTER SET latin1 NOT NULL,
-  `chat_id` bigint(20) NOT NULL,
-  `chat_type` varchar(16) CHARACTER SET latin1 NOT NULL,
-  `text` text CHARACTER SET latin1 NOT NULL,
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-
---
--- Table structure for table `telegram_chats`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_chats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `chat_id` bigint(20) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `enabled` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список чатов куда рассылать уведомления' AUTO_INCREMENT=1 ;
-
-
