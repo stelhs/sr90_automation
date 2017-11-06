@@ -1,5 +1,5 @@
 #!/usr/bin/php
-<?php 
+<?php
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
@@ -70,7 +70,7 @@ function mk_help()
 
 function main($argv) {
     global $commands;
-    
+
     $rc = 0;
     if (count($argv) < 4)
         return -EINVAL;
@@ -79,15 +79,8 @@ function main($argv) {
     $chat_id = strtolower(trim($argv[2]));
     $msg_text = strtolower(trim($argv[3]));
     $msg_id = isset($argv[4]) ? strtolower(trim($argv[4])) : 0;
-    
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        msg_log(LOG_ERR, "can't connect to database");
-        return -EBASE;
-    }
 
-    $telegram = new Telegram_api($db);
+    $telegram = new Telegram_api();
 
     $words = split_string($msg_text);
     if (!$words)
@@ -95,7 +88,7 @@ function main($argv) {
 
     $arg1 = mb_strtolower($words[0], 'utf8');
     $arg2 = mb_strtolower($words[1], 'utf8');
-    if ($arg1 != "skynet" && $arg1 != "скайнет")
+    if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
         return -EINVAL;
 
     if ($arg2 == "голос") {
@@ -107,9 +100,9 @@ function main($argv) {
         $telegram->send_message($chat_id, "Я умею следующее:\n\n" . mk_help(), $msg_id);
         return 0;
     }
-    
+
     $query = strtolower(array_to_string($words, ' '));
-    printf("query = %s\n", $query);
+    pnotice("query = %s\n", $query);
 
     $script = NULL;
     $args = '';
@@ -123,32 +116,30 @@ function main($argv) {
             $args = $row['args'] . substr($query, $p + strlen($cmd));
             break;
        }
-    printf("script = %s\n", $script);
-    printf("args = %s\n", $args);
+    pnotice("script = %s\n", $script);
+    pnotice("args = %s\n", $args);
 
     if (!$script) {
         if (!$arg2)
             $telegram->send_message($chat_id, "Что сделать?\n\nВозможные варианты:\n" . mk_help(), $msg_id);
         else {
             $telegram->send_message($chat_id, "Не поняла\n\n", $msg_id);
-            msg_log(LOG_ERR, "can't recognize query\n");
+            perror("can't recognize query\n");
         }
         return -EINVAL;
     }
 
-    $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script, 
+    $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
                                   $from_user_id, $chat_id, $msg_id, $args);
 
     $ret = run_cmd($cmd);
     if ($ret['rc']) {
-        msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
-                                 $script, $ret['log']));
+        perror("script %s: return error: %s\n", $script, $ret['log']);
         $telegram->send_message($chat_id, "Ошибка: " . $ret['log'], $msg_id);
         return -EINVAL;
     }
 
-    msg_log(LOG_NOTICE, sprintf("script %s: return:\n%s\n", $script, $ret['log']));
     return 0;
 }
 
-return main($argv);
+exit(main($argv));

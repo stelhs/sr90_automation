@@ -41,7 +41,7 @@ class Modem3G {
         @$result = file_get_contents($full_url);
         if ($result == FALSE)
             return -EPARSE;
-        
+
 	return parse_xml($result);
     }
 
@@ -49,16 +49,16 @@ class Modem3G {
     function send_sms($pnone_number, $text)
     {
         if (DISABLE_HW) {
-            printf("modem.send_sms %s, %s\n", $pnone_number, $text);
+            perror("modem.send_sms %s, %s\n", $pnone_number, $text);
             return 0;
         }
 
         // remove stored outgoing sms
-        $rows = $this->get_sms_list(2); 
+        $rows = $this->get_sms_list(2);
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $sms_index = $row['content']['Index'][0]['content'];
-                printf("remove outgoing sms index=%d\n", $sms_index);
+                perror("remove outgoing sms index=%d\n", $sms_index);
                 $this->remove_sms($sms_index);
             }
         }
@@ -74,7 +74,7 @@ class Modem3G {
 
         $data = $this->post_request('/api/sms/send-sms', $query);
         if ($data < 0) {
-            msg_log(LOG_ERR, "Can't send SMS " . $pnone_number . 
+            msg_log(LOG_ERR, "Can't send SMS " . $pnone_number .
                             ' text: ' . $text . ' reason: Can\'t connect to modem');
             return $data;
         }
@@ -82,7 +82,7 @@ class Modem3G {
         if (isset($data['response']['content'][0]) && $data['response']['content'][0] == 'OK')
             return 0;
 
-      //  app_log(LOG_ERR, "Modem: Can't send SMS " . $pnone_number . 
+      //  app_log(LOG_ERR, "Modem: Can't send SMS " . $pnone_number .
         //                ' text: ' . $text . ' reason code: ' . $data['error']['content']['code'][0]['content']);
         return $data['error']['content']['code'][0]['content'];
     }
@@ -91,7 +91,7 @@ class Modem3G {
     function send_ussd($text)
     {
         if (DISABLE_HW) {
-            printf("modem.send_ussd %s\n", $text);
+            perror("modem.send_ussd %s\n", $text);
             return 0;
         }
 
@@ -99,17 +99,16 @@ class Modem3G {
                  '<codeType>CodeType</codeType>';
 
         $data = $this->post_request('/api/ussd/send', $query);
-        if ($data < 0) { 
-            msg_log(LOG_ERR, "Can't send USSD " . $text . 
-                        ' reason: can\'t connect to modem');
+        if ($data < 0) {
+            perror("Can't send USSD %s reason: can\'t connect to modem\n", $text);
             return -EPARSE;
         }
 
         if (isset($data['response']['content'][0]) && $data['response']['content'][0] == 'OK')
             return 0;
 
-        app_log(LOG_ERR, "Modem: Can't send USSD " . $text . 
-                    ' reason code: ' . $data['error']['content']['code'][0]['content']);
+        perror("Modem: Can't send USSD %s reason code: %s\n",
+                    $text, $data['error']['content']['code'][0]['content']);
         return $data['error']['content']['code'][0]['content'];
     }
 
@@ -117,7 +116,7 @@ class Modem3G {
     function check_for_new_ussd()
     {
         if (DISABLE_HW) {
-            printf("modem.check_for_new_ussd\n");
+            perror("modem.check_for_new_ussd\n");
             return 0;
         }
 
@@ -135,7 +134,7 @@ class Modem3G {
     function remove_sms($sms_index)
     {
         if (DISABLE_HW) {
-            printf("modem.remove_sms %d\n", $sms_index);
+            perror("modem.remove_sms %d\n", $sms_index);
             return 0;
         }
 
@@ -143,7 +142,7 @@ class Modem3G {
 
         $data = $this->post_request('/api/sms/delete-sms', $query);
         if ($data < 0) {
-            app_log(LOG_ERR, 'Modem: Can\'t remove SMS: can\'t connect to modem');
+            perror("Modem: Can\'t remove SMS: can\'t connect to modem\n");
             return -EPARSE;
         }
 
@@ -159,7 +158,7 @@ class Modem3G {
     function get_sms_list($box_type)
     {
         if (DISABLE_HW) {
-            printf("modem.get_sms_list\n");
+            perror("modem.get_sms_list\n");
             return [];
         }
 
@@ -174,10 +173,10 @@ class Modem3G {
 
         $data = $this->post_request('/api/sms/sms-list', $query);
         if ($data < 0) {
-            app_log(LOG_ERR, 'Modem: Can\'t check SMS list reason: can\'t connect to modem');
+            perror("Modem: Can\'t check SMS list reason: can\'t connect to modem\n");
             return -EPARSE;
         }
-        
+
         if (isset($data['error']['content']['code'][0]['content']))
             return $data['error']['content']['code'][0]['content'];
 
@@ -190,7 +189,7 @@ class Modem3G {
 
     function check_for_new_sms()
     {
-        $rows = $this->get_sms_list(1); 
+        $rows = $this->get_sms_list(1);
         if (!is_array($rows))
             return $rows;
 
@@ -215,7 +214,7 @@ class Modem3G {
     function get_status()
     {
         if (DISABLE_HW) {
-            printf("modem.get_status\n");
+            perror("modem.get_status\n");
             $info = [];
             $info['connection_status'] = '';
             $info['signal_strength'] = '';
@@ -224,7 +223,7 @@ class Modem3G {
             $info['wan_ip_addr'] = '';
             $info['primary_dns'] = '';
             $info['secondary_dns'] = '';
-            return $info; 
+            return $info;
         }
 
         $data = $this->get_request('/api/monitoring/status');
@@ -248,7 +247,7 @@ class Modem3G {
     function get_traffic_statistics()
     {
         if (DISABLE_HW) {
-            printf("modem.get_traffic_statistics\n");
+            perror("modem.get_traffic_statistics\n");
             $info = [];
             $info['curr_connect_time'] = '';
             $info['curr_upload'] = '';
@@ -258,7 +257,7 @@ class Modem3G {
             $info['total_upload'] = '';
             $info['total_download'] = '';
             $info['total_connect_time'] = '';
-            return $info; 
+            return $info;
         }
 
         $data = $this->get_request('/api/monitoring/traffic-statistics');
@@ -283,7 +282,7 @@ class Modem3G {
     function reset_traffic_statistics()
     {
         if (DISABLE_HW) {
-            printf("modem.reset_traffic_statistics\n");
+            perror("modem.reset_traffic_statistics\n");
             return 0;
         }
 
@@ -291,7 +290,7 @@ class Modem3G {
 
         $data = $this->post_request('/api/monitoring/clear-traffic', $query);
         if ($data < 0) {
-            app_log(LOG_ERR, 'Modem: Can\'t clear traffic statistics: can\'t connect to modem');
+            perror("Modem: Can\'t clear traffic statistics: can\'t connect to modem\n");
             return -EPARSE;
         }
 
@@ -308,7 +307,7 @@ class Modem3G {
     function check_sended_sms_status()
     {
         if (DISABLE_HW) {
-            printf("modem.check_sended_sms_status\n");
+            perror("modem.check_sended_sms_status\n");
             $info = [];
             $info['curr_phone'] = '';
             $info['success_phone'] = '';
@@ -333,20 +332,20 @@ class Modem3G {
         $info['curr_index'] = $data['response']['content']['CurIndex'][0]['content'];
         return $info;
     }
-    
+
     function get_sim_balanse()
     {
         if (DISABLE_HW) {
-            printf("modem.get_sim_balanse\n");
+            perror("modem.get_sim_balanse\n");
             return '0';
         }
 
         $ret = $this->send_ussd('*100#');
         if ($ret) {
-            msg_log(LOG_ERR, "Can't get Balanse: " . $ret);
+            perror("Can't get Balanse: %s\n", $ret);
             return -EBUSY;
         }
-        
+
         for ($i = 0; $i < 5; $i++) {
             sleep(1);
             $response = $this->check_for_new_ussd();
@@ -355,14 +354,14 @@ class Modem3G {
 
             break;
         }
-        
+
         if ($response < 0)
             return -ECONNFAIL;
 
         preg_match('/Balans\=([\w\.]+)/m', $response, $mathes);
         if (!isset($mathes[1]))
             return -EPARSE;
-            
+
         return $mathes[1];
     }
 

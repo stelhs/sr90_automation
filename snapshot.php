@@ -5,13 +5,12 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
-require_once 'mod_io_lib.php';
 $utility_name = $argv[0];
 
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <path_for_store> <prefix>\n" . 
+    echo "Usage: $utility_name <path_for_store> <prefix>\n" .
              "\tMake cameras snapshots into <path_for_store>.\n" .
              "\tResult files name used prefix <prefix>\n" .
              "\t\tExample:\n" .
@@ -24,32 +23,31 @@ function print_help()
 
 function main($argv)
 {
-    if (!isset($argv[1])) {
+    if (!isset($argv[1]))
         return -1;
-    }
-    
-    $path_for_store = trim($argv[1]); 
-    $prefix = isset($argv[2]) ? trim($argv[2]) : ""; 
-    
+
+    $path_for_store = trim($argv[1]);
+    $prefix = isset($argv[2]) ? trim($argv[2]) : "";
+
     $result = 0;
     foreach (conf_guard()['video_cameras'] as $cam) {
         $cmd = 'ffmpeg -f video4linux2 -i ' . $cam['v4l_dev'] .
-               ' -vf scale=' . $cam['resolution'] . 
-               ' -vframes 1 ' . 
+               ' -vf scale=' . $cam['resolution'] .
+               ' -vframes 1 ' .
                $path_for_store . '/' . $prefix . 'cam_' . $cam['id'] . '.jpeg';
         $ret = run_cmd($cmd);
         if ($ret['rc']) {
-            msg_log(LOG_ERR, sprintf("Can't create snapshot for camera %d %s\n", 
-                                     $cam['id'], $cam['v4l_dev']));
+            perror("Can't create snapshot for camera %d %s\n",
+                                     $cam['id'], $cam['v4l_dev']);
         }
         $result |= $ret['rc'];
     }
 
     if ($result) {
-        msg_log(LOG_ERR, "Can't create snapshot\n");
-        return 1;
+        perror("Can't create snapshot\n");
+        return -1;
     }
-    
+
     return 0;
 }
 
@@ -57,4 +55,5 @@ function main($argv)
 $rc = main($argv);
 if ($rc) {
     print_help();
+    exit($rc);
 }

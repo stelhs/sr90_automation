@@ -6,13 +6,14 @@ require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
 require_once 'modem3g.php';
+require_once 'common_lib.php';
 $utility_name = $argv[0];
 
 
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" . 
+    echo "Usage: $utility_name <command> <args>\n" .
     	     "\tcommands:\n" .
     		 "\tsms_send - Send SMS\n" .
              "\t\tExample:\n" .
@@ -36,13 +37,6 @@ function main($argv)
     if (!isset($argv[1])) {
         return -EINVAL;
     }
-    
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        printf("can't connect to database");
-        return -EBASE;
-    }
 
     $modem = new Modem3G(conf_modem()['ip_addr']);
 
@@ -54,7 +48,7 @@ function main($argv)
 
         $ret = $modem->send_sms($phone, $text);
         if ($ret) {
-            msg_log(LOG_ERR, "Can't send SMS: " . $ret);
+            perror("Can't send SMS: %s\n", $ret);
             $rc = -EBUSY;
         }
         goto out;
@@ -63,8 +57,8 @@ function main($argv)
         $text = $argv[2];
 
         // get list phones for SMS subscribers
-        $users = $db->query_list('SELECT * FROM users '.
-                                 'WHERE serv_control = 1');
+        $users = db()->query_list('SELECT * FROM users '.
+                                  'WHERE serv_control = 1');
         $list_phones = array();
         foreach ($users as $user)
             $list_phones[] = string_to_array($user['phones'])[0];
@@ -72,7 +66,7 @@ function main($argv)
         foreach ($list_phones as $phone) {
             $ret = $modem->send_sms($phone, $text);
             if ($ret) {
-                msg_log(LOG_ERR, "Can't send SMS: " . $ret);
+                perror("Can't send SMS: %s\n", $ret);
                 $rc = -EBUSY;
             }
         }
@@ -81,13 +75,13 @@ function main($argv)
     case 'sms_recv':
         $ret = $modem->check_for_new_sms();
         if (!is_array($ret)) {
-            msg_log(LOG_ERR, "Can't check for new sms: " . $ret);   
+            perror("Can't check for new sms: \n", $ret);
             $rc = -EBUSY;
             goto out;
         }
 
         if (!count($ret)) {
-            printf("No new SMS receved\n");
+            perror("No new SMS receved\n");
             goto out;
         }
 
@@ -95,16 +89,16 @@ function main($argv)
         if (isset($argv[2]))
             $action_script = $argv[2];
 
-        printf("New SMS was received:\n");
+        perror("New SMS was received:\n");
         foreach ($ret as $sms) {
-            printf("\tDate: %s\n", $sms['date']);
-            printf("\tPhone: %s\n", $sms['phone']);
-            printf("\tMessage: %s\n\n", $sms['text']);
+            perror("\tDate: %s\n", $sms['date']);
+            perror("\tPhone: %s\n", $sms['phone']);
+            perror("\tMessage: %s\n\n", $sms['text']);
             if (!$action_script)
                 continue;
 
-            run_cmd(sprintf("%s '%s' '%s' '%s'", 
-                            $action_script, $sms['date'], 
+            run_cmd(sprintf("%s '%s' '%s' '%s'",
+                            $action_script, $sms['date'],
                             $sms['phone'], $sms['text']));
         }
 
@@ -113,22 +107,22 @@ function main($argv)
     case 'ussd_send':
         $text = $argv[2];
 
-        printf("sending $text\n");
+        perror("sending $text\n");
         $ret = $modem->send_ussd($text);
         if ($ret) {
-            msg_log(LOG_ERR, "Can't send USSD: " . $ret);
+            perror("Can't send USSD: %s\n", $ret);
             $rc = -EBUSY;
             goto out;
         }
 
-        printf("waiting for response\n");
+        perror("waiting for response\n");
         for (;;) {
             sleep(1);
             $response = $modem->check_for_new_ussd();
             if ($response < 0)
                 continue;
 
-            printf("%s\n", $response);
+            perror("%s\n", $response);
             break;
         }
 
@@ -145,5 +139,5 @@ out:
 $rc = main($argv);
 if ($rc) {
     print_help();
+    exit($rc);
 }
-    

@@ -2,9 +2,8 @@
 <?php
 
 require_once '/usr/local/lib/php/common.php';
-require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
-require_once 'server_control_lib.php';
+require_once 'common_lib.php';
 
 define("MDSTAT_FILE", "/run/mdstat_mode");
 
@@ -13,7 +12,7 @@ function main($argv) {
     $curr_stat = get_mdstat();
     if ($curr_stat['mode'] == $prev_mode)
         return 0;
-printf("curr_stat = %s\n", $curr_stat['mode']);
+
     file_put_contents(MDSTAT_FILE, $curr_stat['mode']);
 
     telegram_send('mdadm', $curr_stat);
@@ -21,4 +20,4 @@ printf("curr_stat = %s\n", $curr_stat['mode']);
     return 0;
 }
 
-return main($argv);
+exit(main($argv));

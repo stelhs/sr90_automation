@@ -3,7 +3,7 @@
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
-require_once 'server_control_lib.php';
+require_once 'common_lib.php';
 
 require_once 'config.php';
 require_once 'telegram_api.php';
@@ -13,7 +13,7 @@ define("MSG_LOG_LEVEL", LOG_NOTICE);
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" . 
+    echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\tmsg_recv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
              "\t\tExample:\n" .
@@ -33,14 +33,7 @@ function main($argv)
     if (!isset($argv[1]))
         return -EINVAL;
 
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        msg_log(LOG_ERR, "can't connect to database");
-        return -EBASE;
-    }
-
-    $telegram = new Telegram_api($db);
+    $telegram = new Telegram_api();
 
     $cmd = strtolower(trim($argv[1]));
     switch ($cmd) {
@@ -59,35 +52,34 @@ function main($argv)
             $action_script = $argv[2];
 
         foreach ($list_msg as $msg) {
-            printf("received from %s: %s\n", $msg['from_name'], $msg['text']);
+            perror("received from %s: %s\n", $msg['from_name'], $msg['text']);
             if (!$action_script)
                 continue;
 
-            $user = user_get_by_telegram_id($db, $msg['from_id']);
+            $user = user_get_by_telegram_id($msg['from_id']);
             $user_id = 0;
             if (is_array($user))
                 $user_id = $user['id'];
 
             if ($user_id == 0)
-                printf("unrecognized user ID: %d\n", $msg['from_id']);
+                perror("unrecognized user ID: %d\n", $msg['from_id']);
 
-            $ret = run_cmd(sprintf("%s '%d' '%s' '%s' '%s'", 
+            $ret = run_cmd(sprintf("%s '%d' '%s' '%s' '%s'",
                                    $action_script, $user_id, $msg['chat_id'],
                                    $msg['text'], $msg['msg_id']));
             if ($ret['rc']) {
-                msg_log(LOG_ERR, sprintf("script %s: return error: %s\n", 
-                                         $action_script, $ret['log']));
+                perror("script %s: return error: %s\n",
+                                         $action_script, $ret['log']);
                 continue;
             }
 
-            msg_log(LOG_NOTICE, sprintf("script %s: return:\n%s\n", 
-                                    $action_script, $ret['log']));
+            pnotice("script %s: return:\n%s\n", $action_script, $ret['log']);
         }
         break;
 
     case 'msg_send':
         if ((!isset($argv[2])) || (!isset($argv[3]))) {
-            msg_log(LOG_ERR, "incorrect params");
+            perror("incorrect params");
             return -EINVAL;
         }
 
@@ -96,22 +88,22 @@ function main($argv)
 
         $telegram->send_message($chat_id, $msg);
         break;
-        
+
     case 'msg_send_all':
         if (!isset($argv[2])) {
-            msg_log(LOG_ERR, "incorrect params");
+            perror("incorrect params");
             return -EINVAL;
         }
-        
+
         $msg = trim($argv[2]);
-        $chat_list = $db->query_list("SELECT * FROM telegram_chats WHERE enabled = 1");
+        $chat_list = db()->query_list("SELECT * FROM telegram_chats WHERE enabled = 1");
         foreach ($chat_list as $row)
             $telegram->send_message($row['chat_id'], $msg);
-        
+
         break;
 
     default:
-        msg_log(LOG_ERR, "incorrect command");
+        perror("incorrect command");
         $rc = -EINVAL;
     }
 
@@ -121,4 +113,5 @@ function main($argv)
 $rc = main($argv);
 if ($rc) {
     print_help();
+    exit($rc);
 }

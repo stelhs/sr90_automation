@@ -2,18 +2,16 @@
 require_once 'config.php';
 
 class Telegram_api {
-    private $db;
     private $last_update_id;
 
-    function __construct($db)
+    function __construct()
     {
-        $this->db = $db;
         $this->last_update_id = 0;
     }
 
     function post_request($method_name, $params = [])
     {
-        $full_url = sprintf('https://api.telegram.org/bot%s/%s', 
+        $full_url = sprintf('https://api.telegram.org/bot%s/%s',
                                     conf_telegram_bot()['token'], $method_name);
 
         $query = http_build_query($params);
@@ -37,7 +35,7 @@ class Telegram_api {
     function get_last_update_id()
     {
         if (!$this->last_update_id)
-            @$this->last_update_id = file_get_contents(getenv("HOME") . 
+            @$this->last_update_id = file_get_contents(getenv("HOME") .
                                                        '/.telegram_last_update_id');
         return $this->last_update_id;
     }
@@ -55,12 +53,12 @@ class Telegram_api {
                                                    'limit' => 10,
                                                    'timeout' => 30]);
         if (!is_array($resp)) {
-            msg_log(LOG_ERR, "telegram: Can't make POST request " . $resp);
+            perror("telegram: Can't make POST request %s\n", $resp);
             return $resp;
         }
 
         if ($resp['ok'] != 1) {
-            msg_log(LOG_ERR, "telegram: error POST request, ok=" . $resp['ok']);
+            perror("telegram: error POST request, ok=%s", $resp['ok']);
             return -EBUSY;
         }
 
@@ -80,7 +78,7 @@ class Telegram_api {
             if (!isset($row['message']['text']))
                 continue;
 
-            printf("Processed message: %d\n", $row['message']['message_id']);
+            perror("Processed message: %d\n", $row['message']['message_id']);
             $msg = ['update_id' =>   $row['update_id'],
                     'msg_id' =>      $row['message']['message_id'],
                     'date' =>        $row['message']['date'],
@@ -88,20 +86,20 @@ class Telegram_api {
                     'from_id' =>     $row['message']['from']['id'],
                     'chat_id' =>     $row['message']['chat']['id'],
                     'chat_type' =>   $row['message']['chat']['type'],
-                    'chat_name' =>   ($row['message']['chat']['type'] == 'private' ? 
+                    'chat_name' =>   ($row['message']['chat']['type'] == 'private' ?
                                               $row['message']['chat']['first_name'] :
                                               $row['message']['chat']['title']),
                     'text'      =>   $row['message']['text'],
             ];
 
-            $this->db->insert('telegram_msg', $msg);
+            db()->insert('telegram_msg', $msg);
             $list_msg[] = $msg;
         }
 
         return $list_msg;
     }
 
-    function send_message($chat_id, $text, 
+    function send_message($chat_id, $text,
                 $reply_to_message_id = 0, $disable_notification = false)
     {
         $params = ['chat_id' => $chat_id, 'text' => $text];
@@ -112,12 +110,12 @@ class Telegram_api {
 
         $resp = $this->post_request('sendMessage', $params);
         if (!is_array($resp)) {
-            msg_log(LOG_ERR, "telegram: Can't make POST request " . $resp);
+            perror("telegram: Can't make POST request %s\n", $resp);
             return $resp;
         }
 
         if ($resp['ok'] != 1) {
-            msg_log(LOG_ERR, "telegram: error POST request, ok=" . $resp['ok']);
+            perror("telegram: error POST request, ok=%s\n", $resp['ok']);
             return -EBUSY;
         }
 

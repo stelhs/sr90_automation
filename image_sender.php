@@ -12,7 +12,7 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" . 
+    echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\t$utility_name alarm <alarm_id> - Send all cameras photos associated with alarm_id to sr38.org and send links to Telegram\n" .
              "\t\tExample:\n" .
@@ -39,12 +39,12 @@ function main($argv)
         // copy images to sr38.org
         $ret = run_cmd(sprintf('scp %s/%d_*.jpeg stelhs@sr38.org:/var/www/plato/alarm_img/',
                                conf_guard()['alarm_snapshot_dir'], $alarm_id));
-        printf("scp to sr38.org: %s\n", $ret['log']);
+        perror("scp to sr38.org: %s\n", $ret['log']);
 
         foreach (conf_guard()['video_cameras'] as $cam) {
             $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg'",
                                    $cam['id'], $alarm_id, $cam['id']));
-            printf("send URL to telegram: %s\n", $ret['log']);
+            perror("send URL to telegram: %s\n", $ret['log']);
         }
         goto out;
 
@@ -54,9 +54,9 @@ function main($argv)
         $ret = json_decode($content, true);
         if ($ret === NULL) {
             $rc = -1;
-            run_cmd(sprintf("./telegram.php msg_send_all 'Не удалось получить изобрадение с камер: %s'", 
+            run_cmd(sprintf("./telegram.php msg_send_all 'Не удалось получить изобрадение с камер: %s'",
                                    $content));
-            printf("can't getting images: %s\n", $ret);
+            perror("can't getting images: %s\n", $ret);
             goto out;
         }
 
@@ -64,12 +64,12 @@ function main($argv)
             if ($chat_id) {
                 $ret = run_cmd(sprintf("./telegram.php msg_send %d 'Камера %d:\n %s'",
                                        $chat_id, $cam_num, $file));
-                printf("send URL to telegram: %s\n", $ret['log']);
+                perror("send URL to telegram: %s\n", $ret['log']);
                 continue;
             }
             $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n %s'",
                                    $cam_num, $file));
-            printf("send URL to telegram: %s\n", $ret['log']);
+            perror("send URL to telegram: %s\n", $ret['log']);
         }
         goto out;
 
@@ -84,5 +84,5 @@ out:
 $rc = main($argv);
 if ($rc) {
     print_help();
+    exit($rc);
 }
-    

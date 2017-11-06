@@ -4,16 +4,16 @@
 require_once '/usr/local/lib/php/common.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
-require_once 'server_control_lib.php';
+require_once 'common_lib.php';
 require_once 'telegram_api.php';
 require_once 'config.php';
 
 
 function main($argv) {
     global $commands;
-    
+
     if (count($argv) < 3) {
-        printf("a few scripts parameters\n");
+        perror("a few scripts parameters\n");
         return -EINVAL;
     }
 
@@ -22,23 +22,16 @@ function main($argv) {
     $msg_id = strtolower(trim($argv[3]));
     $cmd = strtolower(trim($argv[4]));
 
-    printf("user: %d, cmd: %s\n", $user_id, $cmd);
+    pnotice("user: %d, cmd: %s\n", $user_id, $cmd);
 
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        msg_log(LOG_ERR, "can't connect to database");
-        return -EBASE;
-    }
-
-    $telegram = new Telegram_api($db);
+    $telegram = new Telegram_api();
 
     if ($user_id == 0) {
             $telegram->send_message($chat_id,
                 "У вас недостаточно прав чтобы выполнить эту операцию\n", $msg_id);
             return 0;
     }
-    
+
     switch ($cmd) {
     case 'on':
         $cmd = "./guard.php state ready telegram " . $user_id;
@@ -46,7 +39,7 @@ function main($argv) {
             $cmd .= " sms";
 
         $telegram->send_message($chat_id, "ok, попробую\n", $msg_id);
-            
+
         $ret = run_cmd($cmd);
         if ($ret['rc'] != '0')
             $telegram->send_message($chat_id,
@@ -67,14 +60,13 @@ function main($argv) {
         if ($lock) {
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
-            printf("close all padlocks: %s\n", $ret['log']);
+            perror("close all padlocks: %s\n", $ret['log']);
             $telegram->send_message($chat_id, "все замки закрыла\n", $msg_id);
         }
         break;
     }
-    
+
     return 0;
 }
 
-
-return main($argv);
+exit(main($argv));

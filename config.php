@@ -18,9 +18,9 @@ function conf_db()
     return $config;
 }
 
-function conf_io()
+function conf_local_io()
 {
-    return array("socket_file" => '/tmp/module_io_sock');
+    return array("socket_file" => '/tmp/usio_sock');
 }
 
 function conf_guard()
@@ -31,9 +31,11 @@ function conf_guard()
                                  'diff_interval' => 10,
                                  'alarm_time' => 30,
                                  'run_lighter' => 1,
-                                 'sensors' => [['port' => 2,
+                                 'sensors' => [['io' => 'usio1',
+                                                'port' => 2,
                                                 'normal_state' => 1],
-                                               ['port' => 4,
+                                               ['io' => 'usio1',
+                                                'port' => 4,
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '2',
@@ -41,7 +43,8 @@ function conf_guard()
                                  'diff_interval' => 10,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
-                                 'sensors' => [['port' => 10,
+                                 'sensors' => [['io' => 'usio1',
+                                                'port' => 10,
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '3',
@@ -49,10 +52,12 @@ function conf_guard()
                                  'diff_interval' => 10,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
-                                 'sensors' => [['port' => 9,
+                                 'sensors' => [['io' => 'usio1',
+                                                'port' => 9,
                                                 'normal_state' => 1]]
                                 ]
                                ],
+                 'sirena_io_name' => "usio1",
                  'sirena_io_port' => 3,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
@@ -70,6 +75,12 @@ function conf_guard()
 				);
 }
 
+function conf_io()
+{
+        return ['usio1' => ['ip_addr' => 'localhost',
+                            'tcp_port' => 400],
+               ];
+}
 
 function conf_modem()
 {
@@ -88,14 +99,14 @@ function conf_telegram_bot()
 function conf_padlocks()
 {
     return [
-                ['num' => 1, 'name' => 'кунг', 'io_port' => 6],
-                ['num' => 2, 'name' => 'коричневый контейнер', 'io_port' => 5],
+                ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
+                ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 5],
            ];
 }
 
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'уличное', 'io_port' => 4],
+                ['zone' => 1, 'name' => 'уличное', 'io' => 'usio1', 'io_port' => 4],
            ];
 }

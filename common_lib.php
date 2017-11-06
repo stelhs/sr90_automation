@@ -3,23 +3,33 @@
 require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'modem3g.php';
-require_once 'mod_io_lib.php';
+require_once 'httpio_lib.php';
+
+
+function db()
+{
+    static $db = NULL;
+
+    if ($db)
+        return $db;
+
+    $db = new Database;
+    $rc = $db->connect(conf_db());
+    if ($rc)
+        throw new Exception("can't connect to database");
+    return $db;
+}
+
 
 
 function sms_send($type, $recepient, $args = array())
 {
     $sms_text = '';
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        printf("can't connect to database");
-        return -EBASE;
-    }
 
     switch ($type) {
     case 'reboot':
         if (isset($recepient['user_id'])) {
-            $user = user_get_by_id($db, $recepient['user_id']);
+            $user = user_get_by_id($recepient['user_id']);
             $sms_text = sprintf("%s отправил сервер на перезагрузку через %s",
                                 $user['name'], $args);
             break;
@@ -30,7 +40,7 @@ function sms_send($type, $recepient, $args = array())
     case 'status':
         $sms_text = $args;
         break;
-        
+
     case 'lighting_on':
         $sms_text = sprintf("Освещение %s включено.", $args['name']);
         break;
@@ -60,7 +70,7 @@ function sms_send($type, $recepient, $args = array())
         case "no_exist":
         default:
             return;
-        }    
+        }
 
         $sms_text = sprintf("RAID1: %s", $raid_stat);
         break;
@@ -78,7 +88,7 @@ function sms_send($type, $recepient, $args = array())
         break;
 
     case 'alarm':
-        $sms_text = sprintf("Внимание!\nСработала %s, событие: %d", 
+        $sms_text = sprintf("Внимание!\nСработала %s, событие: %d",
                                 $args['zone'], $args['action_id']);
         break;
 
@@ -98,7 +108,7 @@ function sms_send($type, $recepient, $args = array())
             $sms_text .= $args['global_status'];
         break;
 
-    default: 
+    default:
         return -EINVAL;
     }
 
@@ -107,20 +117,20 @@ function sms_send($type, $recepient, $args = array())
     // creating phones list
     $list_phones = [];
     if (isset($recepient['user_id']) && $recepient['user_id']) {
-        $user = user_get_by_id($db, $recepient['user_id']);
+        $user = user_get_by_id($recepient['user_id']);
         $list_phones = $user['phones'];
     }
 
     // applying phones list by groups
     if (isset($recepient['groups']))
         foreach ($recepient['groups'] as $group) {
-            $group_phones = get_users_phones_by_access_type($db, $group);
+            $group_phones = get_users_phones_by_access_type($group);
             $list_phones = array_unique(array_merge($list_phones, $group_phones));
         }
 
     if (!count($list_phones))
         return -EINVAL;
-        
+
     foreach ($list_phones as $phone) {
         $ret = $modem->send_sms($phone, $sms_text);
         if ($ret) {
@@ -133,17 +143,10 @@ function sms_send($type, $recepient, $args = array())
 
 function telegram_send($type, $args = array())
 {
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc) {
-        printf("can't connect to database");
-        return -EBASE;
-    }
-
     switch ($type) {
     case 'reboot':
         if (isset($args['user_id']) && $args['user_id']) {
-            $user = user_get_by_id($db, $args['user_id']);
+            $user = user_get_by_id($args['user_id']);
             $text = sprintf("%s отправил сервер на перезагрузку через %s",
                                 $user['name'], $args['method']);
             break;
@@ -183,7 +186,7 @@ function telegram_send($type, $args = array())
 
         default:
             return;
-        }    
+        }
 
         $text = sprintf("RAID1: %s", $raid_stat);
         break;
@@ -201,9 +204,9 @@ function telegram_send($type, $args = array())
         break;
 
     case 'false_alarm':
-        $text = sprintf("Срабатал датчик на порту %d из группы \"%s\".\n" .
+        $text = sprintf("Срабатал датчик на порту %s:%d из группы \"%s\".\n" .
                         "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
-                                $args['port'], $args['name']);
+                                $args['io'], $args['port'], $args['name']);
         break;
 
     case 'alarm':
@@ -221,7 +224,7 @@ function telegram_send($type, $args = array())
                             $args['user'], $args['method']);
         break;
 
-    default: 
+    default:
         return -EINVAL;
     }
 
@@ -235,10 +238,12 @@ function server_reboot($method, $user_id = NULL)
              ['user_id' => $user_id,
               'groups' => ['sms_observer']],
              $method);
-    
-    telegram_send('reboot', ['method' => $method, 
+
+    telegram_send('reboot', ['method' => $method,
                              'user_id' => $user_id]);
-   // run_cmd('halt');
+    if(DISABLE_HW)
+        return;
+    run_cmd('halt');
     for(;;);
 }
 
@@ -247,16 +252,16 @@ function get_day_night()
     $sun_info = date_sun_info(time(), 54.014634, 28.013484);
     $curr_time = time();
 
-    if ($curr_time > $sun_info['nautical_twilight_begin'] && 
+    if ($curr_time > $sun_info['nautical_twilight_begin'] &&
         $curr_time < ($sun_info['nautical_twilight_end'] - 3600))
             return 'day';
 
     return 'night';
 }
 
-function user_get_by_phone($db, $phone)
+function user_get_by_phone($phone)
 {
-    $user = $db->query("SELECT * FROM users " .
+    $user = db()->query("SELECT * FROM users " .
                       "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
 
     if (!$user)
@@ -266,9 +271,9 @@ function user_get_by_phone($db, $phone)
     return $user;
 }
 
-function user_get_by_id($db, $user_id)
+function user_get_by_id($user_id)
 {
-    $user = $db->query(sprintf("SELECT * FROM users " .
+    $user = db()->query(sprintf("SELECT * FROM users " .
                               "WHERE id = %d", $user_id));
 
     if (!$user)
@@ -278,9 +283,9 @@ function user_get_by_id($db, $user_id)
     return $user;
 }
 
-function user_get_by_telegram_id($db, $telegram_user_id)
+function user_get_by_telegram_id($telegram_user_id)
 {
-    $user = $db->query(sprintf("SELECT * FROM users " .
+    $user = db()->query(sprintf("SELECT * FROM users " .
                               "WHERE telegram_id = %d", $telegram_user_id));
 
     if (!$user)
@@ -291,43 +296,42 @@ function user_get_by_telegram_id($db, $telegram_user_id)
 }
 
 
-function get_users_phones_by_access_type($db, $type)
+function get_users_phones_by_access_type($type)
 {
-    $users = $db->query_list(sprintf('SELECT * FROM users '.
+    $users = db()->query_list(sprintf('SELECT * FROM users '.
                              'WHERE %s = 1 AND enabled = 1', $type));
     $list_phones = array();
     foreach ($users as $user)
         $list_phones[] = string_to_array($user['phones'])[0];
-        
+
     return $list_phones;
 }
 
-function get_all_users_phones_by_access_type($db, $type)
+function get_all_users_phones_by_access_type($type)
 {
-    $users = $db->query_list(sprintf('SELECT * FROM users '.
-                             'WHERE %s = 1 AND enabled = 1', $type));
+    $users = db()->query_list(sprintf('SELECT * FROM users '.
+                              'WHERE %s = 1 AND enabled = 1', $type));
     $list_phones = array();
     foreach ($users as $user) {
         $phones = string_to_array($user['phones']);
         foreach ($phones as $phone)
             $list_phones[] = $phone;
     }
-        
+
     return $list_phones;
 }
 
 
-function get_global_status($db)
+function get_global_status()
 {
     $modem = new Modem3G(conf_modem()['ip_addr']);
-    $mio = new Mod_io($db);
-    
-    $guard_stat = get_guard_state($db);
+
+    $guard_stat = get_guard_state();
     $balance = $modem->get_sim_balanse();
     $modem_stat = $modem->get_status();
-    $lighting_stat = get_street_light_stat($db);
-    $padlocks_stat = get_padlocks_stat($db);
-        
+    $lighting_stat = get_street_light_stat();
+    $padlocks_stat = get_padlocks_stat();
+
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
     $uptime = $mathes[1];
@@ -464,7 +468,7 @@ function format_global_status_for_telegram($stat)
             $text_who = "Включил охрану";
             break;
         }
-        $text .= sprintf("Охрана: %s\n", $mode); 
+        $text .= sprintf("Охрана: %s\n", $mode);
 
         if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнорированные зоны:\n");
@@ -481,8 +485,8 @@ function format_global_status_for_telegram($stat)
         }
 
         if (isset($stat['guard_stat']['user_name']) && $text_who)
-            $text .= sprintf("%s: %s через %s в %s\n", $text_who, 
-                                              $stat['guard_stat']['user_name'], 
+            $text .= sprintf("%s: %s через %s в %s\n", $text_who,
+                                              $stat['guard_stat']['user_name'],
                                               $stat['guard_stat']['method'],
                                               $stat['guard_stat']['created']);
     }
@@ -586,33 +590,29 @@ function get_mdstat()
 }
 
 
-function get_street_light_stat($db)
+function get_street_light_stat()
 {
-    $mio = new Mod_io($db);
-
     $report = [];
     foreach (conf_street_light() as $zone) {
-        $zone['state'] = $mio->relay_get_state($zone['io_port']);
+        $zone['state'] = httpio($zone['io'])->relay_get_state($zone['io_port']);
         if ($zone['state'] < 0)
-            printf("Can't get relay state %d\n", $zone['io_port']);
+            perror("Can't get relay state %d\n", $zone['io_port']);
 
-        $report[] = $zone; 
+        $report[] = $zone;
     }
 
-    return $report; 
+    return $report;
 }
 
-function get_padlocks_stat($db)
+function get_padlocks_stat()
 {
-    $mio = new Mod_io($db);
-
     $report = [];
     foreach (conf_padlocks() as $zone) {
-        $zone['state'] = $mio->relay_get_state($zone['io_port']);
+        $zone['state'] = httpio($zone['io'])->relay_get_state($zone['io_port']);
         if ($zone['state'] < 0)
-            printf("Can't get relay state %d\n", $zone['io_port']);
+            perror("Can't get relay state %d\n", $zone['io_port']);
 
-        $report[] = $zone; 
+        $report[] = $zone;
     }
 
     return $report;
