@@ -72,10 +72,9 @@ class Httpio {
 
         $ret = $this->send_cmd("relay_get", ['port' => $port]);
         if ($ret['status'] == "ok")
-            return $ret['state'];
+            return $ret['log'];
 
-        msg_log(LOG_ERR, sprintf("can't get relay state %s: %s\n",
-                                 $this->ip_addr, $ret['reason']));
+        perror("can't get relay state %s: %s\n", $this->ip_addr, $ret['reason']);
         return -EBUSY;
     }
 
@@ -88,10 +87,9 @@ class Httpio {
 
         $ret = $this->send_cmd("input_get", ['port' => $port]);
         if ($ret['status'] == "ok")
-            return $ret['state'];
+            return $ret['log'];
 
-        msg_log(LOG_ERR, sprintf("can't get input state %s: %s\n",
-                                 $this->ip_addr, $ret['reason']));
+        perror("can't get input state %s: %s\n", $this->ip_addr, $ret['reason']);
         return -EBUSY;
     }
 }
