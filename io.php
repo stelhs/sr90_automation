@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
+require_once 'usio_lib.php';
 require_once 'httpio_lib.php';
 $utility_name = $argv[0];
 
