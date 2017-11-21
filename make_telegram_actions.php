@@ -61,8 +61,8 @@ function mk_help()
     foreach($commands as $row) {
         $msg .= sprintf("   - 'skynet %s'\n", $row['cmd'][0]);
         if (isset($row['wr']))
-        for ($i = 0; $i < $row['wr']; $i++)
-        $msg .= "\n";
+            for ($i = 0; $i < $row['wr']; $i++)
+                $msg .= "\n";
     }
 
     return $msg;
