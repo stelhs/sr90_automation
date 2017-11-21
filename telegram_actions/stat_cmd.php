@@ -31,7 +31,7 @@ function main($argv) {
                 "У вас недостаточно прав чтобы выполнить эту операцию\n", $msg_id);
             return 0;
     }
-
+    $telegram->send_message($chat_id, "поняла, делаю...\n", $msg_id);
     $stat_text = format_global_status_for_telegram(get_global_status());
     $telegram->send_message($chat_id, $stat_text, $msg_id);
     run_cmd(sprintf("./image_sender.php current %d", $chat_id));
