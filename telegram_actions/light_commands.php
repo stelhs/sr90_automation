@@ -32,6 +32,7 @@ function main($argv) {
             return 0;
     }
 
+    $telegram->send_message($chat_id, "ok, попробую\n", $msg_id);
     switch ($cmd) {
     case 'on':
         $cmd = "./street_light.php enable";
@@ -54,7 +55,8 @@ function main($argv) {
         }
         $telegram->send_message($chat_id, "Освещение отключено\n", $msg_id);
         break;
-
+    default:
+        $telegram->send_message($chat_id, "Ошибка, неверная команда\n", $msg_id);
     }
 
     return 0;
