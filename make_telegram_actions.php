@@ -14,7 +14,7 @@ $commands = [
                 ['cmd' => ['включи охрану', 'guard on'],
                  'script' => 'guard_commands.php', 'args' => 'on'],
 
-                ['cmd' => ['отключи охрану', 'guard off'],
+                ['cmd' => ['отключи охрану', 'выключи охрану', 'guard off'],
                  'script' => 'guard_commands.php', 'args' => 'off'],
 
                 ['cmd' => ['отключи охрану замки не открывай'],
@@ -44,7 +44,7 @@ $commands = [
                 ['cmd' => ['включи свет', 'light on'],
                  'script' => 'light_commands.php', 'args' => 'on'],
 
-                ['cmd' => ['отключи свет', 'light off'],
+                ['cmd' => ['отключи свет', 'выключи свет', 'light off'],
                  'script' => 'light_commands.php', 'args' => 'off', 'wr' => 1],
 
                 ['cmd' => ['перезагрузись', 'reboot'],
