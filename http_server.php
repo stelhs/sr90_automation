@@ -3,7 +3,6 @@
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
-require_once 'config.php';
 
 
 $log_file = "/root/log.txt";

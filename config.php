@@ -79,6 +79,8 @@ function conf_io()
 {
         return ['usio1' => ['ip_addr' => 'localhost',
                             'tcp_port' => 400],
+                'sbio1' => ['ip_addr' => 'localhost',
+                            'tcp_port' => 400],
                ];
 }
 

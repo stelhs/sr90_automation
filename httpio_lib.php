@@ -25,7 +25,7 @@ class Httpio {
             $separator = "&";
         }
 
-        $http_request = sprintf("http://%s:%d/usio/%s?%s",
+        $http_request = sprintf("http://%s:%d/io/%s?%s",
                                 $this->ip_addr,
                                 $this->tcp_port,
                                 $cmd,
