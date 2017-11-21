@@ -23,6 +23,8 @@ function print_help()
                  "\t\t\texample: $utility_name close\n" .
                  "\t\t stat: return current status.\n" .
                  "\t\t\texample: $utility_name stat\n" .
+                 "\t\t restore_last_state: actualize padlock state after reboot.\n" .
+                 "\t\t\texample: $utility_name restore_last_state\n" .
     "\n\n";
 }
 
@@ -68,6 +70,21 @@ function main($argv)
                 continue;
             }
             perror("\tpadlock %s %s\n", $row['name'], ($ret == "1" ? "opened" : "close"));
+        }
+        return 0;
+
+    case "restore_last_state":
+        foreach (conf_padlocks() as $row) {
+            $result = db()->query(sprintf("SELECT state FROM io_output_actions " .
+                                          "WHERE io_name='%s' AND port=%d " .
+                                          "ORDER BY id DESC",
+                                          $row['io'], $row['io_port']));
+            if (!is_array($result) || (!isset($result['state'])))
+                continue;
+
+            $rc = httpio($row['io'])->relay_set_state($row['io_port'], $result['state']);
+            if ($rc < 0)
+                perror("Can't set relay state %d\n", $row['io_port']);
         }
         return 0;
 
