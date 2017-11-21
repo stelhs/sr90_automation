@@ -41,10 +41,10 @@ $commands = [
                 ['cmd' => ['закрой все замки'],
                  'script' => 'padlock_commands.php', 'args' => 'close all', 'wr' => 1],
 
-                ['cmd' => ['включи уличный свет', 'light on'],
+                ['cmd' => ['включи свет', 'light on'],
                  'script' => 'light_commands.php', 'args' => 'on'],
 
-                ['cmd' => ['отключи уличный свет', 'light off'],
+                ['cmd' => ['отключи свет', 'light off'],
                  'script' => 'light_commands.php', 'args' => 'off', 'wr' => 1],
 
                 ['cmd' => ['перезагрузись', 'reboot'],
