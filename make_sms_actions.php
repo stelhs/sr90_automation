@@ -57,7 +57,7 @@ function main($argv) {
     db()->insert('incomming_sms', ['phone' => $phone,
                                    'text' => $sms_text,
                                    'received_date' => $sms_date]);
-    $words = split_string($sms_text);
+    $words = string_to_words($sms_text);
     if (!$words)
         return -EINVAL;
 

@@ -82,7 +82,7 @@ function main($argv) {
 
     $telegram = new Telegram_api();
 
-    $words = split_string($msg_text);
+    $words = string_to_words($msg_text);
     if (!$words)
         return -EINVAL;
 
