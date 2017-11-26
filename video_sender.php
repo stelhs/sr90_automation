@@ -1,0 +1,80 @@
+#!/usr/bin/php
+<?php
+require_once '/usr/local/lib/php/common.php';
+require_once '/usr/local/lib/php/os.php';
+
+require_once 'config.php';
+require_once 'avreg_lib.php';
+$utility_name = $argv[0];
+
+
+function print_help()
+{
+    global $utility_name;
+    echo "Usage: $utility_name <command> <args>\n" .
+             "\tcommands:\n" .
+             "\t$utility_name alarm <alarm_id> - Send all camera videos associated with alarm_id to sr38.org and send links to Telegram\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name alarm 27\n" .
+    "\n\n";
+}
+
+
+function main($argv)
+{
+    $rc = 0;
+    if (!isset($argv[1])) {
+        return -EINVAL;
+    }
+
+    $mode = $argv[1];
+
+    switch ($mode) {
+    case 'alarm':
+        $alarm_id = $argv[2];
+
+        run_cmd(sprintf("./telegram.php msg_send_all 'Загружаю видео файлы по событию %d, ожидайте...'",
+                        $alarm_id));
+        foreach(conf_guard()['video_cameras'] as $cam) {
+            $video_files = get_video_files(time() - 10, 20, $cam['name']);
+            if (!$video_files || !count($video_files)) {
+                run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось получить видеофайлы для камеры %s'",
+                                $cam['name']));
+                perror("Can't get videos for camera %s\n", $cam['name']);
+                continue;
+            }
+
+            foreach ($video_files as $file) {
+                $file_info = pathinfo($file);
+                $server_filename = sprintf("%d_%d_%s", $alarm_id, $cam['id'], $file_info['basename']);
+                $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/var/www/plato/alarm_videos/%s',
+                                   $file, $server_filename));
+                if ($ret['rc']) {
+                    run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось загрузить видеофайл %s для камеры %s: %s'",
+                                    $file, $cam['name'], $ret['log']));
+                    perror("Can't upload videos for camera %s: %s\n", $cam['name'], $ret['log']);
+                    continue;
+                }
+
+                $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Видео запись события %d: Камера %d:\n http://sr38.org/plato/alarm_videos/%s'",
+                                       $cam['id'], $alarm_id, $server_filename));
+                pnotice("send URL to telegram: %s\n", $ret['log']);
+            }
+        }
+        run_cmd(sprintf("./telegram.php msg_send_all 'Процесс загрузки видео по событию %d завершен'",
+                        $alarm_id));
+        goto out;
+
+    default:
+        $rc = -EINVAL;
+    }
+
+out:
+    return $rc;
+}
+
+$rc = main($argv);
+if ($rc) {
+    print_help();
+    exit($rc);
+}

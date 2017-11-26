@@ -67,9 +67,11 @@ function conf_guard()
                  'sensor_snapshot_dir' => '/var/spool/sr90_automation/images/sensor_actions',
                  'video_cameras' => array(
                                           array('id' => 1,
+                                                'name' => "01-Kamera_1",
                                                 'v4l_dev' => '/dev/video14',
                                                 'resolution' => '1920:1080'),
                                           array('id' => 2,
+                                                'name' => "02-Kamera_2",
                                                 'v4l_dev' => '/dev/video15',
                                                 'resolution' => '1920:1080')),
 				);
