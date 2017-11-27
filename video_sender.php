@@ -32,11 +32,12 @@ function main($argv)
     switch ($mode) {
     case 'alarm':
         $alarm_id = $argv[2];
+        $alarm_timestamp = isset($argv[3]) ? $argv[3] : time();
 
         run_cmd(sprintf("./telegram.php msg_send_all 'Загружаю видео файлы по событию %d, ожидайте...'",
                         $alarm_id));
         foreach(conf_guard()['video_cameras'] as $cam) {
-            $video_files = get_video_files(time() - 10, 20, $cam['name']);
+            $video_files = get_video_files($alarm_timestamp - 10, 20, $cam['name']);
             if (!$video_files || !count($video_files)) {
                 run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось получить видеофайлы для камеры %s'",
                                 $cam['name']));
@@ -50,7 +51,7 @@ function main($argv)
                      perror("To many video files\n");
                      return -1;
                 }
-                dump($file); 
+                dump($file);
                 $server_filename = sprintf("%d_%d_%s", $alarm_id, $cam['id'], basename($file['file']));
                 $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/var/www/plato/alarm_video/%s',
                                    $file['file'], $server_filename));

@@ -243,8 +243,18 @@ function main($argv)
         // send to Telegram
         telegram_send('alarm', ['zone' => $zone['name'],
                                 'action_id' => $guard_action_id]);
+
+        // send photos
         $ret = run_cmd(sprintf("./image_sender.php alarm %d", $guard_action_id));
         pnotice("send images to sr38: %s\n", $ret['log']);
+
+        // send videos
+        $row = db()->query('SELECT UNIX_TIMESTAMP(created) as timestamp ' .
+                           'FROM guard_actions WHERE id = ' . $guard_action_id);
+        run_cmd(sprintf("./video_sender.php alarm %d %d",
+                        $guard_action_id,
+                        $row['timestamp']),
+                        true);
 
         // send SMS
         sms_send('alarm',
