@@ -76,18 +76,23 @@ function get_video_files_from_archive($start_time, $duration, $cam_num)
 
     // find start index
     $start_file_index = 0;
+    $start_file_detected = false;
     foreach ($all_video_list as $file_index => $file_info) {
         if ($file_info['time'] < $start_time)
             continue;
 
         if ($file_info['time'] == $start_time) {
+            $start_file_detected = true;
             $start_file_index = $file_index;
             break;
         }
-
+        $start_file_detected = true;
         $start_file_index = ($file_index > 0) ? $file_index - 1 : 0;
         break;
     }
+
+    if (!$start_file_detected)
+        return ['video_list' => [], 'incomplete' => true];
 
     // find end index
     $end_file_index = -1;
@@ -107,18 +112,19 @@ function get_video_files_from_archive($start_time, $duration, $cam_num)
     }
 
     if ($list_incomplete)
-        $end_file_index = $file_index;
+        $end_file_index = ($file_index > 0) ? $file_index - 1 : 0;
 
     $video_list = [];
     for ($i = $start_file_index; $i <= $end_file_index; $i++)
         $video_list[] = $all_video_list[$i];
 
-/*    printf("start time = %s\n", $all_video_list[$start_file_index]['file']);
+    printf("start file = %s\n", $all_video_list[$start_file_index]['file']);
+    printf("start interval time = %s\n", $start_time);
     if ($end_file_index != -1)
-        printf("end time = %s\n", $all_video_list[$end_file_index]['file']);
+        printf("end file = %s\n", $all_video_list[$end_file_index]['file']);
     else
         printf("end not found\n");
-*/
+
     return ['video_list' => $video_list, 'incomplete' => $list_incomplete];
 }
 
@@ -143,16 +149,20 @@ function get_current_video_file($cam_name)
     }
 
     $dir = sprintf("/proc/%d/fd/", $avreg_pid);
-    $files = scandir($dir);
-    foreach ($files as $soft_link) {
-        @$file = readlink($dir . $soft_link);
-        preg_match('/\/var\/spool\/avreg/', $file, $mathes);
-        if (!isset($mathes[0]) || !trim($mathes[0]))
-            continue;
-        if (!strstr($file, $cam_name))
-            continue;
+    // attempt three times
+    for ($i = 0; $i < 3; $i++) {
+        $files = scandir($dir);
+        foreach ($files as $soft_link) {
+            @$file = readlink($dir . $soft_link);
+             preg_match('/\/var\/spool\/avreg/', $file, $mathes);
+             if (!isset($mathes[0]) || !trim($mathes[0]))
+                 continue;
+             if (!strstr($file, $cam_name))
+                 continue;
 
-        return $file;
+             return $file;
+         }
+         sleep(1);
     }
     return false;
 }

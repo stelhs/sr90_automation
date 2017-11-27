@@ -43,22 +43,26 @@ function main($argv)
                 perror("Can't get videos for camera %s\n", $cam['name']);
                 continue;
             }
-
+            $cnt = 0;
             foreach ($video_files as $file) {
-                $file_info = pathinfo($file);
-                $server_filename = sprintf("%d_%d_%s", $alarm_id, $cam['id'], $file_info['basename']);
-                $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/var/www/plato/alarm_videos/%s',
-                                   $file, $server_filename));
+                $cnt ++;
+                if ($cnt > 15) {
+                     perror("To many video files\n");
+                     return -1;
+                }
+                dump($file); 
+                $server_filename = sprintf("%d_%d_%s", $alarm_id, $cam['id'], basename($file['file']));
+                $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/var/www/plato/alarm_video/%s',
+                                   $file['file'], $server_filename));
                 if ($ret['rc']) {
                     run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось загрузить видеофайл %s для камеры %s: %s'",
-                                    $file, $cam['name'], $ret['log']));
+                                    $file['file'], $cam['name'], $ret['log']));
                     perror("Can't upload videos for camera %s: %s\n", $cam['name'], $ret['log']);
                     continue;
                 }
 
-                $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Видео запись события %d: Камера %d:\n http://sr38.org/plato/alarm_videos/%s'",
-                                       $cam['id'], $alarm_id, $server_filename));
-                pnotice("send URL to telegram: %s\n", $ret['log']);
+                run_cmd(sprintf("./telegram.php msg_send_all 'Видео запись события %d: Камера %d:\n http://sr38.org/plato/alarm_video/%s'",
+                                $cam['id'], $alarm_id, $server_filename));
             }
         }
         run_cmd(sprintf("./telegram.php msg_send_all 'Процесс загрузки видео по событию %d завершен'",
