@@ -13,7 +13,7 @@ function print_help()
     global $utility_name;
     echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
-             "\t$utility_name alarm <alarm_id> - Send all camera videos associated with alarm_id to sr38.org and send links to Telegram\n" .
+             "\t$utility_name alarm <alarm_id> [alarm_timestamp] - Send all camera videos associated with alarm_id to sr38.org and send links to Telegram\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name alarm 27\n" .
     "\n\n";
