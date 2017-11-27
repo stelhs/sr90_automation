@@ -274,7 +274,7 @@ function user_get_by_phone($phone)
 function user_get_by_id($user_id)
 {
     $user = db()->query(sprintf("SELECT * FROM users " .
-                              "WHERE id = %d", $user_id));
+                              "WHERE id = %d AND enabled = 1", $user_id));
 
     if (!$user)
         return NULL;
@@ -286,7 +286,7 @@ function user_get_by_id($user_id)
 function user_get_by_telegram_id($telegram_user_id)
 {
     $user = db()->query(sprintf("SELECT * FROM users " .
-                              "WHERE telegram_id = %d", $telegram_user_id));
+                              "WHERE telegram_id = %d AND enabled = 1", $telegram_user_id));
 
     if (!$user)
         return NULL;
