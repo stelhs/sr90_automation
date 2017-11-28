@@ -98,8 +98,8 @@ function main($argv)
              $guard_state['state'] == 'ready') {
         $light_interval = conf_guard()['light_ready_timeout'];
         pnotice("run lighter for %d seconds\n", $light_interval);
-        $ret = run_cmd(sprintf("./street_light.php enable %s %s",
-                               $light_interval, $zone['id']));
+        $ret = run_cmd(sprintf("./street_light.php enable %d",
+                               $light_interval));
         pnotice("street_light return: %s\n", $ret['log']);
     }
 

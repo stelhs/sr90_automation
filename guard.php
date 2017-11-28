@@ -229,8 +229,8 @@ function main($argv)
         $day_night = get_day_night();
         if ($day_night == 'night' &&
                 conf_guard()['light_mode'] == 'by_sensors') {
-            $light_interval = conf_guard()['light_ready_timeout'] * 1000;
-            $ret = run_cmd(sprintf("./street_light.php enable %d", $light_interval));
+            $ret = run_cmd(sprintf("./street_light.php enable %d",
+                                   conf_guard()['light_ready_timeout']));
             pnotice("enable lighter for timeout %d: %s\n",
                     $light_interval, $ret['log']);
         }
