@@ -35,6 +35,7 @@ function main($argv)
     $sequence = $argv;
     unset($sequence[0]);
     unset($sequence[1]);
+    unset($sequence[2]);
 
     if (count($sequence) == 1 && $sequence[2] == 0) {
         httpio($io_name)->relay_set_state($port, 0);
