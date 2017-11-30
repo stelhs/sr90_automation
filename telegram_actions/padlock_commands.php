@@ -45,7 +45,7 @@ function main($argv) {
         return 0;
 
     default:
-        perror("incorrect arguments\n");
+        perror("incorrect argument 4: %s\n", $cmd);
         return -EINVAL;
     }
 

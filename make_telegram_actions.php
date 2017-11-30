@@ -129,7 +129,7 @@ function main($argv) {
         return -EINVAL;
     }
 
-    $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
+    $cmd = sprintf("%s '%s' '%s' '%s' %s", TELEGRAM_ACTIONS_DIR . $script,
     $from_user_id, $chat_id, $msg_id, $args);
 
     $ret = run_cmd($cmd);
