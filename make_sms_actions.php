@@ -57,6 +57,9 @@ function main($argv) {
     db()->insert('incomming_sms', ['phone' => $phone,
                                    'text' => $sms_text,
                                    'received_date' => $sms_date]);
+
+    run_cmd(sprintf("./telegram.php msg_send_all 'Поступило входящее SMS сообщение от %s: %s'",
+                    $phone, $sms_text));
     $words = string_to_words($sms_text);
     if (!$words)
         return -EINVAL;
