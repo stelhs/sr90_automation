@@ -232,7 +232,7 @@ function main($argv)
             $ret = run_cmd(sprintf("./street_light.php enable %d",
                                    conf_guard()['light_ready_timeout']));
             pnotice("enable lighter for timeout %d: %s\n",
-                    $light_interval, $ret['log']);
+                    conf_guard()['light_ready_timeout'], $ret['log']);
         }
 
         // make snapshots
