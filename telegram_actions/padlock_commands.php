@@ -30,8 +30,8 @@ function main($argv) {
     }
 
     switch ($cmd) {
-    case 'on':
-    case 'off':
+    case 'open':
+    case 'close':
         $num = isset($argv[5]) ? strtolower(trim($argv[5])) : "";
         $mode = $cmd == 'on' ? 'open' : 'close';
         $ret = run_cmd(sprintf("./padlock.php %s %d", $mode, $num));
