@@ -33,19 +33,19 @@ function main($argv) {
     case 'open':
     case 'close':
         $num = isset($argv[5]) ? strtolower(trim($argv[5])) : "";
-        $mode = $cmd == 'on' ? 'open' : 'close';
-        $ret = run_cmd(sprintf("./padlock.php %s %d", $mode, $num));
+        $ret = run_cmd(sprintf("./padlock.php %s %d", $cmd, $num));
         dump($ret);
         if (!$ret || $ret['rc']) {
             $telegram->send_message($chat_id,
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
             return 0;
         }
-        $mode = $cmd == 'on' ? 'открыт' : 'закрыт';
+        $mode = $cmd == 'open' ? 'открыт' : 'закрыт';
         $telegram->send_message($chat_id, sprintf("Замок %s %s\n", $num, $mode), $msg_id);
         return 0;
 
     default:
+        perror("incorrect arguments\n");
         return -EINVAL;
     }
 
