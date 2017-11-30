@@ -234,10 +234,11 @@ function telegram_send($type, $args = array())
 
 function server_reboot($method, $user_id = NULL)
 {
-    sms_send('reboot',
-             ['user_id' => $user_id,
-              'groups' => ['sms_observer']],
-             $method);
+    if ($method == "SMS")
+        sms_send('reboot',
+                 ['user_id' => $user_id,
+                  'groups' => ['sms_observer']],
+                 $method);
 
     telegram_send('reboot', ['method' => $method,
                              'user_id' => $user_id]);
