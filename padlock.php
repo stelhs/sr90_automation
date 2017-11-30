@@ -31,34 +31,31 @@ function print_help()
 
 function main($argv)
 {
-    if (!isset($argv[1]))
+    if (!isset($argv[1])) {
+        print_help();
         return -EINVAL;
+    }
     $cmd = strtolower($argv[1]);
 
     switch ($cmd) {
     case "open":
+    case "close":
         $padlock_num = isset($argv[2]) ? $argv[2] : 0;
+        $new_port_state = $cmd == "open" ? 1 : 0;
 
+        $ok = false;
         foreach (conf_padlocks() as $row) {
             if ($padlock_num && $padlock_num != $row['num'])
                 continue;
 
-            $rc = httpio($row['io'])->relay_set_state($row['io_port'], 1);
+            $ok = true;
+            $rc = httpio($row['io'])->relay_set_state($row['io_port'], $new_port_state);
             if ($rc < 0)
                 perror("Can't set relay state %d\n", $row['io_port']);
         }
-        return 0;
-
-    case "close":
-        $padlock_num = isset($argv[2]) ? $argv[2] : 0;
-
-        foreach (conf_padlocks() as $row) {
-            if ($padlock_num && $padlock_num != $row['num'])
-                continue;
-
-            $rc = httpio($row['io'])->relay_set_state($row['io_port'], 0);
-            if ($rc < 0)
-                perror("Can't set relay state %d\n", $row['io_port']);
+        if (!$ok) {
+            perror("Incorrect padlock number %d\n", $padlock_num);
+            return -EINVAL;
         }
         return 0;
 
@@ -97,9 +94,5 @@ function main($argv)
 }
 
 
-$rc = main($argv);
-if ($rc) {
-    print_help();
-    exit($rc);
-}
+exit(main($argv));
 

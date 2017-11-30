@@ -26,10 +26,10 @@ $commands = [
                 ['cmd' => ['закрой замок кунга'],
                  'script' => 'padlock_commands.php', 'args' => 'close 1', 'wr' => 1],
 
-                ['cmd' => ['открой замок красного контейнера'],
+                ['cmd' => ['открой замок малого контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'open 2'],
 
-                ['cmd' => ['закрой замок красного контейнера'],
+                ['cmd' => ['закрой замок малого контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'close 2', 'wr' => 1],
 
                 ['cmd' => ['открой замок синего контейнера'],
@@ -38,8 +38,8 @@ $commands = [
                 ['cmd' => ['закрой замок синего контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'close 3', 'wr' => 1],
 
-                ['cmd' => ['закрой все замки'],
-                 'script' => 'padlock_commands.php', 'args' => 'close all', 'wr' => 1],
+                ['cmd' => ['закрой замки'],
+                 'script' => 'padlock_commands.php', 'args' => 'close', 'wr' => 1],
 
                 ['cmd' => ['включи свет', 'light on'],
                  'script' => 'light_commands.php', 'args' => 'on'],
