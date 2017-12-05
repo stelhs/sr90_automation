@@ -35,7 +35,7 @@ function conf_guard()
                                                 'port' => 2,
                                                 'normal_state' => 1],
                                                ['io' => 'usio1',
-                                                'port' => 4,
+                                                'port' => 3,
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '2',
@@ -44,7 +44,7 @@ function conf_guard()
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
                                  'sensors' => [['io' => 'usio1',
-                                                'port' => 10,
+                                                'port' => 4,
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '3',
@@ -53,7 +53,7 @@ function conf_guard()
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
                                  'sensors' => [['io' => 'usio1',
-                                                'port' => 9,
+                                                'port' => 5,
                                                 'normal_state' => 1]]
                                 ]
                                ],
