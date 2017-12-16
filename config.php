@@ -58,7 +58,7 @@ function conf_guard()
                                 ]*/
                                ],
                  'sirena_io_name' => "usio1",
-                 'sirena_io_port' => 6,
+                 'sirena_io_port' => 5,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
