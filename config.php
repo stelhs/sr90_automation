@@ -40,14 +40,14 @@ function conf_guard()
                                 ],
                                 ['id' => '2',
                                  'name' => 'Датчик дверцы ВРУ',
-                                 'diff_interval' => 10,
+                                 'diff_interval' => 4,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
                                  'sensors' => [['io' => 'usio1',
                                                 'port' => 4,
                                                 'normal_state' => 1]]
                                 ],
-                                ['id' => '3',
+/*                                ['id' => '3',
                                  'name' => 'Датчик двери Кунга',
                                  'diff_interval' => 10,
                                  'alarm_time' => 300,
@@ -55,10 +55,10 @@ function conf_guard()
                                  'sensors' => [['io' => 'usio1',
                                                 'port' => 5,
                                                 'normal_state' => 1]]
-                                ]
+                                ]*/
                                ],
                  'sirena_io_name' => "usio1",
-                 'sirena_io_port' => 3,
+                 'sirena_io_port' => 6,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
@@ -104,13 +104,13 @@ function conf_padlocks()
 {
     return [
                 ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
-                ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 5],
+                ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 6],
            ];
 }
 
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'уличное', 'io' => 'usio1', 'io_port' => 4],
+                ['zone' => 1, 'name' => 'уличное', 'io' => 'usio1', 'io_port' => 3],
            ];
 }
