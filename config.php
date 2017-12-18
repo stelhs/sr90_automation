@@ -114,3 +114,9 @@ function conf_street_light()
                 ['zone' => 1, 'name' => 'уличное', 'io' => 'usio1', 'io_port' => 3],
            ];
 }
+
+function conf_broadcast_audio()
+{
+    return ['amplifier_io' => ['io' => 'usio1', 'io_port' => 7]];
+}
+
