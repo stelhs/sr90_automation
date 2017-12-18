@@ -111,8 +111,9 @@ function conf_padlocks()
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'уличное', 'io' => 'usio1', 'io_port' => 3],
-           ];
+                ['zone' => 1, 'name' => 'слабое', 'io' => 'usio1', 'io_port' => 3],
+                ['zone' => 2, 'name' => 'основное', 'io' => 'usio1', 'io_port' => 4],
+                ];
 }
 
 function conf_broadcast_audio()

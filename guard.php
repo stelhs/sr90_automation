@@ -161,7 +161,7 @@ function main($argv)
 
             /* disable lighter if this disable */
             if (conf_guard()['light_mode'] != 'auto') {
-                $ret = run_cmd('./street_light.php disable');
+                $ret = run_cmd('./street_light.php disable 2');
                 perror("disable lighter: %s\n", $ret['log']);
             }
 

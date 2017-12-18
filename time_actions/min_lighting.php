@@ -28,11 +28,16 @@ function main($argv) {
     if (conf_guard()['light_mode'] == 'off')
         return 0;
 
-    $guard_info = get_guard_state();
-    if ($guard_info['state'] == 'ready' && conf_guard()['light_mode'] == 'by_sensors')
+    $ret = run_cmd('./street_light.php enable 0 1');
+    if ($ret['rc']) {
+        perror("Can't enable street_light: %s\n", $ret['log']);
+        return $rc;
+    }
+
+    if (conf_guard()['light_mode'] == 'by_sensors')
         return 0;
 
-    $ret = run_cmd('./street_light.php enable');
+    $ret = run_cmd('./street_light.php enable 0 2');
     if ($ret['rc']) {
         perror("Can't enable street_light: %s\n", $ret['log']);
         return $rc;
