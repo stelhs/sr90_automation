@@ -11,7 +11,7 @@ define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
 function main($argv) {
     $res = db()->query('SELECT * FROM `ext_power_log` ' .
                        'WHERE id = (SELECT MAX(id) FROM `ext_power_log`) AND ' .
-                       'created < (now() - interval 5 minute)');
+                       'created < (now() - interval 1 minute)');
     if (!isset($res['state']))
         return 0;
 

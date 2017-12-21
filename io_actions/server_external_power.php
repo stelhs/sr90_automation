@@ -18,7 +18,7 @@ function main($argv) {
     if ($io_name != 'usio1')
         return -EINVAL;
 
-    if ($port != 6)
+    if ($port != 5)
         return 0;
 
     if ($port_state)
