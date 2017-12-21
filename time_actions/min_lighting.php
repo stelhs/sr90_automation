@@ -34,7 +34,9 @@ function main($argv) {
         return $rc;
     }
 
-    if (conf_guard()['light_mode'] == 'by_sensors')
+    $guard_info = get_guard_state();
+    if ($guard_info['state'] == 'ready' ||
+            conf_guard()['light_mode'] == 'by_sensors')
         return 0;
 
     $ret = run_cmd('./street_light.php enable 0 2');
