@@ -18,6 +18,13 @@ function main($argv) {
     $curr_stat = $res['state'];
 
     @$prev_stat = file_get_contents(EXT_POWER_STATE_FILE);
+    if ($prev_stat === FALSE) {
+        file_put_contents(EXT_POWER_STATE_FILE, $curr_stat);
+        if ($curr_stat == 'off')
+            telegram_send('external_power', ['mode' => $curr_stat]);
+        return 0;
+    }
+
     if ($curr_stat == $prev_stat)
         return 0;
 

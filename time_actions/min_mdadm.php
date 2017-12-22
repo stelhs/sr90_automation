@@ -12,6 +12,8 @@ function main($argv) {
     $curr_stat = get_mdstat();
     if ($prev_mode === FALSE) {
         file_put_contents(MDSTAT_FILE, $curr_stat['mode']);
+        if ($curr_stat['mode'] != 'normal')
+            telegram_send('mdadm', $curr_stat);
         return 0;
     }
 
