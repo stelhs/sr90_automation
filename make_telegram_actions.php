@@ -71,21 +71,21 @@ function mk_help()
 function check_for_marazm($msg_text)
 {
     $skynet_found = false;
-    if (strstr($msg_text, "скайнет") ||
-        strstr($msg_text, "skynet") ||
-        strstr($msg_text, "sky.net"))
+    if (mb_strstr($msg_text, "скайнет", false, 'utf8') ||
+        mb_strstr($msg_text, "skynet", false, 'utf8') ||
+        mb_strstr($msg_text, "sky.net", false, 'utf8'))
             $skynet_found = true;
 
     if (!$skynet_found)
         return NULL;
 
-    if (!strstr($msg_text, "маразм"))
+    if (!mb_strstr($msg_text, "маразм", false, 'utf8'))
         return NULL;
 
-    $content = file_get_contents('marazm_responce.txt');
+    $content = file_get_contents('marazm_response.txt');
     $rows = string_to_rows($content);
-    $rand_keys = array_rand($rows, 1);
-    return $rows[$rand_keys[0]];
+    $rand_key = array_rand($rows, 1);
+    return $rows[$rand_key];
 }
 
 function main($argv) {
@@ -97,10 +97,13 @@ function main($argv) {
 
     $from_user_id = strtolower(trim($argv[1]));
     $chat_id = strtolower(trim($argv[2]));
-    $msg_text = strtolower(trim($argv[3]));
+    $msg_text = mb_strtolower(trim($argv[3]), 'utf8');
     $msg_id = isset($argv[4]) ? strtolower(trim($argv[4])) : 0;
 
     $telegram = new Telegram_api();
+
+//    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s", 
+//                                               $from_user_id, $chat_id, $msg_text, $msg_id), $msg_id);
 
     $marazm_resp = check_for_marazm($msg_text);
     if ($marazm_resp) {
@@ -112,8 +115,8 @@ function main($argv) {
     if (!$words)
         return -EINVAL;
 
-    $arg1 = mb_strtolower($words[0], 'utf8');
-    $arg2 = mb_strtolower($words[1], 'utf8');
+    $arg1 = $words[0];
+    $arg2 = $words[1];
     if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
         return -EINVAL;
 
