@@ -42,6 +42,24 @@ function main($argv)
     $voice_type = isset($argv[3]) ? (int)$argv[3] : 1;
     $speed = isset($argv[4]) ? (int)$argv[4] : 0;
 
+    switch ($voice_type) {
+        case 1:
+            $voice_name = "Aleksandr+CLB";
+            break;
+
+        case 2:
+            $voice_name = "Anna+CLB";
+            break;
+
+        case 3:
+            $voice_name = "Irina+CLB";
+            break;
+        default:
+            perror("Incorrect voice type\n");
+            return -EINVAL;
+    }
+
+
     $amplifier_port = conf_broadcast_audio()['amplifier_io'];
     // Enable amplifier
     httpio($amplifier_port['io'])->relay_set_state($amplifier_port['io_port'], 1);
@@ -55,6 +73,9 @@ function main($argv)
 
     run_cmd(sprintf("amixer -q set PCM %d%", $volume));
 
+
+    run_cmd(sprintf("echo \"%s\" | RHVoice-client -s %s -r %s | aplay",
+                    $message, $voice_name, $speed));
 
 
     // Disable amplifier
