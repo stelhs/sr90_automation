@@ -71,7 +71,7 @@ function main($argv)
     run_cmd("amixer -q set Master unmute");
     run_cmd("amixer -q set 'Speaker Boost' unmute");
 
-    run_cmd(sprintf("amixer -q set PCM %d%", $volume));
+    run_cmd(sprintf("amixer -q set PCM %d%%", $volume));
 
 
     run_cmd(sprintf("echo \"%s\" | RHVoice-client -s %s -r %s | aplay",

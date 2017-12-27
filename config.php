@@ -3,7 +3,11 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 define("CONFIG_PATH", "/etc/sr90_automation/");
-define("DISABLE_HW", 0);
+
+if (is_file('DISABLE_HW'))
+    define("DISABLE_HW", 1);
+else
+    define("DISABLE_HW", 0);
 
 function conf_global()
 {
@@ -105,7 +109,8 @@ function conf_padlocks()
     return [
                 ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 6],
-           ];
+                ['num' => 2, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
+                ];
 }
 
 function conf_street_light()

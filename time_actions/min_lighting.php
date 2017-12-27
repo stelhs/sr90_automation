@@ -35,7 +35,7 @@ function main($argv) {
     }
 
     $guard_info = get_guard_state();
-    if ($guard_info['state'] == 'ready' ||
+    if ($guard_info['state'] == 'ready' &&
             conf_guard()['light_mode'] == 'by_sensors')
         return 0;
 
