@@ -68,6 +68,26 @@ function mk_help()
     return $msg;
 }
 
+function check_for_marazm($msg_text)
+{
+    $skynet_found = false;
+    if (strstr($msg_text, "скайнет") ||
+        strstr($msg_text, "skynet") ||
+        strstr($msg_text, "sky.net"))
+            $skynet_found = true;
+
+    if (!$skynet_found)
+        return NULL;
+
+    if (!strstr($msg_text, "маразм"))
+        return NULL;
+
+    $content = file_get_contents('marazm_responce.txt');
+    $rows = string_to_rows($content);
+    $rand_keys = array_rand($rows, 1);
+    return $rows[$rand_keys[0]];
+}
+
 function main($argv) {
     global $commands;
 
@@ -81,6 +101,12 @@ function main($argv) {
     $msg_id = isset($argv[4]) ? strtolower(trim($argv[4])) : 0;
 
     $telegram = new Telegram_api();
+
+    $marazm_resp = check_for_marazm($msg_text);
+    if ($marazm_resp) {
+        $telegram->send_message($chat_id, $marazm_resp . "\n", $msg_id);
+        return 0;
+    }
 
     $words = string_to_words($msg_text);
     if (!$words)
