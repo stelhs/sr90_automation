@@ -84,6 +84,7 @@ function check_for_marazm($msg_text)
 
     $content = file_get_contents('marazm_response.txt');
     $rows = string_to_rows($content);
+    srand(time());
     $rand_key = array_rand($rows, 1);
     return $rows[$rand_key];
 }
