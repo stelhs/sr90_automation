@@ -225,10 +225,10 @@ function telegram_send($type, $args = array())
         break;
 
     default:
-        return -EINVAL;
+        $text = $type;
     }
 
-    run_cmd(sprintf("./telegram.php msg_send_all '%s'", $text));
+    run_cmd(sprintf("./telegram.php msg_send_all \"%s\"", $text));
 }
 
 
