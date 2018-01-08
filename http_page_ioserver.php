@@ -79,7 +79,9 @@ function main($argv)
             continue;
         }
 
-        pnotice("script %s: return: %s\n", $script, $ret['log']);
+        pnotice("run I/O script %s\n", $script);
+        if ($ret['log'])
+            pnotice("script %s return: %s\n", $ret['log']);
     }
 
     return 0;

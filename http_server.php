@@ -3,9 +3,11 @@
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
+require_once 'common_lib.php';
 
 
 $log_file = "/root/log.txt";
+$http_log = [];
 
 function printlog($data)
 {
@@ -82,39 +84,53 @@ function stdin_get_http_query()
 
 function return_ok($data_text = "")
 {
+    global $http_log;
     echo "HTTP/1.1 200 OK\n";
     echo sprintf("Content-Type: text/plain\n");
     echo sprintf("Content-Length: %s\n", strlen($data_text) + 1);
     echo "\n\n";
     echo $data_text;
-    exit;
+    $http_log['return'] = addslashes($data_text);
+    http_end();
 }
 
 function return_bad_request($data_text = "")
 {
+    global $http_log;
     echo "HTTP/1.1 400 Bad Request\n";
     echo sprintf("Content-Type: text/plain\n");
     echo sprintf("Content-Length: %s\n", strlen($data_text) + 1);
     echo "\n\n";
     echo $data_text;
-    exit;
+    $http_log['return'] = "bad_request";
+    http_end();
 }
 
 function return_404_request()
 {
+    global $http_log;
     $content = "404 Page not found\n";
     echo "HTTP/1.1 404 Page Not Found\n";
     echo sprintf("Content-Type: text/plain\n");
     echo sprintf("Content-Length: %s\n", strlen($content) + 1);
     echo "\n\n";
     echo $content;
+    $http_log['return'] = "404";
+    http_end();
+}
+
+function http_end()
+{
+    global $http_log;
+    $rc = db()->insert("http_server_log", $http_log);
     exit;
 }
 
-
 function main($argv)
 {
+    global $http_log;
     chdir(dirname($argv[0]));
+    $remote_host = getenv("REMOTE_HOST");
 
     $http_query_text = stdin_get_http_query();
     $http_data = parse_http($http_query_text);
@@ -125,12 +141,16 @@ function main($argv)
     $url_parts = parse_url($query);
     $path = str_replace('/', '', $url_parts['path']);
     $parts = string_to_array($url_parts['path'], '/');
+
+    $http_log['remote_host'] = $remote_host;
+    $http_log['query'] = $query;
     if (!count($parts))
         return_404_request();
 
     $php_file = sprintf('http_page_%s.php', $parts[0]);
     if (!file_exists($php_file))
         return_404_request();
+    $http_data['script'] = $php_file;
 
     if (!isset($url_parts['query']))
         return_404_request();

@@ -171,3 +171,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `http_server_log`
+--
+
+CREATE TABLE IF NOT EXISTS `http_server_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `remote_host` varchar(24) NOT NULL,
+  `query` varchar(255) NOT NULL,
+  `script` varchar(32) NOT NULL,
+  `return` text NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
