@@ -109,7 +109,7 @@ function conf_padlocks()
     return [
                 ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 6],
-                ['num' => 2, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
+                ['num' => 3, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
                 ];
 }
 
