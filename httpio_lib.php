@@ -30,7 +30,7 @@ class Httpio {
                                 $this->tcp_port,
                                 $cmd,
                                 $query);
-
+        dump($http_request);
         $content = file_get_contents($http_request);
         if (!$content)
             return ['status' => 'error',
