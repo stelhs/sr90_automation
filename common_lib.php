@@ -108,6 +108,11 @@ function sms_send($type, $recepient, $args = array())
             $sms_text .= $args['global_status'];
         break;
 
+    case 'inet_switch':
+        $sms_text = sprintf("Интернет переключен на модем %d",
+                            $args['modem_num']);
+        break;
+
     default:
         return -EINVAL;
     }
@@ -223,6 +228,12 @@ function telegram_send($type, $args = array())
         $text = sprintf("Охрана включена, включил %s с помощью %s.",
                             $args['user'], $args['method']);
         break;
+
+    case 'inet_switch':
+        $text = sprintf("Интернет преключен на модем %d",
+            $args['modem_num']);
+        break;
+
 
     default:
         $text = $type;
