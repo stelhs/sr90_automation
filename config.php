@@ -62,7 +62,7 @@ function conf_guard()
                                 ]*/
                                ],
                  'sirena_io_name' => "usio1",
-                 'sirena_io_port' => 5,
+                 'sirena_io_port' => 0,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
@@ -85,7 +85,7 @@ function conf_io()
 {
         return ['usio1' => ['ip_addr' => 'localhost',
                             'tcp_port' => 400],
-                'sbio1' => ['ip_addr' => '10.54.4.80',
+                'sbio1' => ['ip_addr' => '192.168.10.3',
                             'tcp_port' => 400],
                ];
 }
@@ -109,7 +109,7 @@ function conf_padlocks()
     return [
                 ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 6],
-                ['num' => 3, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
+                ['num' => 1, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
                 ];
 }
 
@@ -123,6 +123,6 @@ function conf_street_light()
 
 function conf_broadcast_audio()
 {
-    return ['amplifier_io' => ['io' => 'usio1', 'io_port' => 7]];
+    return ['amplifier_io' => ['io' => 'sbio1', 'io_port' => 1]];
 }
 

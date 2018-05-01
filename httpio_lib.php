@@ -72,7 +72,7 @@ class Httpio {
 
         $ret = $this->send_cmd("relay_get", ['port' => $port]);
         if ($ret['status'] == "ok")
-            return $ret['log'];
+                return $ret['state'];
 
         perror("can't get relay state %s: %s\n", $this->ip_addr, $ret['reason']);
         return -EBUSY;
