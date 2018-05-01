@@ -87,6 +87,7 @@ function main($argv)
         telegram_send('false_alarm', ['name' => $zone['name'],
                                       'io' => $io_name,
                                       'port' => $port]);
+        run_cmd(sprintf("./image_sender.php current"));
         return 0;
     }
 
