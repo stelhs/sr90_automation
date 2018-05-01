@@ -31,7 +31,7 @@ function conf_guard()
 {
     return array('zones' => [
                                 ['id' => '1',
-                                 'name' => 'зона 1',
+                                 'name' => 'кунг',
                                  'diff_interval' => 10,
                                  'alarm_time' => 30,
                                  'run_lighter' => 1,
@@ -43,12 +43,33 @@ function conf_guard()
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '2',
+                                    'name' => 'РП',
+                                    'diff_interval' => 10,
+                                    'alarm_time' => 30,
+                                    'run_lighter' => 1,
+                                    'sensors' => [['io' => 'usio1',
+                                                   'port' => 6,
+                                                   'normal_state' => 1],
+                                                  ['io' => 'usio1',
+                                                   'port' => 7,
+                                                  'normal_state' => 1]]
+                                ],
+                                ['id' => '3',
                                  'name' => 'Датчик дверцы ВРУ',
                                  'diff_interval' => 4,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
                                  'sensors' => [['io' => 'usio1',
                                                 'port' => 4,
+                                                'normal_state' => 1]]
+                                ],
+                                ['id' => '4',
+                                 'name' => 'Датчик двери РП',
+                                 'diff_interval' => 4,
+                                 'alarm_time' => 300,
+                                 'run_lighter' => 1,
+                                 'sensors' => [['io' => 'usio1',
+                                                'port' => 5,
                                                 'normal_state' => 1]]
                                 ],
 /*                                ['id' => '3',

@@ -103,7 +103,7 @@ function main($argv) {
 
     $telegram = new Telegram_api();
 
-//    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s", 
+//    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s",
 //                                               $from_user_id, $chat_id, $msg_text, $msg_id), $msg_id);
 
     $marazm_resp = check_for_marazm($msg_text);
@@ -112,7 +112,7 @@ function main($argv) {
         return 0;
     }
 
-    $words = string_to_words($msg_text);
+    $words = string_to_words($msg_text, " \t:,;+-=!");
     if (!$words)
         return -EINVAL;
 
