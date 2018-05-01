@@ -128,6 +128,10 @@ function main($argv)
 
         goto out;
 
+    case 'stat':
+        dump($modem->get_status());
+        break;
+
     default:
         $rc = -EINVAL;
     }
