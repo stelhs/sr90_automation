@@ -74,7 +74,7 @@ function main($argv)
     run_cmd(sprintf("amixer -q set PCM %d%%", $volume));
 
 
-    run_cmd(sprintf("eval dbus-launch;export $(dbus-launch);echo \"%s\" | RHVoice-client -s %s -r %s | aplay",
+    run_cmd(sprintf("export $(cat /tmp/dbus_vars);echo \"%s\" | RHVoice-client -s %s -r %s | aplay",
                     $message, $voice_name, $speed));
 
 
