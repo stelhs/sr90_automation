@@ -32,9 +32,12 @@ function main($argv)
             return -EINVAL;
         }
         $port = strtolower(trim($data['port']));
-        $rc = usio()->relay_get_state($port);
-        if ($rc)
-            return $rc;
+        $state = usio()->relay_get_state($port);
+        if ($state < 0) {
+            perror("Can't get relay state\n");
+            return $state;
+        }
+        echo json_encode(['state' => $state]);
         break;
 
     case 'input_get':
@@ -43,9 +46,11 @@ function main($argv)
             return -EINVAL;
         }
         $port = strtolower(trim($data['port']));
-        $rc = usio()->input_get_state($port);
-        if ($rc)
+        $state = usio()->input_get_state($port);
+        if ($state < 0)
             return $rc;
+
+        echo json_encode(['state' => $state]);
         break;
     }
 }
