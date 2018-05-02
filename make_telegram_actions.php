@@ -115,7 +115,7 @@ function main($argv) {
         return 0;
     }
 
-    $words = string_to_words($msg_text, " \t:,;+-=!");
+    $words = string_to_words($msg_text, " \t:;+-=");
     if (!$words)
         return -EINVAL;
 
@@ -123,7 +123,6 @@ function main($argv) {
     $arg2 = $words[1];
     if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
         return -EINVAL;
-
     if ($arg2 == "голос") {
         $telegram->send_message($chat_id, "Слушаю вас внимательно\n", $msg_id);
         return 0;
