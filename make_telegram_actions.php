@@ -52,6 +52,9 @@ $commands = [
 
                 ['cmd' => ['статус', 'stat'],
                  'script' => 'stat_cmd.php'],
+
+                ['cmd' => ['скажи', 'tell'],
+                    'script' => 'tell_cmd.php'],
 ];
 
 function mk_help()
@@ -103,7 +106,7 @@ function main($argv) {
 
     $telegram = new Telegram_api();
 
-//    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s", 
+//    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s",
 //                                               $from_user_id, $chat_id, $msg_text, $msg_id), $msg_id);
 
     $marazm_resp = check_for_marazm($msg_text);
@@ -112,7 +115,7 @@ function main($argv) {
         return 0;
     }
 
-    $words = string_to_words($msg_text);
+    $words = string_to_words($msg_text, " \t:;+-=");
     if (!$words)
         return -EINVAL;
 
@@ -120,7 +123,6 @@ function main($argv) {
     $arg2 = $words[1];
     if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
         return -EINVAL;
-
     if ($arg2 == "голос") {
         $telegram->send_message($chat_id, "Слушаю вас внимательно\n", $msg_id);
         return 0;
@@ -159,7 +161,7 @@ function main($argv) {
         return -EINVAL;
     }
 
-    $cmd = sprintf("%s '%s' '%s' '%s' %s", TELEGRAM_ACTIONS_DIR . $script,
+    $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
     $from_user_id, $chat_id, $msg_id, $args);
 
     $ret = run_cmd($cmd);

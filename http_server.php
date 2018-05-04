@@ -169,8 +169,14 @@ function main($argv)
                                'reason' => $reason]));
 
     }
-    return_ok(json_encode(['status' => 'ok',
-                           'log' => $ret['log']]));
+    $ret_data = json_decode($ret['log'], true);
+    if (!is_array($ret_data)) {
+        return_ok(json_encode(['status' => 'ok',
+            'log' => $ret['log']]));
+    }
+    if (!isset($ret_data['status']))
+        $ret_data['status'] = 'ok';
+        return_ok(json_encode($ret_data));
 }
 
 exit(main($argv));
