@@ -142,8 +142,3 @@ function conf_street_light()
                 ];
 }
 
-function conf_broadcast_audio()
-{
-    return ['amplifier_io' => ['io' => 'sbio1', 'io_port' => 1]];
-}
-
