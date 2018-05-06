@@ -82,24 +82,25 @@ function conf_guard()
                                                 'normal_state' => 1]]
                                 ]*/
                                ],
-                 'sirena_io_name' => "usio1",
-                 'sirena_io_port' => 0,
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
 			     'light_sleep_timeout' => 30 * 60, /* in seconds */
                  'light_mode' => 'by_sensors', // 'by_sensors', 'auto', 'off'
                  'alarm_snapshot_dir' => '/var/spool/sr90_automation/images/alarm_actions',
                  'sensor_snapshot_dir' => '/var/spool/sr90_automation/images/sensor_actions',
-                 'video_cameras' => array(
-                                          array('id' => 1,
-                                                'name' => "01-Kamera_1",
-                                                'v4l_dev' => '/dev/video14',
-                                                'resolution' => '1920:1080'),
-                                          array('id' => 2,
-                                                'name' => "02-Kamera_2",
-                                                'v4l_dev' => '/dev/video15',
-                                                'resolution' => '1920:1080')),
-				);
+                 'video_cameras' => [
+                                      ['id' => 1,
+                                            'name' => "01-Kamera_1",
+                                            'v4l_dev' => '/dev/video14',
+                                            'resolution' => '1920:1080'],
+                                      ['id' => 2,
+                                            'name' => "02-Kamera_2",
+                                            'v4l_dev' => '/dev/video15',
+                                            'resolution' => '1920:1080']
+                                    ],
+                 'remote_control_sleep' => ['io' => 'sbio1', 'port' => 2],
+                 'remote_control_ready' => ['io' => 'sbio1', 'port' => 3],
+    );
 }
 
 function conf_io()

@@ -1,6 +1,7 @@
 #!/bin/bash
 # $1 - sound file name or 'stop' key word
 # $2 - volume in precent (1-100)
+# $3 - duration in seconds
 
 function start {
     ./io.php relay_set sbio1 1 1
@@ -24,6 +25,13 @@ then
 fi
 
 
+DURATION=0
+if [ -n "$3" ]
+then
+    DURATION=$3
+fi
+
+
 start
 amixer -q set Master 100%
 amixer -q set 'Speaker Boost' 100%
@@ -31,5 +39,5 @@ amixer -q set PCM unmute
 amixer -q set Master unmute
 amixer -q set 'Speaker Boost' unmute
 amixer -q set PCM $VOLUME%
-aplay $1
+aplay --duration=$DURATION $1
 stop

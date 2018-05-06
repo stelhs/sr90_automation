@@ -68,12 +68,7 @@ function main($argv)
             $ret = run_cmd('./padlock.php open');
             pnotice("open all padlocks: %s\n", $ret['log']);
 
-            // two beep by sirena
-            sequncer_stop(conf_guard()['sirena_io_name'],
-                          conf_guard()['sirena_io_port']);
-            sequncer_start(conf_guard()['sirena_io_name'],
-                           conf_guard()['sirena_io_port'],
-                           array(100, 100, 100, 0));
+            player_start('sounds/unlock.wav', 50);
 
             /* enable lighter if night */
             $day_night = get_day_night();
@@ -147,16 +142,9 @@ function main($argv)
                     $ignore_zones_list[] = $zone;
             }
 
-            sequncer_stop(conf_guard()['sirena_io_name'],
-                          conf_guard()['sirena_io_port']);
-            if (!count($ignore_zones_list)) {
-                // one beep by sirena
-                sequncer_start(conf_guard()['sirena_io_port'], array(200, 0));
-            } else {
-                // two beep by sirena
-                sequncer_start(conf_guard()['sirena_io_name'],
-                               conf_guard()['sirena_io_port'],
-                               array(200, 200, 1000, 0));
+            player_start('sounds/lock.wav', 50);
+            if (count($ignore_zones_list)) {
+                // TODO: check for zones not complete
             }
 
             /* disable lighter if this disable */
@@ -219,11 +207,7 @@ function main($argv)
 
         // run sirena
         $zone = zone_get_by_io_id($action['zone_id']);
-        sequncer_stop(conf_guard()['sirena_io_name'],
-                      conf_guard()['sirena_io_port']);
-        sequncer_start(conf_guard()['sirena_io_name'],
-                       conf_guard()['sirena_io_port'],
-                       [$zone['alarm_time'] * 1000, 0]);
+        player_start('sounds/siren.wav', 100, $zone['alarm_time']);
 
         // run lighter if night
         $day_night = get_day_night();

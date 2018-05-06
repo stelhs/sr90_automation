@@ -23,6 +23,22 @@ function main($argv)
     $port = $argv[2];
     $port_state = $argv[3];
 
+    // guard off by remote control
+    if ($io_name == conf_guard()['remote_control_sleep']['io'] &&
+        $port == conf_guard()['remote_control_sleep']['port']) {
+        if ($port_state)
+            run_cmd('./guard.php state sleep remote 0');
+        return 0;
+    }
+
+    // guard on by remote control
+    if ($io_name == conf_guard()['remote_control_ready']['io'] &&
+        $port == conf_guard()['remote_control_ready']['port']) {
+        if ($port_state)
+            run_cmd('./guard.php state ready remote 0');
+        return 0;
+    }
+
     // check for sensors
     $ret = zone_get_by_io_port($io_name, $port);
     if (!is_array($ret))
@@ -84,6 +100,7 @@ function main($argv)
         if ($guard_state['state'] == 'sleep')
             return 0;
 
+        player_start('sounds/access_denyed.wav', 100);
         telegram_send('false_alarm', ['name' => $zone['name'],
                                       'io' => $io_name,
                                       'port' => $port]);
