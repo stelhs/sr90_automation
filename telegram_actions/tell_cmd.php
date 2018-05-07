@@ -32,7 +32,7 @@ function main($argv) {
             return 0;
     }
 
-    $ret = run_cmd(sprintf("./broadcast_play.php '%s'", $cmd));
+    $ret = run_cmd(sprintf("./text_spech.php '%s'", $cmd));
     $telegram->send_message($chat_id, sprintf("По громкоговорителю было озвученно сообщение:\n%s\n", $cmd), $msg_id);
     return 0;
 }

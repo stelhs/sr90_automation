@@ -164,7 +164,7 @@ function main($argv)
             return $ret['status'];
         }
 
-        pnotice("%s\n", $ret['log']);
+        pnotice("http return: %s\n", $ret['log']);
     }
 }
 

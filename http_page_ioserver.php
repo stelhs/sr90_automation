@@ -71,6 +71,7 @@ function main($argv)
     foreach ($list_subscribers as $script_name) {
         $script = sprintf("%s %s %s %s",
                           $script_name, $io_name, $port, $state);
+        pnotice("run I/O script %s\n", $script);
         $ret = run_cmd(IO_ACTIONS_DIR . $script);
 
         if ($ret['rc']) {
@@ -79,9 +80,8 @@ function main($argv)
             continue;
         }
 
-        pnotice("run I/O script %s\n", $script);
         if ($ret['log'])
-            pnotice("script %s return: %s\n", $ret['log']);
+            pnotice("script %s return: %s\n", $script, $ret['log']);
     }
 
     return 0;

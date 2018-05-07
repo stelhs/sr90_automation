@@ -8,7 +8,7 @@ require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'httpio_lib.php';
 require_once 'guard_lib.php';
-require_once 'sequencer_lib.php';
+require_once 'player_lib.php';
 
 $utility_name = $argv[0];
 
@@ -68,7 +68,7 @@ function main($argv)
             $ret = run_cmd('./padlock.php open');
             pnotice("open all padlocks: %s\n", $ret['log']);
 
-            player_start('sounds/unlock.wav', 50);
+            player_start('sounds/unlock.wav', 70);
 
             /* enable lighter if night */
             $day_night = get_day_night();
@@ -142,7 +142,7 @@ function main($argv)
                     $ignore_zones_list[] = $zone;
             }
 
-            player_start('sounds/lock.wav', 50);
+            player_start('sounds/lock.wav', 70);
             if (count($ignore_zones_list)) {
                 // TODO: check for zones not complete
             }

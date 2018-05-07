@@ -5,6 +5,7 @@
 
 function start {
     ./io.php relay_set sbio1 1 1
+    sleep(1)
 }
 
 function stop {
@@ -34,10 +35,8 @@ fi
 
 start
 amixer -q set Master 100%
-amixer -q set 'Speaker Boost' 100%
 amixer -q set PCM unmute
 amixer -q set Master unmute
-amixer -q set 'Speaker Boost' unmute
 amixer -q set PCM $VOLUME%
 aplay --duration=$DURATION $1
 stop
