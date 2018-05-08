@@ -62,6 +62,8 @@ function main($argv)
     run_cmd("rm sounds/text.wav");
     run_cmd(sprintf("export $(cat /tmp/dbus_vars);echo \"%s\" | RHVoice-client -s %s -r %s > sounds/text.wav",
                     $message, $voice_name, $speed));
+    if ($volume == 0)
+        return 0;
     player_start(['sounds/text_preamb.wav',
                   'sounds/text.wav'], $volume);
     return 0;

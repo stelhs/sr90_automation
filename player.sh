@@ -5,7 +5,7 @@
 
 function start {
     ./io.php relay_set sbio1 1 1
-    sleep(1)
+#    sleep(1)
 }
 
 function stop {

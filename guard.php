@@ -142,9 +142,13 @@ function main($argv)
                     $ignore_zones_list[] = $zone;
             }
 
-            player_start('sounds/lock.wav', 70);
+            player_start('sounds/lock.wav', 75);
             if (count($ignore_zones_list)) {
-                // TODO: check for zones not complete
+                $text = "не закрыты ";
+                foreach ($ignore_zones_list as $zone)
+                    $text += $zone['name'] . ' ';
+                run_cmd(sprintf('./text_spech.php %s 0', $text));
+                player_start(['sounds/lock.wav', 'sounds/text.wav'], 75);
             }
 
             /* disable lighter if this disable */

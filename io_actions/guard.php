@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'common_lib.php';
+require_once 'player_lib.php';
 $utility_name = $argv[0];
 
 
@@ -25,9 +26,13 @@ function main($argv)
     printf("port = %s\n", $port);
     printf("port_state = %s\n", $port_state);
 
-    // guard off by remote control
+    $guard_state = get_guard_state();
+
+    // guard to sleep by remote control
     if ($io_name == conf_guard()['remote_control_sleep']['io'] &&
         $port == conf_guard()['remote_control_sleep']['port']) {
+        if ($guard_state['state'] == 'sleep')
+            return 0;
         if (!$port_state) {
             $ret = run_cmd('./guard.php state sleep remote 0');
             pnotice("guard.php responce: %s\n", $ret['log']);
@@ -35,9 +40,11 @@ function main($argv)
         return 0;
     }
 
-    // guard on by remote control
+    // guard set ready by remote control
     if ($io_name == conf_guard()['remote_control_ready']['io'] &&
         $port == conf_guard()['remote_control_ready']['port']) {
+        if ($guard_state['state'] == 'ready')
+            return 0;
         if (!$port_state) {
             $ret = run_cmd('./guard.php state ready remote 0');
             pnotice("guard.php responce: %s\n", $ret['log']);
@@ -50,8 +57,6 @@ function main($argv)
     if (!is_array($ret))
         return 0;
     $zone = $ret;
-
-    $guard_state = get_guard_state();
 
     // define normal state for current port
     $normal_state = -1;
@@ -106,7 +111,9 @@ function main($argv)
         if ($guard_state['state'] == 'sleep')
             return 0;
 
-        player_start('sounds/access_denyed.wav', 100);
+        $ret = run_cmd('./text_spech.php "Уходи" 0');
+        player_start(['sounds/access_denyed.wav',
+                      'sounds/text.wav'], 100);
         telegram_send('false_alarm', ['name' => $zone['name'],
                                       'io' => $io_name,
                                       'port' => $port]);
