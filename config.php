@@ -131,10 +131,11 @@ function conf_telegram_bot()
 function conf_padlocks()
 {
     return [
-                ['num' => 1, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
-                ['num' => 2, 'name' => 'коричневый контейнер', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 1, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
-                ];
+                ['num' => 2, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
+                ['num' => 3, 'name' => 'коричневый контейнер', 'io' => 'sbio2', 'io_port' => 3],
+                ['num' => 4, 'name' => 'синий контейнер', 'io' => 'sbio2', 'io_port' => 2],
+    ];
 }
 
 function conf_street_light()

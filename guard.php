@@ -64,6 +64,9 @@ function main($argv)
 
             pnotice("Guard stoped by %s\n", $method);
 
+            $ret = run_cmd('./io.php relay_set sbio2 1 1');
+            pnotice("enable power containers: %s\n", $ret['log']);
+
             // open all padlocks
             $ret = run_cmd('./padlock.php open');
             pnotice("open all padlocks: %s\n", $ret['log']);
@@ -118,6 +121,9 @@ function main($argv)
             $user_name = $user['name'];
 
             pnotice("Guard started by %s\n", $method);
+
+            $ret = run_cmd('./io.php relay_set sbio2 1 0');
+            pnotice("disable power containers: %s\n", $ret['log']);
 
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
