@@ -570,7 +570,7 @@ function format_global_status_for_telegram($stat)
 
     if (isset($stat['termo_sensors'])) {
         foreach($stat['termo_sensors'] as $sensor)
-            $text .= sprintf("температура %s: %.02f градусов\n");
+            $text .= sprintf("Температура %s: %.01f градусов\n", $sensor['name'], $sensor['value']);
     }
 
     return $text;
