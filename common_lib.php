@@ -647,7 +647,7 @@ function get_termosensors_stat()
                     'created > now() - INTERVAL 2 MINUTE';
 
     $rows = db()->query_list($query);
-    if (!count($rows))
+    if (!is_array($rows) || !count($rows))
         return [];
 
     $list = [];

@@ -152,10 +152,11 @@ function main($argv)
         return_404_request();
     $http_data['script'] = $php_file;
 
-    if (!isset($url_parts['query']))
-        return_404_request();
+    $query = '';
+    if (isset($url_parts['query']))
+        $query = $url_parts['query'];
 
-    $script = sprintf('./%s "%s"', $php_file, $url_parts['query']);
+    $script = sprintf('./%s "%s"', $php_file, $query);
     unset($parts[0]);
     foreach ($parts as $part)
         $script .= ' ' . $part;
