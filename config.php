@@ -109,6 +109,8 @@ function conf_io()
                             'tcp_port' => 400],
                 'sbio1' => ['ip_addr' => '192.168.10.3',
                             'tcp_port' => 400],
+                'sbio2' => ['ip_addr' => '192.168.10.4',
+                            'tcp_port' => 400],
                ];
 }
 
