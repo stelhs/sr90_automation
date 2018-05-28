@@ -25,9 +25,18 @@ function main($argv) {
         }
 
         if ($response['status'] != 'ok') {
-            telegram_send(sprintf("При опросе модуля ввода вывода %s выяснилось, что ей плохо: %s",
+            telegram_send(sprintf("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
                                   $io_name, $response['error_msg']));
             continue;
+        }
+
+        if (isset($response['termo_sensors'])) {
+            $sensors = $response['termo_sensors'];
+            foreach ($sensors as $sensor) {
+                db()->insert('termo_sensors_log', ['io_name' => $io_name,
+                                                   'sensor_name' => $sensor['name'],
+                                                   'temperaure' => $sensor['temperature']]);
+            }
         }
 
         if (count($response['trigger_log'])) {

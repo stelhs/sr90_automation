@@ -187,3 +187,18 @@ CREATE TABLE IF NOT EXISTS `http_server_log` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `termo_sensors_log`
+--
+
+CREATE TABLE IF NOT EXISTS `termo_sensors_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `io_name` varchar(8) NOT NULL,
+  `sensor_name` varchar(20) NOT NULL,
+  `temperaure` float NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
