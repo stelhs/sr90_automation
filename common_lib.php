@@ -343,6 +343,7 @@ function get_global_status()
     $modem_stat = $modem->get_status();
     $lighting_stat = get_street_light_stat();
     $padlocks_stat = get_padlocks_stat();
+    $termosensors = get_termosensors_stat();
 
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
@@ -356,6 +357,7 @@ function get_global_status()
             'uptime' => $uptime,
             'lighting_stat' => $lighting_stat,
             'padlocks_stat' => $padlocks_stat,
+            'termo_sensors' => $termosensors,
             'mdadm' => $mdstat];
 }
 
@@ -566,6 +568,11 @@ function format_global_status_for_telegram($stat)
         $text .= sprintf("Баланс счета SIM карты: %s\n", $stat['balance']);
     }
 
+    if (isset($stat['termo_sensors'])) {
+        foreach($stat['termo_sensors'] as $sensor)
+            $text .= sprintf("температура %s: %.02f градусов\n");
+    }
+
     return $text;
 }
 
@@ -628,4 +635,27 @@ function get_padlocks_stat()
     }
 
     return $report;
+}
+
+function get_termosensors_stat()
+{
+    $query = 'SELECT sensor_name, temperaure FROM `termo_sensors_log` LEFT JOIN ' .
+                 '(SELECT sensor_name, MAX(id) as max '.
+                        'FROM `termo_sensors_log` GROUP BY sensor_name) as s ' .
+             'USING (sensor_name) WHERE ' .
+                    'termo_sensors_log.id >= s.max AND ' .
+                    'created > now() - INTERVAL 2 MINUTE';
+
+    $rows = db()->query_list($query);
+    if (!count($rows))
+        return [];
+
+    $list = [];
+    foreach ($rows as $row) {
+        if (!isset(conf_termo_sensors()[$row['sensor_name']]))
+            continue;
+            $list[] = ['name' => conf_termo_sensors()[$row['sensor_name']],
+                       'value' => $row['temperaure']];
+    }
+    return $list;
 }

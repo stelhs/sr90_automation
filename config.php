@@ -114,6 +114,13 @@ function conf_io()
                ];
 }
 
+function conf_termo_sensors()
+{
+    return ['28-00000a872141' => 'на синем контейнере',
+            '28-00000a87afc5' => 'внутри синего контейнера',
+    ];
+}
+
 function conf_modem()
 {
     return array('ip_addr' => '192.168.1.1');
