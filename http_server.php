@@ -173,11 +173,11 @@ function main($argv)
     $ret_data = json_decode($ret['log'], true);
     if (!is_array($ret_data)) {
         return_ok(json_encode(['status' => 'ok',
-            'log' => $ret['log']]));
+            'log' => $ret['log']], JSON_UNESCAPED_UNICODE));
     }
     if (!isset($ret_data['status']))
         $ret_data['status'] = 'ok';
-        return_ok(json_encode($ret_data));
+        return_ok(json_encode($ret_data, JSON_UNESCAPED_UNICODE));
 }
 
 exit(main($argv));
