@@ -146,8 +146,8 @@ function main($argv)
             if (count($ignore_zones_list)) {
                 $text = "не закрыты ";
                 foreach ($ignore_zones_list as $zone)
-                    $text += $zone['name'] . ' ';
-                run_cmd(sprintf('./text_spech.php %s 0', $text));
+                    $text .= $zone['name'] . ' ';
+                run_cmd(sprintf('./text_spech.php \'%s\' 0', $text));
                 player_start(['sounds/lock.wav', 'sounds/text.wav'], 75);
             }
 
