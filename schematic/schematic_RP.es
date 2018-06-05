@@ -530,10 +530,10 @@
     "app": "Electro Schematic editor",
     "version": 1,
     "viewCenter": {
-      "x": 1148.0,
+      "x": 1067.0,
       "y": 445.0
     },
-    "viewPage": 4,
+    "viewPage": 10,
     "viewZoom": 100.0
   },
   "pages": [
@@ -49304,7 +49304,7 @@
           },
           "id": 1701,
           "mountPoint": {
-            "x": 1280.0,
+            "x": 1260.0,
             "y": 780.0
           },
           "name": "",
@@ -49325,7 +49325,7 @@
           },
           "id": 1702,
           "mountPoint": {
-            "x": 1280.0,
+            "x": 1260.0,
             "y": 580.0
           },
           "name": "",
