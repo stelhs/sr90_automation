@@ -67,6 +67,9 @@ function main($argv)
             $ret = run_cmd('./io.php relay_set sbio2 1 1');
             pnotice("enable power containers: %s\n", $ret['log']);
 
+            $ret = run_cmd('./io.php relay_set sbio1 2 1');
+            pnotice("enable power RP: %s\n", $ret['log']);
+
             // open all padlocks
             $ret = run_cmd('./padlock.php open');
             pnotice("open all padlocks: %s\n", $ret['log']);
@@ -124,6 +127,9 @@ function main($argv)
 
             $ret = run_cmd('./io.php relay_set sbio2 1 0');
             pnotice("disable power containers: %s\n", $ret['log']);
+
+            $ret = run_cmd('./io.php relay_set sbio1 2 0');
+            pnotice("disable power RP: %s\n", $ret['log']);
 
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
