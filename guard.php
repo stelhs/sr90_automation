@@ -62,16 +62,19 @@ function main($argv)
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
 
+            player_start('sounds/unlock.wav', 90);
+
             pnotice("Guard stoped by %s\n", $method);
 
             $ret = run_cmd('./io.php relay_set sbio2 1 1');
             pnotice("enable power containers: %s\n", $ret['log']);
 
+            $ret = run_cmd('./io.php relay_set sbio1 2 1');
+            pnotice("enable power RP: %s\n", $ret['log']);
+
             // open all padlocks
             $ret = run_cmd('./padlock.php open');
             pnotice("open all padlocks: %s\n", $ret['log']);
-
-            player_start('sounds/unlock.wav', 70);
 
             /* enable lighter if night */
             $day_night = get_day_night();
@@ -120,10 +123,15 @@ function main($argv)
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
 
+            player_start('sounds/lock.wav', 75);
+
             pnotice("Guard started by %s\n", $method);
 
             $ret = run_cmd('./io.php relay_set sbio2 1 0');
             pnotice("disable power containers: %s\n", $ret['log']);
+
+            $ret = run_cmd('./io.php relay_set sbio1 2 0');
+            pnotice("disable power RP: %s\n", $ret['log']);
 
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
@@ -148,13 +156,12 @@ function main($argv)
                     $ignore_zones_list[] = $zone;
             }
 
-            player_start('sounds/lock.wav', 75);
             if (count($ignore_zones_list)) {
                 $text = "не закрыты ";
                 foreach ($ignore_zones_list as $zone)
                     $text .= $zone['name'] . ' ';
                 run_cmd(sprintf('./text_spech.php \'%s\' 0', $text));
-                player_start(['sounds/lock.wav', 'sounds/text.wav'], 75);
+                player_start(['sounds/text.wav'], 75);
             }
 
             /* disable lighter if this disable */
