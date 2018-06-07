@@ -659,3 +659,25 @@ function get_termosensors_stat()
     }
     return $list;
 }
+
+function get_stored_io_states()
+{
+    $query = 'SELECT io_output_actions.io_name, ' .
+                    'io_output_actions.port, ' .
+                    'io_output_actions.state ' .
+             'FROM io_output_actions ' .
+             'INNER JOIN ' .
+                '( SELECT io_name, port, max(id) as last_id ' .
+                  'FROM io_output_actions ' .
+                  'GROUP BY io_name, port ) as b '.
+             'ON io_output_actions.port = b.port AND ' .
+                'io_output_actions.io_name = b.io_name AND ' .
+                'io_output_actions.id = b.last_id ' .
+             'ORDER BY io_output_actions.io_name, io_output_actions.port';
+
+    $rows = db()->query_list($query);
+    if (!is_array($rows) || !count($rows))
+        return [];
+
+    return $rows;
+}
