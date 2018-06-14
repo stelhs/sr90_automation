@@ -234,6 +234,9 @@ function telegram_send($type, $args = array())
             $args['modem_num']);
         break;
 
+    case 'crypto_currancy':
+        $text = sprintf("Цена на %s %f USDT", $args['coin'], $args['price']);
+        break;
 
     default:
         $text = $type;
