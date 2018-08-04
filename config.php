@@ -72,6 +72,19 @@ function conf_guard()
                                                 'port' => 5,
                                                 'normal_state' => 1]]
                                 ],
+                                ['id' => '5',
+                                    'name' => 'СК',
+                                    'diff_interval' => 10,
+                                    'alarm_time' => 30,
+                                    'run_lighter' => 1,
+                                    'sensors' => [['io' => 'sbio2',
+                                                   'port' => 1,
+                                                   'normal_state' => 1],
+                                                  ['io' => 'sbio2',
+                                                   'port' => 2,
+                                                  'normal_state' => 1]]
+                                ],
+
 /*                                ['id' => '3',
                                  'name' => 'Датчик двери Кунга',
                                  'diff_interval' => 10,
