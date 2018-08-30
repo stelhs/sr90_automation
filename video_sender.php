@@ -15,7 +15,7 @@ function print_help()
              "\tcommands:\n" .
              "\t$utility_name alarm <alarm_id> [alarm_timestamp] - Send all camera videos associated with alarm_id to sr38.org and send links to Telegram\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name alarm 27\n" .
+             "\t\t\t $utility_name alarm 27 timestamp\n" .
     "\n\n";
 }
 
@@ -53,7 +53,7 @@ function main($argv)
                 }
                 dump($file);
                 $server_filename = sprintf("%d_%d_%s", $alarm_id, $cam['id'], basename($file['file']));
-                $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/var/www/plato/alarm_video/%s',
+                $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/storage/www/plato/alarm_video/%s',
                                    $file['file'], $server_filename));
                 if ($ret['rc']) {
                     run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось загрузить видеофайл %s для камеры %s: %s'",
