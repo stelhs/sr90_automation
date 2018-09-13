@@ -2,6 +2,7 @@
 
 require_once '/usr/local/lib/php/database.php';
 require_once '/usr/local/lib/php/common.php';
+require_once '/usr/local/lib/php/os.php';
 require_once 'config.php';
 require_once 'modem3g.php';
 require_once 'httpio_lib.php';
@@ -51,7 +52,7 @@ function sms_send($type, $recepient, $args = array())
         break;
 
     case 'mdadm':
-        switch ($args['mode']) {
+        switch ($args['state']) {
         case "resync":
             $raid_stat = "синхронизируется " . $args['progress'] . '%';
             break;
@@ -169,7 +170,7 @@ function telegram_send($type, $args = array())
         break;
 
     case 'mdadm':
-        switch ($args['mode']) {
+        switch ($args['state']) {
         case "resync":
             $raid_stat = "синхронизируется " . $args['progress'] . '%';
             break;
@@ -434,7 +435,7 @@ function format_global_status_for_sms($stat)
     }
 
     if (isset($stat['mdadm'])) {
-        switch ($stat['mdadm']['mode']) {
+        switch ($stat['mdadm']['state']) {
         case "normal":
             $mode = "исправен";
             break;
@@ -540,7 +541,7 @@ function format_global_status_for_telegram($stat)
     }
 
     if (isset($stat['mdadm'])) {
-        switch ($stat['mdadm']['mode']) {
+        switch ($stat['mdadm']['state']) {
         case "normal":
             $mode = "исправен";
             break;
