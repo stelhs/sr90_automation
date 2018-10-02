@@ -106,19 +106,9 @@
       "p2": 1070
     },
     {
-      "id": 21,
-      "p1": 1098,
-      "p2": 1096
-    },
-    {
       "id": 26,
       "p1": 440,
       "p2": 981
-    },
-    {
-      "id": 25,
-      "p1": 1000,
-      "p2": 1097
     },
     {
       "id": 27,
@@ -516,16 +506,6 @@
       "p2": 3085
     },
     {
-      "id": 111,
-      "p1": 3578,
-      "p2": 3580
-    },
-    {
-      "id": 112,
-      "p1": 3577,
-      "p2": 3581
-    },
-    {
       "id": 104,
       "p1": 3668,
       "p2": 3648
@@ -574,17 +554,112 @@
       "id": 115,
       "p1": 3583,
       "p2": 3675
+    },
+    {
+      "id": 21,
+      "p1": 1000,
+      "p2": 3897
+    },
+    {
+      "id": 25,
+      "p1": 1098,
+      "p2": 3900
+    },
+    {
+      "id": 111,
+      "p1": 3903,
+      "p2": 3910
+    },
+    {
+      "id": 112,
+      "p1": 3899,
+      "p2": 3904
+    },
+    {
+      "id": 118,
+      "p1": 3908,
+      "p2": 3912
+    },
+    {
+      "id": 119,
+      "p1": 3907,
+      "p2": 3913
+    },
+    {
+      "id": 120,
+      "p1": 3578,
+      "p2": 3916
+    },
+    {
+      "id": 121,
+      "p1": 3577,
+      "p2": 3917
+    },
+    {
+      "id": 122,
+      "p1": 3959,
+      "p2": 3962
+    },
+    {
+      "id": 123,
+      "p1": 3960,
+      "p2": 3963
+    },
+    {
+      "id": 130,
+      "p1": 3981,
+      "p2": 3985
+    },
+    {
+      "id": 131,
+      "p1": 3982,
+      "p2": 3984
+    },
+    {
+      "id": 132,
+      "p1": 3901,
+      "p2": 3993
+    },
+    {
+      "id": 133,
+      "p1": 3902,
+      "p2": 3994
+    },
+    {
+      "id": 134,
+      "p1": 4004,
+      "p2": 3999
+    },
+    {
+      "id": 135,
+      "p1": 4005,
+      "p2": 4000
+    },
+    {
+      "id": 136,
+      "p1": 4007,
+      "p2": 4001
+    },
+    {
+      "id": 137,
+      "p1": 4008,
+      "p2": 4002
+    },
+    {
+      "id": 170,
+      "p1": 4046,
+      "p2": 4048
     }
   ],
   "header": {
     "app": "Electro Schematic editor",
     "version": 1,
     "viewCenter": {
-      "x": 1148.0,
-      "y": 521.0
+      "x": 649.6,
+      "y": 351.20000000000005
     },
-    "viewPage": 3,
-    "viewZoom": 100.0
+    "viewPage": 4,
+    "viewZoom": 125.0
   },
   "pages": [
     {
@@ -11943,7 +12018,7 @@
           },
           "id": 746,
           "mountPoint": {
-            "x": 680.0,
+            "x": 780.0,
             "y": 120.0
           },
           "name": "",
@@ -11969,7 +12044,7 @@
           },
           "id": 787,
           "mountPoint": {
-            "x": 620.0,
+            "x": 720.0,
             "y": 240.0
           },
           "name": "",
@@ -11990,49 +12065,7 @@
           },
           "id": 788,
           "mountPoint": {
-            "x": 880.0,
-            "y": 240.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": -20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 1096,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 240.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": -20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 1097,
-          "mountPoint": {
-            "x": 1360.0,
+            "x": 980.0,
             "y": 240.0
           },
           "name": "",
@@ -12044,7 +12077,7 @@
         {
           "id": 977,
           "mountPoint": {
-            "x": 220.0,
+            "x": 320.0,
             "y": 500.0
           },
           "name": "",
@@ -12065,7 +12098,7 @@
         {
           "id": 978,
           "mountPoint": {
-            "x": 520.0,
+            "x": 620.0,
             "y": 500.0
           },
           "name": "",
@@ -12086,7 +12119,7 @@
         {
           "id": 979,
           "mountPoint": {
-            "x": 220.0,
+            "x": 320.0,
             "y": 540.0
           },
           "name": "",
@@ -12107,7 +12140,7 @@
         {
           "id": 980,
           "mountPoint": {
-            "x": 980.0,
+            "x": 1080.0,
             "y": 540.0
           },
           "name": "",
@@ -12137,7 +12170,7 @@
           },
           "id": 981,
           "mountPoint": {
-            "x": 40.0,
+            "x": 140.0,
             "y": 600.0
           },
           "name": "",
@@ -12158,7 +12191,7 @@
           },
           "id": 982,
           "mountPoint": {
-            "x": 80.0,
+            "x": 180.0,
             "y": 600.0
           },
           "name": "",
@@ -12179,7 +12212,7 @@
           },
           "id": 997,
           "mountPoint": {
-            "x": 40.0,
+            "x": 140.0,
             "y": 440.0
           },
           "name": "",
@@ -12200,7 +12233,7 @@
           },
           "id": 998,
           "mountPoint": {
-            "x": 80.0,
+            "x": 180.0,
             "y": 440.0
           },
           "name": "",
@@ -12264,7 +12297,7 @@
           ],
           "id": 1399,
           "mountPoint": {
-            "x": 860.0,
+            "x": 960.0,
             "y": 240.0
           },
           "name": "undefined",
@@ -12325,7 +12358,7 @@
           ],
           "id": 1400,
           "mountPoint": {
-            "x": 400.0,
+            "x": 500.0,
             "y": 240.0
           },
           "name": "undefined",
@@ -12473,694 +12506,10 @@
           ],
           "id": 2645,
           "mountPoint": {
-            "x": 20.0,
+            "x": 120.0,
             "y": 440.0
           },
           "name": "undefined",
-          "type": "group"
-        },
-        {
-          "angle": 90,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3105,
-          "mountPoint": {
-            "x": 1380.0,
-            "y": 480.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 60.0,
-            "w": 20
-          },
-          "text": "sense +",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "id": 3109,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 340.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 60.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3110,
-          "mountPoint": {
-            "x": 1360.0,
-            "y": 400.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -60.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3118,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 280.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -40.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3119,
-          "mountPoint": {
-            "x": 1360.0,
-            "y": 280.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -40.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3122,
-          "index": 1,
-          "mountPoint": {
-            "x": 1380.0,
-            "y": 680.0
-          },
-          "name": "undefined",
-          "parentComponentId": 3131,
-          "prefixName": "S",
-          "type": "group"
-        },
-        {
-          "angle": 90,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3130,
-          "mountPoint": {
-            "x": 1280.0,
-            "y": 480.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 60.0,
-            "w": 20
-          },
-          "text": "sense -",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": "None",
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 40.0,
-                "w": 20.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 60.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 4
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 4
-            }
-          ],
-          "id": 3131,
-          "index": 11,
-          "mountPoint": {
-            "x": 1720.0,
-            "y": 700.0
-          },
-          "name": "relay2",
-          "prefixName": "K",
-          "type": "group"
-        },
-        {
-          "id": 3133,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 460.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 40.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 10.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 30.0,
-                "y": 5.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 5.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -5.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 6,
-              "mountPoint": {
-                "x": 5.0,
-                "y": 15.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3134,
-          "index": 2,
-          "mountPoint": {
-            "x": 1560.0,
-            "y": 500.0
-          },
-          "name": "undefined",
-          "prefixName": "C",
-          "type": "group"
-        },
-        {
-          "id": 3139,
-          "mountPoint": {
-            "x": 1720.0,
-            "y": 480.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 60.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3140,
-          "mountPoint": {
-            "x": 1760.0,
-            "y": 480.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 60.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 60.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -60.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 40.0,
-                "y": 30.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 40.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -20.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 30.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 10.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 20.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3143,
-          "index": 1,
-          "mountPoint": {
-            "x": 1460.0,
-            "y": 540.0
-          },
-          "name": "diode",
-          "prefixName": "VD",
           "type": "group"
         },
         {
@@ -13243,330 +12592,11 @@
           "id": 3176,
           "index": 12,
           "mountPoint": {
-            "x": 340.0,
+            "x": 440.0,
             "y": 300.0
           },
           "name": "relay2",
           "prefixName": "K",
-          "type": "group"
-        },
-        {
-          "id": 3185,
-          "mountPoint": {
-            "x": 1700.0,
-            "y": 740.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -140.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3205,
-          "mountPoint": {
-            "x": 1700.0,
-            "y": 720.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 20.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3207,
-          "mountPoint": {
-            "x": 1780.0,
-            "y": 720.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 20.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3209,
-          "mountPoint": {
-            "x": 1800.0,
-            "y": 740.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -140.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -60.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 30.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3211,
-          "index": 2,
-          "mountPoint": {
-            "x": 1400.0,
-            "y": 580.0
-          },
-          "name": "diode",
-          "prefixName": "VD",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3225,
-          "index": 2,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 620.0
-          },
-          "name": "undefined",
-          "parentComponentId": 3131,
-          "prefixName": "S",
           "type": "group"
         },
         {
@@ -13653,7 +12683,7 @@
           "id": 3254,
           "index": 1,
           "mountPoint": {
-            "x": 420.0,
+            "x": 520.0,
             "y": 300.0
           },
           "name": "undefined",
@@ -13664,7 +12694,7 @@
         {
           "id": 3276,
           "mountPoint": {
-            "x": 420.0,
+            "x": 520.0,
             "y": 300.0
           },
           "name": "",
@@ -13681,206 +12711,6 @@
           "type": "line",
           "typeLine": "trace",
           "zIndex": 2
-        },
-        {
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3342,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 330.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 10.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "line",
-          "zIndex": 2
-        },
-        {
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3344,
-          "mountPoint": {
-            "x": 1345.0,
-            "y": 330.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 10.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "line",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": {
-                "A": 150,
-                "B": 127,
-                "G": 255,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 140.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 35.0,
-                "y": 5.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 40,
-                "w": 80.0
-              },
-              "text": "AC-DC\n220 -> 24v",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 45.0,
-                "y": 45.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3345,
-          "mountPoint": {
-            "x": 1260.0,
-            "y": 280.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 140.0
-              },
-              "text": "DC-DC smooth start",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": {
-                "A": 100,
-                "B": 255,
-                "G": 200,
-                "R": 97
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 160.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            }
-          ],
-          "id": 3353,
-          "mountPoint": {
-            "x": 1660.0,
-            "y": 540.0
-          },
-          "name": "undefined",
-          "type": "group"
         },
         {
           "graphicsObjects": [
@@ -14196,7 +13026,7 @@
           "id": 3382,
           "index": 1,
           "mountPoint": {
-            "x": 680.0,
+            "x": 780.0,
             "y": 300.0
           },
           "name": "led",
@@ -14206,7 +13036,7 @@
         {
           "id": 3383,
           "mountPoint": {
-            "x": 620.0,
+            "x": 720.0,
             "y": 260.0
           },
           "name": "",
@@ -14227,7 +13057,7 @@
         {
           "id": 3386,
           "mountPoint": {
-            "x": 840.0,
+            "x": 940.0,
             "y": 320.0
           },
           "name": "",
@@ -14248,7 +13078,7 @@
         {
           "id": 3387,
           "mountPoint": {
-            "x": 880.0,
+            "x": 980.0,
             "y": 320.0
           },
           "name": "",
@@ -14269,7 +13099,7 @@
         {
           "id": 3389,
           "mountPoint": {
-            "x": 620.0,
+            "x": 720.0,
             "y": 320.0
           },
           "name": "",
@@ -14367,7 +13197,7 @@
           "id": 3391,
           "index": 1,
           "mountPoint": {
-            "x": 780.0,
+            "x": 880.0,
             "y": 320.0
           },
           "name": "test",
@@ -14377,7 +13207,7 @@
         {
           "id": 3393,
           "mountPoint": {
-            "x": 740.0,
+            "x": 840.0,
             "y": 320.0
           },
           "name": "",
@@ -14394,1108 +13224,6 @@
           "type": "line",
           "typeLine": "trace",
           "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 25.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 40.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 25.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 40.0,
-                "y": 45.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 6,
-              "mountPoint": {
-                "x": 35.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 7,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 55.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 8,
-              "mountPoint": {
-                "x": 60.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 9,
-              "mountPoint": {
-                "x": 65.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 10,
-              "mountPoint": {
-                "x": 80.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 11,
-              "mountPoint": {
-                "x": 65.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 12,
-              "mountPoint": {
-                "x": 80.0,
-                "y": 45.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 13,
-              "mountPoint": {
-                "x": 75.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 14,
-              "mountPoint": {
-                "x": 60.0,
-                "y": 55.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 15,
-              "mountPoint": {
-                "x": 100.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 16,
-              "mountPoint": {
-                "x": 105.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 17,
-              "mountPoint": {
-                "x": 120.0,
-                "y": 25.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 18,
-              "mountPoint": {
-                "x": 105.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 19,
-              "mountPoint": {
-                "x": 120.0,
-                "y": 45.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 20,
-              "mountPoint": {
-                "x": 115.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 21,
-              "mountPoint": {
-                "x": 100.0,
-                "y": 55.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": {
-                "A": 50,
-                "B": 127,
-                "G": 255,
-                "R": 255
-              },
-              "id": 22,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 80.0,
-                "w": 140.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 0,
-                "G": 170,
-                "R": 0
-              },
-              "id": 23,
-              "mountPoint": {
-                "x": 40.0,
-                "y": 60.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 80.0
-              },
-              "text": "Voltmeter",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            }
-          ],
-          "id": 3425,
-          "mountPoint": {
-            "x": 1560.0,
-            "y": 140.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "id": 3485,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 580.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -100.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "fillColor": {
-            "A": 100,
-            "B": 127,
-            "G": 255,
-            "R": 0
-          },
-          "id": 3486,
-          "mountPoint": {
-            "x": 1260.0,
-            "y": 400.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 80.0,
-            "w": 180.0
-          },
-          "thickness": 2,
-          "type": "rectangle",
-          "zIndex": 1
-        },
-        {
-          "angle": 0,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3487,
-          "mountPoint": {
-            "x": 1320.0,
-            "y": 420.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 40,
-            "w": 80.0
-          },
-          "text": "DC-DC\n24 -> 13.8",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3527,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 560.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3529,
-          "mountPoint": {
-            "x": 1320.0,
-            "y": 560.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "angle": 90,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3531,
-          "mountPoint": {
-            "x": 1320.0,
-            "y": 480.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 60.0,
-            "w": 20
-          },
-          "text": "charge -",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "id": 3532,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 560.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -80.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3534,
-          "mountPoint": {
-            "x": 1320.0,
-            "y": 560.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -80.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3538,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 440.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -220.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3540,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 560.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 40.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3542,
-          "mountPoint": {
-            "x": 1520.0,
-            "y": 560.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 100.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3544,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 520.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 40.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3546,
-          "mountPoint": {
-            "x": 1660.0,
-            "y": 440.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": -80.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3547,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 440.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 60.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "arrowPoint": {
-            "x": -20.0,
-            "y": 0.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3549,
-          "mountPoint": {
-            "x": 1560.0,
-            "y": 440.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "id": 3551,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 460.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 160.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3553,
-          "mountPoint": {
-            "x": 1560.0,
-            "y": 440.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 20.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3565,
-          "mountPoint": {
-            "x": 1400.0,
-            "y": 480.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 200.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3567,
-          "mountPoint": {
-            "x": 1400.0,
-            "y": 740.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "id": 3569,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 640.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 40.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3571,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 680.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "angle": 90,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3573,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 480.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 80.0,
-            "w": 20
-          },
-          "text": "charge +",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3574,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 760.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
         },
         {
           "arrowPoint": {
@@ -15509,7 +13237,7 @@
           },
           "id": 3577,
           "mountPoint": {
-            "x": 360.0,
+            "x": 460.0,
             "y": 360.0
           },
           "name": "",
@@ -15530,50 +13258,8 @@
           },
           "id": 3578,
           "mountPoint": {
-            "x": 360.0,
+            "x": 460.0,
             "y": 300.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3580,
-          "mountPoint": {
-            "x": 1700.0,
-            "y": 740.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "link",
-          "zIndex": null
-        },
-        {
-          "arrowPoint": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3581,
-          "mountPoint": {
-            "x": 1800.0,
-            "y": 740.0
           },
           "name": "",
           "penStyle": "solid",
@@ -15593,7 +13279,7 @@
           },
           "id": 3583,
           "mountPoint": {
-            "x": 420.0,
+            "x": 520.0,
             "y": 360.0
           },
           "name": "",
@@ -15614,7 +13300,7 @@
           },
           "id": 3585,
           "mountPoint": {
-            "x": 1080.0,
+            "x": 1180.0,
             "y": 260.0
           },
           "name": "",
@@ -15622,559 +13308,6 @@
           "thickness": 2,
           "type": "link",
           "zIndex": null
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 60.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 30.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 5.0,
-                "y": 30.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 6,
-              "mountPoint": {
-                "x": -5.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 7,
-              "mountPoint": {
-                "x": -5.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 8,
-              "mountPoint": {
-                "x": -5.0,
-                "y": 40.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3600,
-          "index": 6,
-          "mountPoint": {
-            "x": 1560.0,
-            "y": 620.0
-          },
-          "name": "button_no",
-          "prefixName": "SB",
-          "type": "group"
-        },
-        {
-          "id": 3603,
-          "mountPoint": {
-            "x": 1680.0,
-            "y": 260.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -40.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3605,
-          "mountPoint": {
-            "x": 1680.0,
-            "y": 280.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -20.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "angle": 90,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
-          "id": 3615,
-          "mountPoint": {
-            "x": 1500.0,
-            "y": 600.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 140.0,
-            "w": 40
-          },
-          "text": "Принудительный\nзапуск",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 25.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3624,
-          "mountPoint": {
-            "x": 1320.0,
-            "y": 680.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 25.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3625,
-          "mountPoint": {
-            "x": 1420.0,
-            "y": 780.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -25.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -5.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3626,
-          "mountPoint": {
-            "x": 1300.0,
-            "y": 120.0
-          },
-          "name": "undefined",
-          "type": "group"
         },
         {
           "graphicsObjects": [
@@ -16261,550 +13394,6 @@
           "mountPoint": {
             "x": 1280.0,
             "y": 1280.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": -25.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -5.0,
-                "y": -10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3629,
-          "mountPoint": {
-            "x": 1360.0,
-            "y": 120.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "id": 3631,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 760.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -80.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3634,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 680.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": 20.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3635,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 700.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 40.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3637,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 620.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -20.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3638,
-          "mountPoint": {
-            "x": 1580.0,
-            "y": 600.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 40.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3640,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 460.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 0.0,
-            "y": -180.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "id": 3641,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 280.0
-          },
-          "name": "",
-          "p1": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "p2": {
-            "x": 60.0,
-            "y": 0.0
-          },
-          "penStyle": "solid",
-          "thickness": 2,
-          "type": "line",
-          "typeLine": "trace",
-          "zIndex": 2
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 25.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 5.0,
-                "y": 10.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3643,
-          "mountPoint": {
-            "x": 1620.0,
-            "y": 860.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -25.0,
-                "y": 0.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": -5.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 0,
-                "G": 0,
-                "R": 255
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": -10.0,
-                "y": 5.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            }
-          ],
-          "id": 3644,
-          "mountPoint": {
-            "x": 1480.0,
-            "y": 420.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "graphicsObjects": [
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 1,
-              "mountPoint": {
-                "x": 60.0,
-                "y": 40.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "выход",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 20.0
-              },
-              "text": "-",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 3,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 30.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 20.0
-              },
-              "text": "+",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 4,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 160.0
-              },
-              "text": "Low voltage cutter (LVC)",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": {
-                "A": 100,
-                "B": 194,
-                "G": 226,
-                "R": 215
-              },
-              "id": 5,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 160.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            }
-          ],
-          "id": 3698,
-          "mountPoint": {
-            "x": 1660.0,
-            "y": 420.0
           },
           "name": "undefined",
           "type": "group"
@@ -28393,60 +24982,27 @@
           "zIndex": 2
         },
         {
-          "graphicsObjects": [
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": "None",
-              "id": 1,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 80.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 2,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 40.0
-              },
-              "text": "RIG1",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            }
-          ],
-          "id": 2978,
-          "mountPoint": {
-            "x": 1680.0,
-            "y": 420.0
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
           },
-          "name": "undefined",
-          "type": "group"
+          "id": 3966,
+          "mountPoint": {
+            "x": 1700.0,
+            "y": 440.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 80.0
+          },
+          "text": "????",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
         }
       ],
       "name": "Панель 1",
@@ -31331,8 +27887,8 @@
           },
           "id": 1370,
           "mountPoint": {
-            "x": 880.0,
-            "y": 200.0
+            "x": 1840.0,
+            "y": 460.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31353,8 +27909,8 @@
           },
           "id": 1371,
           "mountPoint": {
-            "x": 900.0,
-            "y": 240.0
+            "x": 1860.0,
+            "y": 500.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31379,8 +27935,8 @@
           },
           "id": 1372,
           "mountPoint": {
-            "x": 920.0,
-            "y": 200.0
+            "x": 1880.0,
+            "y": 460.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31400,8 +27956,8 @@
           },
           "id": 1373,
           "mountPoint": {
-            "x": 960.0,
-            "y": 200.0
+            "x": 1920.0,
+            "y": 460.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31421,8 +27977,8 @@
           },
           "id": 1374,
           "mountPoint": {
-            "x": 1000.0,
-            "y": 200.0
+            "x": 1960.0,
+            "y": 460.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31439,8 +27995,8 @@
           },
           "id": 1375,
           "mountPoint": {
-            "x": 920.0,
-            "y": 200.0
+            "x": 1880.0,
+            "y": 460.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31462,8 +28018,8 @@
           },
           "id": 1376,
           "mountPoint": {
-            "x": 920.0,
-            "y": 320.0
+            "x": 1880.0,
+            "y": 580.0
           },
           "name": "",
           "penStyle": "solid",
@@ -31605,8 +28161,8 @@
           "id": 1377,
           "index": 2,
           "mountPoint": {
-            "x": 920.0,
-            "y": 420.0
+            "x": 1880.0,
+            "y": 680.0
           },
           "name": "3phase_motor",
           "prefixName": "M",
@@ -31615,8 +28171,8 @@
         {
           "id": 1378,
           "mountPoint": {
-            "x": 960.0,
-            "y": 420.0
+            "x": 1920.0,
+            "y": 680.0
           },
           "name": "",
           "p1": {
@@ -31636,8 +28192,8 @@
         {
           "id": 1379,
           "mountPoint": {
-            "x": 940.0,
-            "y": 420.0
+            "x": 1900.0,
+            "y": 680.0
           },
           "name": "",
           "p1": {
@@ -31657,8 +28213,8 @@
         {
           "id": 1380,
           "mountPoint": {
-            "x": 920.0,
-            "y": 400.0
+            "x": 1880.0,
+            "y": 660.0
           },
           "name": "",
           "p1": {
@@ -31678,8 +28234,8 @@
         {
           "id": 1381,
           "mountPoint": {
-            "x": 980.0,
-            "y": 420.0
+            "x": 1940.0,
+            "y": 680.0
           },
           "name": "",
           "p1": {
@@ -31699,8 +28255,8 @@
         {
           "id": 1382,
           "mountPoint": {
-            "x": 1000.0,
-            "y": 400.0
+            "x": 1960.0,
+            "y": 660.0
           },
           "name": "",
           "p1": {
@@ -31726,8 +28282,8 @@
           },
           "id": 1383,
           "mountPoint": {
-            "x": 920.0,
-            "y": 520.0
+            "x": 1880.0,
+            "y": 760.0
           },
           "name": "",
           "penStyle": "solid",
@@ -33793,6 +30349,4041 @@
           "thickness": 2,
           "type": "text",
           "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3897,
+          "mountPoint": {
+            "x": 1280.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3899,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3900,
+          "mountPoint": {
+            "x": 1300.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3901,
+          "mountPoint": {
+            "x": 1400.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3902,
+          "mountPoint": {
+            "x": 1420.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3903,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 580.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3904,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3907,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 740.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3908,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 780.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3910,
+          "mountPoint": {
+            "x": 1340.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3912,
+          "mountPoint": {
+            "x": 1440.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3913,
+          "mountPoint": {
+            "x": 1460.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3916,
+          "mountPoint": {
+            "x": 1480.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3917,
+          "mountPoint": {
+            "x": 1500.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3938,
+          "mountPoint": {
+            "x": 1260.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3939,
+          "mountPoint": {
+            "x": 1300.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3940,
+          "mountPoint": {
+            "x": 1380.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3941,
+          "mountPoint": {
+            "x": 1420.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3942,
+          "mountPoint": {
+            "x": 1460.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3943,
+          "mountPoint": {
+            "x": 1280.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "220VAC",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3944,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "Battery",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3945,
+          "mountPoint": {
+            "x": 1480.0,
+            "y": 730.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "Relay",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3946,
+          "mountPoint": {
+            "x": 1440.0,
+            "y": 740.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "LVC",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3947,
+          "mountPoint": {
+            "x": 1400.0,
+            "y": 740.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "3A",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3948,
+          "mountPoint": {
+            "x": 1335.0,
+            "y": 820.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 10.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "line",
+          "zIndex": 2
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3950,
+          "mountPoint": {
+            "x": 1455.0,
+            "y": 820.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 10.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "line",
+          "zIndex": 2
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": -5.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 5.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            }
+          ],
+          "id": 3951,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 820.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": -5.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 5.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            }
+          ],
+          "id": 3953,
+          "mountPoint": {
+            "x": 1440.0,
+            "y": 820.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "fillColor": "None",
+          "id": 3954,
+          "mountPoint": {
+            "x": 1240.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 480.0,
+            "w": 340.0
+          },
+          "thickness": 2,
+          "type": "rectangle",
+          "zIndex": 1
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3955,
+          "mountPoint": {
+            "x": 1340.0,
+            "y": 600.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 120.0
+          },
+          "text": "Контроллер АКБ",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3956,
+          "mountPoint": {
+            "x": 1340.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 140.0
+          },
+          "text": "Batterry-system.es",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3957,
+          "mountPoint": {
+            "x": 1340.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3959,
+          "mountPoint": {
+            "x": 1360.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3960,
+          "mountPoint": {
+            "x": 1380.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": -20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": -10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3967,
+          "mountPoint": {
+            "x": 1500.0,
+            "y": 780.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3968,
+          "mountPoint": {
+            "x": 1520.0,
+            "y": 680.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 120.0,
+            "w": 20
+          },
+          "text": "Charger Enable",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3969,
+          "mountPoint": {
+            "x": 1360.0,
+            "y": 740.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "1.5A",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 10.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3970,
+          "mountPoint": {
+            "x": 1280.0,
+            "y": 380.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 10.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3971,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 380.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 10.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3972,
+          "mountPoint": {
+            "x": 1360.0,
+            "y": 380.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 40.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 4,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 5,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 6,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 7,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 10.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 40.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 3973,
+          "mountPoint": {
+            "x": 1400.0,
+            "y": 380.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3974,
+          "mountPoint": {
+            "x": 1290.0,
+            "y": 480.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40,
+            "w": 100.0
+          },
+          "text": "Нагрузочные резисторы",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3975,
+          "mountPoint": {
+            "x": 1290.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "165 ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3976,
+          "mountPoint": {
+            "x": 1310.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "78.4 ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3977,
+          "mountPoint": {
+            "x": 1330.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "44.2 ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3978,
+          "mountPoint": {
+            "x": 1350.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 60.0,
+            "w": 20
+          },
+          "text": "COM",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3979,
+          "mountPoint": {
+            "x": 1380.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "ADC",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3980,
+          "mountPoint": {
+            "x": 1420.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 120.0,
+            "w": 20
+          },
+          "text": "Charge/discarge",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3981,
+          "mountPoint": {
+            "x": 1400.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3982,
+          "mountPoint": {
+            "x": 1380.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3984,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 820.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3985,
+          "mountPoint": {
+            "x": 400.0,
+            "y": 860.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3987,
+          "mountPoint": {
+            "x": 1395.0,
+            "y": 380.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 10.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "line",
+          "zIndex": 2
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3989,
+          "mountPoint": {
+            "x": 1400.0,
+            "y": 385.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": -10.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "line",
+          "zIndex": 2
+        },
+        {
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3991,
+          "mountPoint": {
+            "x": 1375.0,
+            "y": 380.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 10.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "line",
+          "zIndex": 2
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4004,
+          "mountPoint": {
+            "x": 1520.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4005,
+          "mountPoint": {
+            "x": 1540.0,
+            "y": 840.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4007,
+          "mountPoint": {
+            "x": 1420.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4008,
+          "mountPoint": {
+            "x": 1440.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 1,
+              "mountPoint": {
+                "x": 5.0,
+                "y": -5.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 10.0,
+                "w": 30.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 35.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            }
+          ],
+          "id": 4011,
+          "index": 2,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 300.0
+          },
+          "name": "undefined",
+          "prefixName": "R",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 1,
+              "mountPoint": {
+                "x": 5.0,
+                "y": -5.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 10.0,
+                "w": 30.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 35.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            }
+          ],
+          "id": 4012,
+          "index": 3,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 240.0
+          },
+          "name": "undefined",
+          "prefixName": "R",
+          "type": "group"
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 1,
+              "mountPoint": {
+                "x": 5.0,
+                "y": -5.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 10.0,
+                "w": 30.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 35.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 0.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            }
+          ],
+          "id": 4013,
+          "index": 4,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 180.0
+          },
+          "name": "undefined",
+          "prefixName": "R",
+          "type": "group"
+        },
+        {
+          "id": 4014,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 180.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -20.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4015,
+          "mountPoint": {
+            "x": 1020.0,
+            "y": 140.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 160.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4016,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 240.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -20.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4017,
+          "mountPoint": {
+            "x": 1040.0,
+            "y": 300.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -20.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4018,
+          "mountPoint": {
+            "x": 1020.0,
+            "y": 190.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 60.0
+          },
+          "text": "44,2ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4019,
+          "mountPoint": {
+            "x": 1020.0,
+            "y": 250.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 60.0
+          },
+          "text": "78.4ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4020,
+          "mountPoint": {
+            "x": 1030.0,
+            "y": 310.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 50.0
+          },
+          "text": "165ом",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4021,
+          "mountPoint": {
+            "x": 1080.0,
+            "y": 160.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 40.0
+          },
+          "text": "4W ",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4022,
+          "mountPoint": {
+            "x": 1080.0,
+            "y": 220.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 40.0
+          },
+          "text": "2W ",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4023,
+          "mountPoint": {
+            "x": 1080.0,
+            "y": 280.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 20,
+            "w": 40.0
+          },
+          "text": "1W ",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "id": 4024,
+          "mountPoint": {
+            "x": 1020.0,
+            "y": 140.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 340.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4025,
+          "mountPoint": {
+            "x": 1360.0,
+            "y": 140.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 220.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4027,
+          "mountPoint": {
+            "x": 1080.0,
+            "y": 180.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 260.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4028,
+          "mountPoint": {
+            "x": 1340.0,
+            "y": 180.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 180.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4030,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 360.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": -120.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4032,
+          "mountPoint": {
+            "x": 1080.0,
+            "y": 300.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 220.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4033,
+          "mountPoint": {
+            "x": 1300.0,
+            "y": 300.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 60.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4035,
+          "mountPoint": {
+            "x": 1320.0,
+            "y": 240.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -240.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "graphicsObjects": [
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 3,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 20.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": -5.0,
+                "y": 10.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": "None",
+              "id": 4,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 10.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 30.0,
+                "w": 20.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            }
+          ],
+          "id": 4044,
+          "mountPoint": {
+            "x": 1500.0,
+            "y": 380.0
+          },
+          "name": "undefined",
+          "type": "group"
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4045,
+          "mountPoint": {
+            "x": 1510.0,
+            "y": 420.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "USB",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4046,
+          "mountPoint": {
+            "x": 1520.0,
+            "y": 360.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
         }
       ],
       "name": "Панель 2",
@@ -40412,3698 +41003,6 @@
             "G": 0,
             "R": 0
           },
-          "id": 2231,
-          "mountPoint": {
-            "x": 460.0,
-            "y": 440.0
-          },
-          "name": "",
-          "penStyle": "solid",
-          "rectSize": {
-            "h": 20,
-            "w": 120.0
-          },
-          "text": "192.168.10.3",
-          "thickness": 2,
-          "type": "text",
-          "zIndex": 3
-        },
-        {
-          "graphicsObjects": [
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 1,
-              "mountPoint": {
-                "x": 20.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 2,
-              "mountPoint": {
-                "x": 100.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 3,
-              "mountPoint": {
-                "x": 180.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 4,
-              "mountPoint": {
-                "x": 260.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 5,
-              "mountPoint": {
-                "x": 340.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 6,
-              "mountPoint": {
-                "x": 420.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 7,
-              "mountPoint": {
-                "x": 500.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 8,
-              "mountPoint": {
-                "x": 580.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 9,
-              "mountPoint": {
-                "x": 660.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 10,
-              "mountPoint": {
-                "x": 740.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "graphicsObjects": [
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 1,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 2,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -20.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 3,
-                  "mountPoint": {
-                    "x": 20.0,
-                    "y": 20.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": -15.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 4,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 40.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": -40.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 5,
-                  "mountPoint": {
-                    "x": 40.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": -10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 6,
-                  "mountPoint": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 7,
-                  "mountPoint": {
-                    "x": 30.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                },
-                {
-                  "color": {
-                    "B": 200,
-                    "G": 0,
-                    "R": 0
-                  },
-                  "id": 8,
-                  "mountPoint": {
-                    "x": 10.0,
-                    "y": 0.0
-                  },
-                  "name": "",
-                  "p1": {
-                    "x": 0.0,
-                    "y": 0.0
-                  },
-                  "p2": {
-                    "x": 0.0,
-                    "y": 10.0
-                  },
-                  "penStyle": "solid",
-                  "thickness": 2,
-                  "type": "line",
-                  "typeLine": "line",
-                  "zIndex": 2
-                }
-              ],
-              "id": 11,
-              "mountPoint": {
-                "x": 820.0,
-                "y": 320.0
-              },
-              "name": "undefined",
-              "type": "group"
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 12,
-              "mountPoint": {
-                "x": 180.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 13,
-              "mountPoint": {
-                "x": 200.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 14,
-              "mountPoint": {
-                "x": 180.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 1",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 15,
-              "mountPoint": {
-                "x": 240.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 16,
-              "mountPoint": {
-                "x": 260.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 17,
-              "mountPoint": {
-                "x": 240.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 2",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 18,
-              "mountPoint": {
-                "x": 300.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 19,
-              "mountPoint": {
-                "x": 320.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 20,
-              "mountPoint": {
-                "x": 300.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 3",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 21,
-              "mountPoint": {
-                "x": 360.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 22,
-              "mountPoint": {
-                "x": 380.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 23,
-              "mountPoint": {
-                "x": 360.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 4",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 24,
-              "mountPoint": {
-                "x": 420.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 25,
-              "mountPoint": {
-                "x": 440.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 26,
-              "mountPoint": {
-                "x": 420.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 5",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 27,
-              "mountPoint": {
-                "x": 480.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 28,
-              "mountPoint": {
-                "x": 500.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 29,
-              "mountPoint": {
-                "x": 480.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 6",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 30,
-              "mountPoint": {
-                "x": 540.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 31,
-              "mountPoint": {
-                "x": 560.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 32,
-              "mountPoint": {
-                "x": 540.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 7",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 33,
-              "mountPoint": {
-                "x": 600.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 34,
-              "mountPoint": {
-                "x": 620.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 35,
-              "mountPoint": {
-                "x": 600.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 8",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 36,
-              "mountPoint": {
-                "x": 660.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 37,
-              "mountPoint": {
-                "x": 680.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 38,
-              "mountPoint": {
-                "x": 660.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 9",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 39,
-              "mountPoint": {
-                "x": 720.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 40,
-              "mountPoint": {
-                "x": 740.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 41,
-              "mountPoint": {
-                "x": 720.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 10",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 42,
-              "mountPoint": {
-                "x": 780.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 43,
-              "mountPoint": {
-                "x": 800.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 44,
-              "mountPoint": {
-                "x": 780.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 11",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 45,
-              "mountPoint": {
-                "x": 340.0,
-                "y": 160.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 200.0
-              },
-              "text": "Плата Ввода-Вывода SBIO1",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "fillColor": {
-                "A": 120,
-                "B": 194,
-                "G": 255,
-                "R": 124
-              },
-              "id": 46,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 360.0,
-                "w": 880.0
-              },
-              "thickness": 2,
-              "type": "rectangle",
-              "zIndex": 1
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 47,
-              "mountPoint": {
-                "x": 50.0,
-                "y": 0.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 40,
-                "w": 80.0
-              },
-              "text": "Питание 220v",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 48,
-              "mountPoint": {
-                "x": 10.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 1",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 49,
-              "mountPoint": {
-                "x": 90.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 2",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 50,
-              "mountPoint": {
-                "x": 170.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 3",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 51,
-              "mountPoint": {
-                "x": 250.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 4",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 52,
-              "mountPoint": {
-                "x": 330.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 5",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 53,
-              "mountPoint": {
-                "x": 410.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 6",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 54,
-              "mountPoint": {
-                "x": 490.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 7",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 55,
-              "mountPoint": {
-                "x": 570.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 8",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 56,
-              "mountPoint": {
-                "x": 650.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Выход 9",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 57,
-              "mountPoint": {
-                "x": 730.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 70.0
-              },
-              "text": "Выход 10",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 58,
-              "mountPoint": {
-                "x": 810.0,
-                "y": 300.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 70.0
-              },
-              "text": "Выход 11",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 59,
-              "mountPoint": {
-                "x": 840.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 60,
-              "mountPoint": {
-                "x": 860.0,
-                "y": 0.0
-              },
-              "name": "",
-              "p1": {
-                "x": 0.0,
-                "y": 0.0
-              },
-              "p2": {
-                "x": 0.0,
-                "y": 20.0
-              },
-              "penStyle": "solid",
-              "thickness": 2,
-              "type": "line",
-              "typeLine": "line",
-              "zIndex": 2
-            },
-            {
-              "angle": 90,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 61,
-              "mountPoint": {
-                "x": 840.0,
-                "y": 20.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 60.0,
-                "w": 20
-              },
-              "text": "Вход 12",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            },
-            {
-              "angle": 0,
-              "color": {
-                "B": 200,
-                "G": 0,
-                "R": 0
-              },
-              "id": 62,
-              "mountPoint": {
-                "x": 0.0,
-                "y": 160.0
-              },
-              "name": "",
-              "penStyle": "solid",
-              "rectSize": {
-                "h": 20,
-                "w": 60.0
-              },
-              "text": "Ethernet",
-              "thickness": 2,
-              "type": "text",
-              "zIndex": 3
-            }
-          ],
-          "id": 2294,
-          "mountPoint": {
-            "x": 460.0,
-            "y": 260.0
-          },
-          "name": "undefined",
-          "type": "group"
-        },
-        {
-          "angle": 0,
-          "color": {
-            "B": 200,
-            "G": 0,
-            "R": 0
-          },
           "id": 2387,
           "mountPoint": {
             "x": 440.0,
@@ -44626,19 +41525,4038 @@
           },
           "id": 2965,
           "mountPoint": {
-            "x": 620.0,
+            "x": 640.0,
             "y": 720.0
           },
           "name": "",
           "penStyle": "solid",
           "rectSize": {
-            "h": 20,
-            "w": 100.0
+            "h": 40,
+            "w": 60.0
           },
-          "text": "Питание RIG1",
+          "text": "?????\n",
           "thickness": 2,
           "type": "text",
           "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3962,
+          "mountPoint": {
+            "x": 720.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3963,
+          "mountPoint": {
+            "x": 740.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3965,
+          "mountPoint": {
+            "x": 720.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 140.0,
+            "w": 20
+          },
+          "text": "заряд током 1.5A",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3993,
+          "mountPoint": {
+            "x": 800.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3994,
+          "mountPoint": {
+            "x": 820.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3996,
+          "mountPoint": {
+            "x": 800.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 140.0,
+            "w": 20
+          },
+          "text": "заряд током 3A",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3997,
+          "mountPoint": {
+            "x": 880.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 140.0,
+            "w": 20
+          },
+          "text": "Включить заряд",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3998,
+          "mountPoint": {
+            "x": 960.0,
+            "y": 720.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 140.0,
+            "w": 20
+          },
+          "text": "Заряд/Разряд",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 3999,
+          "mountPoint": {
+            "x": 880.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4000,
+          "mountPoint": {
+            "x": 900.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4001,
+          "mountPoint": {
+            "x": 960.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4002,
+          "mountPoint": {
+            "x": 980.0,
+            "y": 620.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4010,
+          "mountPoint": {
+            "x": 780.0,
+            "y": 860.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40,
+            "w": 160.0
+          },
+          "text": "Управление системой\nконтроля АКБ",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": -20.0,
+            "y": 0.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4048,
+          "mountPoint": {
+            "x": 460.0,
+            "y": 500.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "graphicsObjects": [
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 1,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 180.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 120.0
+              },
+              "text": "192.168.10.3",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 2,
+              "mountPoint": {
+                "x": 20.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 3,
+              "mountPoint": {
+                "x": 100.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 4,
+              "mountPoint": {
+                "x": 180.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 5,
+              "mountPoint": {
+                "x": 260.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 6,
+              "mountPoint": {
+                "x": 340.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 7,
+              "mountPoint": {
+                "x": 420.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 8,
+              "mountPoint": {
+                "x": 500.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 9,
+              "mountPoint": {
+                "x": 580.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 10,
+              "mountPoint": {
+                "x": 660.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 11,
+              "mountPoint": {
+                "x": 740.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "graphicsObjects": [
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 1,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 2,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -20.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 3,
+                  "mountPoint": {
+                    "x": 20.0,
+                    "y": 20.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": -15.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 4,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 40.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": -40.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 5,
+                  "mountPoint": {
+                    "x": 40.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": -10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 6,
+                  "mountPoint": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 7,
+                  "mountPoint": {
+                    "x": 30.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                },
+                {
+                  "color": {
+                    "B": 200,
+                    "G": 0,
+                    "R": 0
+                  },
+                  "id": 8,
+                  "mountPoint": {
+                    "x": 10.0,
+                    "y": 0.0
+                  },
+                  "name": "",
+                  "p1": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "p2": {
+                    "x": 0.0,
+                    "y": 10.0
+                  },
+                  "penStyle": "solid",
+                  "thickness": 2,
+                  "type": "line",
+                  "typeLine": "line",
+                  "zIndex": 2
+                }
+              ],
+              "id": 12,
+              "mountPoint": {
+                "x": 820.0,
+                "y": 320.0
+              },
+              "name": "undefined",
+              "type": "group"
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 13,
+              "mountPoint": {
+                "x": 180.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 14,
+              "mountPoint": {
+                "x": 200.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 15,
+              "mountPoint": {
+                "x": 180.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 1",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 16,
+              "mountPoint": {
+                "x": 240.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 17,
+              "mountPoint": {
+                "x": 260.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 18,
+              "mountPoint": {
+                "x": 240.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 2",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 19,
+              "mountPoint": {
+                "x": 300.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 20,
+              "mountPoint": {
+                "x": 320.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 21,
+              "mountPoint": {
+                "x": 300.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 3",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 22,
+              "mountPoint": {
+                "x": 360.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 23,
+              "mountPoint": {
+                "x": 380.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 24,
+              "mountPoint": {
+                "x": 360.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 4",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 25,
+              "mountPoint": {
+                "x": 420.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 26,
+              "mountPoint": {
+                "x": 440.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 27,
+              "mountPoint": {
+                "x": 420.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 5",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 28,
+              "mountPoint": {
+                "x": 480.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 29,
+              "mountPoint": {
+                "x": 500.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 30,
+              "mountPoint": {
+                "x": 480.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 6",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 31,
+              "mountPoint": {
+                "x": 540.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 32,
+              "mountPoint": {
+                "x": 560.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 33,
+              "mountPoint": {
+                "x": 540.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 7",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 34,
+              "mountPoint": {
+                "x": 600.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 35,
+              "mountPoint": {
+                "x": 620.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 36,
+              "mountPoint": {
+                "x": 600.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 8",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 37,
+              "mountPoint": {
+                "x": 660.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 38,
+              "mountPoint": {
+                "x": 680.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 39,
+              "mountPoint": {
+                "x": 660.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 9",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 40,
+              "mountPoint": {
+                "x": 720.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 41,
+              "mountPoint": {
+                "x": 740.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 42,
+              "mountPoint": {
+                "x": 720.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 10",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 43,
+              "mountPoint": {
+                "x": 780.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 44,
+              "mountPoint": {
+                "x": 800.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 45,
+              "mountPoint": {
+                "x": 780.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 11",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 46,
+              "mountPoint": {
+                "x": 340.0,
+                "y": 160.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 200.0
+              },
+              "text": "Плата Ввода-Вывода SBIO1",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "fillColor": {
+                "A": 120,
+                "B": 194,
+                "G": 255,
+                "R": 124
+              },
+              "id": 47,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 360.0,
+                "w": 880.0
+              },
+              "thickness": 2,
+              "type": "rectangle",
+              "zIndex": 1
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 48,
+              "mountPoint": {
+                "x": 50.0,
+                "y": 0.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 40,
+                "w": 80.0
+              },
+              "text": "Питание 220v",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 49,
+              "mountPoint": {
+                "x": 10.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 1",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 50,
+              "mountPoint": {
+                "x": 90.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 2",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 51,
+              "mountPoint": {
+                "x": 170.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 3",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 52,
+              "mountPoint": {
+                "x": 250.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 4",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 53,
+              "mountPoint": {
+                "x": 330.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 5",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 54,
+              "mountPoint": {
+                "x": 410.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 6",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 55,
+              "mountPoint": {
+                "x": 490.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 7",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 56,
+              "mountPoint": {
+                "x": 570.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 8",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 57,
+              "mountPoint": {
+                "x": 650.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Выход 9",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 58,
+              "mountPoint": {
+                "x": 730.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 70.0
+              },
+              "text": "Выход 10",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 59,
+              "mountPoint": {
+                "x": 810.0,
+                "y": 300.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 70.0
+              },
+              "text": "Выход 11",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 60,
+              "mountPoint": {
+                "x": 840.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 61,
+              "mountPoint": {
+                "x": 860.0,
+                "y": 0.0
+              },
+              "name": "",
+              "p1": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "p2": {
+                "x": 0.0,
+                "y": 20.0
+              },
+              "penStyle": "solid",
+              "thickness": 2,
+              "type": "line",
+              "typeLine": "line",
+              "zIndex": 2
+            },
+            {
+              "angle": 90,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 62,
+              "mountPoint": {
+                "x": 840.0,
+                "y": 20.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 60.0,
+                "w": 20
+              },
+              "text": "Вход 12",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 63,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 160.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "Ethernet",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            },
+            {
+              "angle": 0,
+              "color": {
+                "B": 200,
+                "G": 0,
+                "R": 0
+              },
+              "id": 64,
+              "mountPoint": {
+                "x": 0.0,
+                "y": 230.0
+              },
+              "name": "",
+              "penStyle": "solid",
+              "rectSize": {
+                "h": 20,
+                "w": 60.0
+              },
+              "text": "USB",
+              "thickness": 2,
+              "type": "text",
+              "zIndex": 3
+            }
+          ],
+          "id": 4114,
+          "mountPoint": {
+            "x": 460.0,
+            "y": 260.0
+          },
+          "name": "undefined",
+          "type": "group"
         }
       ],
       "name": "SBIO1",
