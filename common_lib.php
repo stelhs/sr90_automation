@@ -240,6 +240,11 @@ function telegram_send($type, $args = array())
         $text = sprintf("Цена на %s %f USDT", $args['coin'], $args['price']);
         break;
 
+    case 'battery_charger':
+        if ($args['error'])
+            $text = sprintf("Ошибка зарядного устройства: %s", $args['error']);
+        break;
+
     default:
         $text = $type;
     }
