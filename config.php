@@ -103,14 +103,20 @@ function conf_guard()
                  'sensor_snapshot_dir' => '/var/spool/sr90_automation/images/sensor_actions',
                  'video_cameras' => [
                                       ['id' => 1,
-                                            'name' => "01-Kamera_1",
-                                            'v4l_dev' => '/dev/video14',
-                                            'resolution' => '1920:1080'],
+                                       'name' => "01-Kamera_1",
+                                       'v4l_dev' => '/dev/video14',
+                                       'resolution' => '1920:1080'],
+
                                       ['id' => 2,
-                                            'name' => "02-Kamera_2",
-                                            'v4l_dev' => '/dev/video15',
-                                            'resolution' => '1920:1080']
-                                    ],
+                                       'name' => "02-Kamera_2",
+                                       'v4l_dev' => '/dev/video15',
+                                       'resolution' => '1920:1080'],
+
+                                      ['id' => 3,
+                                       'name' => "03-Kamera_3",
+                                       'v4l_dev' => '/dev/video16',
+                                       'resolution' => '1920:1080']
+                 ],
                  'remote_control_sleep' => ['io' => 'sbio1', 'port' => 2],
                  'remote_control_ready' => ['io' => 'sbio1', 'port' => 3],
     );
