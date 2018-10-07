@@ -49,8 +49,14 @@ function main($argv)
         $port = $argv[3];
         $state = $argv[4];
 
-        if ($port < 1 || $port > 7) {
-            perror("Invalid arguments: port is not correct. port > 0 and port <= 7\n");
+        if (!isset(conf_io()[$io_name])) {
+            perror("Board name %s is not found\n", $io_name);
+            return -EINVAL;
+        }
+
+        if ($port < 1 || $port > conf_io()[$io_name]['out_ports']) {
+            perror("Invalid arguments: port is not correct. port > 0 and port <= %d\n",
+                   conf_io()[$io_name]['out_ports']);
             return -EINVAL;
         }
 
@@ -74,8 +80,14 @@ function main($argv)
         $io_name = $argv[2];
         $port = $argv[3];
 
-        if ($port < 1 || $port > 10) {
-            perror("Invalid arguments: port is not correct. port > 0 and port <= 7\n");
+        if (!isset(conf_io()[$io_name])) {
+            perror("Board name %s is not found\n", $io_name);
+            return -EINVAL;
+        }
+
+        if ($port < 1 || $port > conf_io()[$io_name]['out_ports']) {
+            perror("Invalid arguments: port is not correct. port > 0 and port <= %d\n",
+                conf_io()[$io_name]['out_ports']);
             return -EINVAL;
         }
 
@@ -95,8 +107,15 @@ function main($argv)
         $io_name = $argv[2];
         $port = $argv[3];
 
-        if ($port < 1 || $port > 10) {
-            perror("Invalid arguments: port is not correct. port > 0 and port <= 10\n");
+        if (!isset(conf_io()[$io_name])) {
+            perror("Board name %s is not found\n", $io_name);
+            return -EINVAL;
+        }
+
+
+        if ($port < 1 || $port > conf_io()[$io_name]['in_ports']) {
+            perror("Invalid arguments: port is not correct. port > 0 and port <= %d\n",
+                conf_io()[$io_name]['in_ports']);
             return -EINVAL;
         }
 

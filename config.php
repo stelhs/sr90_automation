@@ -125,11 +125,17 @@ function conf_guard()
 function conf_io()
 {
         return ['usio1' => ['ip_addr' => 'localhost',
-                            'tcp_port' => 400],
+                            'tcp_port' => 400,
+                            'in_ports' => 10,
+                            'out_ports' => 7],
                 'sbio1' => ['ip_addr' => '192.168.10.3',
-                            'tcp_port' => 400],
+                            'tcp_port' => 400,
+                            'in_ports' => 12,
+                            'out_ports' => 11],
                 'sbio2' => ['ip_addr' => '192.168.10.4',
-                            'tcp_port' => 400],
+                            'tcp_port' => 400,
+                            'in_ports' => 12,
+                            'out_ports' => 11],
                ];
 }
 
@@ -175,4 +181,17 @@ function conf_street_light()
                 ['zone' => 2, 'name' => 'основное', 'io' => 'usio1', 'io_port' => 4],
                 ];
 }
+
+function conf_ups()
+{
+    return ['charger_enable_port' => ['io' => 'sbio1', 'out_port' => '6'],
+            'middle_current_enable_port' => ['io' => 'sbio1', 'out_port' => '4'],
+            'full_current_enable_port' => ['io' => 'sbio1', 'out_port' => '5'],
+            'discharge_enable_port' => ['io' => 'sbio1', 'out_port' => '7'],
+            'external_power_port' => ['io' => 'sbio1', 'in_port' => '1'],
+            'disable_ups_power_port' => ['io' => 'sbio1', 'out_port' => '8'],
+            'disable_ups_output_port' => ['io' => 'sbio1', 'out_port' => '9'],
+           ];
+}
+
 

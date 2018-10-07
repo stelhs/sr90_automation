@@ -34,7 +34,6 @@ function main($argv) {
 
     $ok = false;
     switch ($interval) {
-    case "sec":
     case "min":
     case "hour":
     case "day":

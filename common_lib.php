@@ -198,18 +198,6 @@ function telegram_send($type, $args = array())
         $text = sprintf("RAID1: %s", $raid_stat);
         break;
 
-    case 'external_power':
-        switch ($args['mode']) {
-        case "on":
-            $text = "Внешнее питание восстановлено";
-            break;
-
-        case "off":
-            $text = "Отключено внешнее питание";
-            break;
-        }
-        break;
-
     case 'false_alarm':
         $text = sprintf("Срабатал датчик на порту %s:%d из группы \"%s\".\n" .
                         "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
@@ -240,9 +228,11 @@ function telegram_send($type, $args = array())
         $text = sprintf("Цена на %s %f USDT", $args['coin'], $args['price']);
         break;
 
-    case 'battery_charger':
-        if ($args['error'])
+    case 'ups_system':
+        if (isset($args['error']))
             $text = sprintf("Ошибка зарядного устройства: %s", $args['error']);
+        else if (isset($args['text']))
+            $text = $args['text'];
         break;
 
     default:
@@ -368,7 +358,9 @@ function get_global_status()
             'lighting_stat' => $lighting_stat,
             'padlocks_stat' => $padlocks_stat,
             'termo_sensors' => $termosensors,
-            'mdadm' => $mdstat];
+            'mdadm' => $mdstat,
+            'battery' => get_battery_info(),
+    ];
 }
 
 
@@ -470,6 +462,13 @@ function format_global_status_for_sms($stat)
 
     if (isset($stat['balance'])) {
         $text .= sprintf("Баланс: %s, ", $stat['balance']);
+    }
+
+    if (isset($stat['battery'])) {
+        if ($stat['battery']['status'] != 'ok')
+            $text .= sprintf("АКБ ошибка: %s, ", $stat['battery']['status']);
+        else
+            $text .= sprintf("АКБ: %.2fv, ", $stat['battery']['voltage']);
     }
 
     return $text;
@@ -583,6 +582,13 @@ function format_global_status_for_telegram($stat)
             $text .= sprintf("Температура %s: %.01f градусов\n", $sensor['name'], $sensor['value']);
     }
 
+    if (isset($stat['battery'])) {
+        if ($stat['battery']['status'] != 'ok')
+            $text .= sprintf("АКБ: Ошибка: %s, ", $stat['battery']['status']);
+        else
+            $text .= sprintf("Напряжение АКБ: %.2fv, ", $stat['battery']['voltage']);
+    }
+
     return $text;
 }
 
@@ -659,3 +665,52 @@ function get_stored_io_states()
 
     return $rows;
 }
+
+
+function get_battery_info()
+{
+    if (DISABLE_HW) {
+        $voltage = 12.0;
+        perror("FAKE: get_battery_info() return voltage %.2fv\n", $voltage);
+        return ['status' => 'ok',
+                'voltage' => $voltage,
+                'current' => 0];
+    }
+
+    $content = file_get_contents(sprintf("http://%s:%d/battery",
+                                 conf_io()['sbio1']['ip_addr'],
+                                 conf_io()['sbio1']['tcp_port']));
+
+    $ret_data = json_decode($content, true);
+    if (!$ret_data)
+        return ['status' => sprintf('Can`t decoded battery info: %s', $content)];
+
+    return ['status' => 'ok',
+            'voltage' => $ret_data['voltage'],
+            'current' => $ret_data['current']];
+}
+
+
+define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
+
+function halt_all_systems()
+{
+    if (@file_get_contents(HALT_ALL_SYSTEMS_FILE)) {
+        perror("FAKE: all systems stop at the moment.\n");
+        return;
+    }
+
+    if (DISABLE_HW) {
+        perror("FAKE: halt all systems, goodbuy. For undo - remove %s\n",
+               HALT_ALL_SYSTEMS_FILE);
+        file_put_contents(HALT_ALL_SYSTEMS_FILE, 1);
+        return;
+    }
+
+}
+
+function is_halt_all_systems()
+{
+    return @file_get_contents(HALT_ALL_SYSTEMS_FILE);
+}
+

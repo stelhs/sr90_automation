@@ -4,16 +4,17 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once 'common_lib.php';
 
+
 class Httpio {
-    private $debug_output_states = [];
     public $ip_addr;
     public $tcp_port;
     public $io;
 
-    function __construct($ip_addr, $tcp_port)
+    function __construct($name, $ip_addr, $tcp_port)
     {
         $this->ip_addr = $ip_addr;
         $this->tcp_port = $tcp_port;
+        $this->name = $name;
     }
 
     private function send_cmd($cmd, $args)
@@ -50,7 +51,9 @@ class Httpio {
                                            'state' => $state]);
         if (DISABLE_HW) {
             perror("FAKE: httpio.relay_set_state %s: %d to %d\n", $this->ip_addr, $port, $state);
-            $this->debug_output_states[$this->ip_addr][$port] = $state;
+            $ports = $this->read_fake_out_ports();
+            $ports[$port] = $state;
+            $this->write_fake_out_ports($ports);
             return '0';
         }
 
@@ -67,7 +70,7 @@ class Httpio {
     {
         if (DISABLE_HW) {
             perror("FAKE: httpio.relay_get_state %s: %d\n", $this->ip_addr, $port);
-            return isset($this->debug_output_states[$this->ip_addr][$port]) ? $this->debug_output_states[$this->ip_addr][$port] : '0';
+            return $this->read_fake_out_ports()[$port];
         }
 
         $ret = $this->send_cmd("relay_get", ['port' => $port]);
@@ -81,8 +84,9 @@ class Httpio {
     public function input_get_state($port)
     {
         if (DISABLE_HW) {
+            $ports = $this->read_fake_in_ports();
             perror("FAKE: httpio.input_get_state %d\n", $port);
-            return '0';
+            return $ports[$port];
         }
 
         $ret = $this->send_cmd("input_get", ['port' => $port]);
@@ -91,6 +95,52 @@ class Httpio {
 
         perror("can't get input state %s: %s\n", $this->ip_addr, $ret['reason']);
         return -EBUSY;
+    }
+
+    private function read_fake_in_ports()
+    {
+        $io_name = $this->name;
+        $ports = [];
+        for ($i = 1; $i <= conf_io()[$io_name]['in_ports']; $i++)
+            $ports[$i] = 0;
+
+        @$str = file_get_contents(sprintf('fake_in_ports_%s.txt', $io_name));
+        if (!$str)
+            return $ports;
+
+        $rows = string_to_array($str, "\n");
+        for ($i = 1; $i <= conf_io()[$io_name]['in_ports']; $i++)
+            @$ports[$i] = $rows[$i - 1];
+
+        return $ports;
+    }
+
+    private function read_fake_out_ports()
+    {
+        $io_name = $this->name;
+        $ports = [];
+        for ($i = 1; $i <= conf_io()[$io_name]['out_ports']; $i++)
+            $ports[$i] = 0;
+
+        @$str = file_get_contents(sprintf('fake_out_ports_%s.txt', $io_name));
+        if (!$str)
+            return $ports;
+
+        $rows = string_to_array($str, "\n");
+        for ($i = 1; $i <= conf_io()[$io_name]['out_ports']; $i++)
+            @$ports[$i] = $rows[$i - 1];
+
+        return $ports;
+    }
+
+    private function write_fake_out_ports($ports)
+    {
+        $io_name = $this->name;
+        foreach ($ports as $num => $value)
+            $ports[$num] = $value ? '1' : '0';
+
+        $str = array_to_string($ports, "\n");
+        file_put_contents(sprintf('fake_out_ports_%s.txt', $io_name), $str);
     }
 }
 
@@ -113,8 +163,52 @@ function httpio($name)
         return $httpio;
     }
 
-    $httpio = new Httpio($ip_addr, $tcp_port);
+    $httpio = new Httpio($name, $ip_addr, $tcp_port);
     $httpio->io = $name;
     return $httpio;
+}
+
+
+class Httpio_input_port {
+    function __construct($httpio, $io_port)
+    {
+        $this->httpio = $httpio;
+        $this->io_port = $io_port;
+    }
+
+    public function get()
+    {
+        return $this->httpio->input_get_state($this->io_port);
+    }
+}
+
+
+class Httpio_output_port {
+    function __construct($httpio, $io_port)
+    {
+        $this->httpio = $httpio;
+        $this->io_port = $io_port;
+    }
+
+    public function set($state)
+    {
+        return $this->httpio->relay_set_state($this->io_port, $state);
+    }
+
+    public function get()
+    {
+        return $this->httpio->relay_get_state($this->io_port);
+    }
+}
+
+
+function httpio_port($port_info)
+{
+    $httpio = httpio($port_info['io']);
+    if (isset($port_info['in_port']))
+        return new Httpio_input_port($httpio, $port_info['in_port']);
+
+    if (isset($port_info['out_port']))
+        return new Httpio_output_port($httpio, $port_info['out_port']);
 }
 
