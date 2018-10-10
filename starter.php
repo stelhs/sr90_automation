@@ -35,6 +35,7 @@ function main($argv)
 
     $timeout = $argv[1];
 
+    pcntl_async_signals(true);
     pcntl_signal(SIGCHLD, "signal_handler");
 
     unset($argv[0]);

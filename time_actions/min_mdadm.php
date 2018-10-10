@@ -8,6 +8,8 @@ require_once 'common_lib.php';
 define("MDSTAT_FILE", "/run/mdstat_mode");
 
 function main($argv) {
+    return 0; // disable mdadm monitor
+
     @$prev_mode = file_get_contents(MDSTAT_FILE);
     $curr_stat = get_mdstat();
     if ($prev_mode === FALSE) {
