@@ -28,7 +28,11 @@ function switch_to_discharge() {
 
 function switch_to_charge() {
     global $discharge_enable_port;
+    global $charger_enable_port;
     $discharge_enable_port->set(0);
+    $charger_enable_port->set(0);
+    sleep(1);
+    $charger_enable_port->set(1);
     file_put_contents(CHARGE_LASTTIME_FILE, time());
 }
 
@@ -197,7 +201,7 @@ function main($argv)
         if (!$notified) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                 $voltage);
-            telegram_send('ups_system', ['text' => $msg]);
+//            telegram_send('ups_system', ['text' => $msg]);
             file_put_contents(LOW_BATT_VOLTAGE_FILE, time());
         }
     } else
@@ -260,7 +264,7 @@ function main($argv)
         else if ($mode == 'discharge' && $switch_interval > 30)
             switch_to_charge();
 
-        if ($voltage <= 15.0)
+        if ($voltage <= 14.9)
             return 0;
 
         switch_mode_to_monitoring($batt_info);
