@@ -13,19 +13,19 @@ function main($argv) {
         @$content = file_get_contents(sprintf('http://%s:%d/stat',
                                      $io_data['ip_addr'], $io_data['tcp_port']));
         if ($content === FALSE) {
-            telegram_send(sprintf("Сбой связи с модулем ввода-вывода %s", $io_name));
+            telegram_send_admin(sprintf("Сбой связи с модулем ввода-вывода %s", $io_name));
             continue;
         }
 
         $response = json_decode($content, true);
         if ($response === NULL) {
-            telegram_send(sprintf("Модуль ввода вывода %s вернула не корректный ответ на запрос: %s",
+            telegram_send_admin(sprintf("Модуль ввода вывода %s вернула не корректный ответ на запрос: %s",
                                   $io_name, $content));
             continue;
         }
 
         if ($response['status'] != 'ok') {
-            telegram_send(sprintf("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
+            telegram_send_admin(sprintf("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
                                   $io_name, $response['error_msg']));
             continue;
         }
@@ -41,7 +41,7 @@ function main($argv) {
 
         if (count($response['trigger_log'])) {
             foreach ($response['trigger_log'] as $time => $msg) {
-                telegram_send(sprintf("Модуль ввода-вывода %s сообщил, что не смог вовремя передать событие %s. Которое произошло %s",
+                telegram_send_admin(sprintf("Модуль ввода-вывода %s сообщил, что не смог вовремя передать событие %s. Которое произошло %s",
                                       $io_name, $msg, date("m.d.Y H:i:s", $time)));
             }
             continue;

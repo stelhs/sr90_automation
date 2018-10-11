@@ -148,98 +148,119 @@ function sms_send($type, $recepient, $args = array())
 }
 
 
-function telegram_send($type, $args = array())
+
+function make_telegram_message($type, $args = array())
 {
     switch ($type) {
-    case 'reboot':
-        if (isset($args['user_id']) && $args['user_id']) {
-            $user = user_get_by_id($args['user_id']);
-            $text = sprintf("%s отправил сервер на перезагрузку через %s",
-                                $user['name'], $args['method']);
-            break;
-        }
-        $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $args['method']);
-        break;
-
-    case 'lighting_on':
-        $text = sprintf("Освещение %s включено.", $args['name']);
-        break;
-
-    case 'lighting_off':
-        $text = sprintf("Освещение %s отключено.", $args['name']);
-        break;
-
-    case 'mdadm':
-        switch ($args['state']) {
-        case "resync":
-            $raid_stat = "синхронизируется " . $args['progress'] . '%';
+        case 'reboot':
+            if (isset($args['user_id']) && $args['user_id']) {
+                $user = user_get_by_id($args['user_id']);
+                $text = sprintf("%s отправил сервер на перезагрузку через %s",
+                    $user['name'], $args['method']);
+                break;
+            }
+            $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $args['method']);
             break;
 
-        case "recovery":
-            $raid_stat = "восстанавливается " . $args['progress'] . '%';
+        case 'lighting_on':
+            $text = sprintf("Освещение %s включено.", $args['name']);
             break;
 
-        case "damage":
-            $raid_stat = "поврежден!";
+        case 'lighting_off':
+            $text = sprintf("Освещение %s отключено.", $args['name']);
             break;
 
-        case "normal":
-            $raid_stat = "восстановлен!";
+        case 'mdadm':
+            switch ($args['state']) {
+                case "resync":
+                    $raid_stat = "синхронизируется " . $args['progress'] . '%';
+                    break;
+
+                case "recovery":
+                    $raid_stat = "восстанавливается " . $args['progress'] . '%';
+                    break;
+
+                case "damage":
+                    $raid_stat = "поврежден!";
+                    break;
+
+                case "normal":
+                    $raid_stat = "восстановлен!";
+                    break;
+
+                case "no_exist":
+                    $raid_stat = "отсутствует";
+                    break;
+
+                default:
+                    return;
+            }
+
+            $text = sprintf("RAID1: %s", $raid_stat);
             break;
 
-        case "no_exist":
-            $raid_stat = "отсутствует";
+        case 'false_alarm':
+            $text = sprintf("Срабатал датчик на порту %s:%d из группы \"%s\".\n" .
+                "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
+                $args['io'], $args['port'], $args['name']);
             break;
+
+        case 'alarm':
+            $text = sprintf("!!! Внимание, Тревога !!!\nСработала %s, событие: %d\n",
+            $args['zone'], $args['action_id']);
+            break;
+
+        case 'guard_disable':
+            $text = sprintf("Охрана отключена, отключил %s с помощью %s.",
+            $args['user'], $args['method']);
+            break;
+
+        case 'guard_enable':
+            $text = sprintf("Охрана включена, включил %s с помощью %s.",
+            $args['user'], $args['method']);
+            break;
+
+        case 'inet_switch':
+            $text = sprintf("Интернет преключен на модем %d",
+            $args['modem_num']);
+            break;
+
+        case 'crypto_currancy':
+            $text = sprintf("Цена на %s %f USDT", $args['coin'], $args['price']);
+            break;
+
+        case 'ups_system':
+            if (isset($args['error']))
+                $text = sprintf("Ошибка зарядного устройства: %s", $args['error']);
+                else if (isset($args['text']))
+                    $text = $args['text'];
+                    break;
 
         default:
-            return;
-        }
-
-        $text = sprintf("RAID1: %s", $raid_stat);
-        break;
-
-    case 'false_alarm':
-        $text = sprintf("Срабатал датчик на порту %s:%d из группы \"%s\".\n" .
-                        "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
-                                $args['io'], $args['port'], $args['name']);
-        break;
-
-    case 'alarm':
-        $text = sprintf("!!! Внимание, Тревога !!!\nСработала %s, событие: %d\n",
-                                $args['zone'], $args['action_id']);
-        break;
-
-    case 'guard_disable':
-        $text = sprintf("Охрана отключена, отключил %s с помощью %s.",
-                            $args['user'], $args['method']);
-        break;
-
-    case 'guard_enable':
-        $text = sprintf("Охрана включена, включил %s с помощью %s.",
-                            $args['user'], $args['method']);
-        break;
-
-    case 'inet_switch':
-        $text = sprintf("Интернет преключен на модем %d",
-            $args['modem_num']);
-        break;
-
-    case 'crypto_currancy':
-        $text = sprintf("Цена на %s %f USDT", $args['coin'], $args['price']);
-        break;
-
-    case 'ups_system':
-        if (isset($args['error']))
-            $text = sprintf("Ошибка зарядного устройства: %s", $args['error']);
-        else if (isset($args['text']))
-            $text = $args['text'];
-        break;
-
-    default:
-        $text = $type;
+            $text = $type;
     }
+    return $text;
+}
 
+
+function telegram_get_admin_chat_id()
+{
+    $chat = db()->query("SELECT * FROM telegram_chats " .
+                        "WHERE name = 'SkyNet'");
+    return $chat['chat_id'];
+}
+
+function telegram_send($type, $args = array())
+{
+    $text = make_telegram_message($type, $args);
     run_cmd(sprintf("./telegram.php msg_send_all \"%s\"", $text));
+}
+
+
+function telegram_send_admin($type, $args = array())
+{
+    $text = make_telegram_message($type, $args);
+    run_cmd(sprintf("./telegram.php msg_send_admin \"%s\"", $text));
 }
 
 

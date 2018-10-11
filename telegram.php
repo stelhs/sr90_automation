@@ -24,7 +24,10 @@ function print_help()
              "\tmsg_send_all <message_text> - Send message in all chats\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send_all 'hello world'\n" .
-    "\n\n";
+             "\tmsg_send_admin <message_text> - Send message in admin chat\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name msg_send_admin 'hello world'\n" .
+             "\n\n";
 }
 
 function main($argv)
@@ -101,6 +104,18 @@ function main($argv)
             $telegram->send_message($row['chat_id'], $msg);
 
         break;
+
+    case 'msg_send_admin':
+        if (!isset($argv[2])) {
+            perror("incorrect params");
+            return -EINVAL;
+        }
+
+        $msg = trim($argv[2]);
+        $chat_id = telegram_get_admin_chat_id();
+        $telegram->send_message($chat_id, $msg);
+        break;
+
 
     default:
         perror("incorrect command");

@@ -114,10 +114,10 @@ function main($argv)
         $ret = run_cmd('./text_spech.php "Уходи" 0');
         player_start(['sounds/access_denyed.wav',
                       'sounds/text.wav'], 100);
-        telegram_send('false_alarm', ['name' => $zone['name'],
-                                      'io' => $io_name,
-                                      'port' => $port]);
-        run_cmd(sprintf("./image_sender.php current"));
+        telegram_send_admin('false_alarm', ['name' => $zone['name'],
+                                            'io' => $io_name,
+                                            'port' => $port]);
+        run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id()));
         return 0;
     }
 

@@ -4,6 +4,8 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 
+define("AVREG_VIDEO_DIR", "/storage/avreg/");
+
 function get_video_file_timestamp($full_file_name)
 {
     preg_match('/(\d{4}-\d{2})\/(\d{2})\/.*(\d{2}_\d{2}_\d{2}).*/', $full_file_name, $mathes);
@@ -22,30 +24,29 @@ function get_video_file_timestamp($full_file_name)
 function get_sorted_video_list($cam_name)
 {
     $video_list = [];
-    $avreg_dir = "/var/spool/avreg/";
-    $dirs1 = get_list_subdirs($avreg_dir);
+    $dirs1 = get_list_subdirs(AVREG_VIDEO_DIR);
     if (!$dirs1) {
-        perror("Can't find directory: %s\n", $avreg_dir);
+        perror("Can't find directory: %s\n", AVREG_VIDEO_DIR);
         return false;
     }
 
     if (!count($dirs1)) {
-        perror("Directory %s is empty: %s\n", $avreg_dir);
+        perror("Directory %s is empty: %s\n", AVREG_VIDEO_DIR);
         return [];
     }
 
     foreach ($dirs1 as $dir1) {
-        $dirs2 = get_list_subdirs($avreg_dir . $dir1 . '/');
+        $dirs2 = get_list_subdirs(AVREG_VIDEO_DIR . $dir1 . '/');
         if (!$dirs2 || !count($dirs2))
             continue;
 
         foreach ($dirs2 as $dir2) {
-            $files = get_list_files($avreg_dir . $dir1 . '/' . $dir2 . '/' . $cam_name . '/');
+            $files = get_list_files(AVREG_VIDEO_DIR . $dir1 . '/' . $dir2 . '/' . $cam_name . '/');
             if (!$files || !count($files))
                 continue;
 
             foreach ($files as $file) {
-                $full_file_name = $avreg_dir . $dir1 . '/' . $dir2 .
+                $full_file_name = AVREG_VIDEO_DIR . $dir1 . '/' . $dir2 .
                                           '/' . $cam_name . '/' . $file;
                 $file_stamp = get_video_file_timestamp($full_file_name);
                 $video_list[$file_stamp] = $full_file_name;
@@ -131,7 +132,7 @@ function get_video_files_from_archive($start_time, $duration, $cam_num)
 
 function get_current_video_file($cam_name)
 {
-    $avreg_pids = get_pid_list_by_command('avregd');
+    $avreg_pids = get_pid_list_by_command('/usr/sbin/avregd');
     if (!is_array($avreg_pids)) {
         perror("Can't get avreg PID\n");
         return -1;
@@ -154,7 +155,7 @@ function get_current_video_file($cam_name)
         $files = scandir($dir);
         foreach ($files as $soft_link) {
             @$file = readlink($dir . $soft_link);
-             preg_match('/\/var\/spool\/avreg/', $file, $mathes);
+            preg_match(sprintf('/%s/', addcslashes(AVREG_VIDEO_DIR, '/')), $file, $mathes);
              if (!isset($mathes[0]) || !trim($mathes[0]))
                  continue;
              if (!strstr($file, $cam_name))

@@ -99,7 +99,7 @@ function switch_mode_to_stage1($batt_info)
                                      'voltage' => $batt_info['voltage']]);
     $msg = sprintf('Включен заряд током 3A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send('ups_system', ['text' => $msg]);
+    telegram_send_admin('ups_system', ['text' => $msg]);
 }
 
 function switch_mode_to_stage2($batt_info)
@@ -112,7 +112,7 @@ function switch_mode_to_stage2($batt_info)
                                      'voltage' => $batt_info['voltage']]);
     $msg = sprintf('Включен заряд током 1.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send('ups_system', ['text' => $msg]);
+    telegram_send_admin('ups_system', ['text' => $msg]);
 }
 
 function switch_mode_to_stage3($batt_info)
@@ -125,7 +125,7 @@ function switch_mode_to_stage3($batt_info)
                                      'voltage' => $batt_info['voltage']]);
     $msg = sprintf('Включен заряд током 0.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send('ups_system', ['text' => $msg]);
+    telegram_send_admin('ups_system', ['text' => $msg]);
 }
 
 function switch_mode_to_monitoring($batt_info)
@@ -136,7 +136,7 @@ function switch_mode_to_monitoring($batt_info)
                                      'voltage' => $batt_info['voltage']]);
     $msg = sprintf('Заряд окончен, напряжение на АКБ %.2fv',
                    $batt_info['voltage']);
-    telegram_send('ups_system', ['text' => $msg]);
+    telegram_send_admin('ups_system', ['text' => $msg]);
 }
 
 function switch_mode_to_stage4($batt_info)
@@ -150,7 +150,7 @@ function switch_mode_to_stage4($batt_info)
     $msg = sprintf('Напряжение на АКБ снизилось до %.2fv, ' .
                    'включился капельный дозаряд до 14.4v',
                    $batt_info['voltage']);
-    telegram_send('ups_system', ['text' => $msg]);
+    telegram_send_admin('ups_system', ['text' => $msg]);
 }
 
 
@@ -174,7 +174,7 @@ function main($argv)
         else
             $msg = 'Отключено внешнее питание';
 
-        telegram_send('ups_system', ['text' => $msg]);
+        telegram_send_admin('ups_system', ['text' => $msg]);
 
         db()->insert('ext_power_log',
                      ['state' => ($current_ext_power_state ? 'on' : 'off')]);
@@ -190,7 +190,7 @@ function main($argv)
 
     $batt_info = get_battery_info();
     if (!is_array($batt_info)) {
-        telegram_send('ups_system', ['error' => $info]);
+        telegram_send_admin('ups_system', ['error' => $info]);
         return -1;
     }
 
@@ -201,7 +201,7 @@ function main($argv)
         if (!$notified) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                 $voltage);
-//            telegram_send('ups_system', ['text' => $msg]);
+//            telegram_send_admin('ups_system', ['text' => $msg]);
             file_put_contents(LOW_BATT_VOLTAGE_FILE, time());
         }
     } else
@@ -212,7 +212,7 @@ function main($argv)
     if (!$current_ext_power_state && $voltage <= 12) {
         $msg = 'Напряжение на АКБ снизилось ниже 12v а внешнее питание так и не появилось. ' .
                'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
-        telegram_send('ups_system', ['text' => $msg]);
+        telegram_send_admin('ups_system', ['text' => $msg]);
         $disable_ups_power_port->set(1);
         $disable_ups_output_port->set(1);
         halt_all_systems();

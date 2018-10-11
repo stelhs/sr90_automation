@@ -24,7 +24,7 @@ function main($argv) {
 
     file_put_contents(MDSTAT_FILE, $curr_stat['state']);
 
-    telegram_send('mdadm', $curr_stat);
+    telegram_send_admin('mdadm', $curr_stat);
 //    sms_send('mdadm', ['groups' => ['sms_observer']], $curr_stat);
     return 0;
 }

@@ -222,6 +222,11 @@ function main($argv)
             return -EINVAL;
         }
 
+        // make snapshots
+        $ret = run_cmd(sprintf('./snapshot.php %s %d_',
+        conf_guard()['alarm_snapshot_dir'], $guard_action_id));
+        pnotice("make snapshots: %s\n", $ret['log']);
+
         // run sirena
         $zone = zone_get_by_io_id($action['zone_id']);
         player_start('sounds/siren.wav', 100, $zone['alarm_time']);
@@ -235,11 +240,6 @@ function main($argv)
             pnotice("enable lighter for timeout %d: %s\n",
                     conf_guard()['light_ready_timeout'], $ret['log']);
         }
-
-        // make snapshots
-        $ret = run_cmd(sprintf('./snapshot.php %s %d_',
-                        conf_guard()['alarm_snapshot_dir'], $guard_action_id));
-        pnotice("make snapshots: %s\n", $ret['log']);
 
         // send to Telegram
         telegram_send('alarm', ['zone' => $zone['name'],
