@@ -47,7 +47,7 @@ function main($argv)
         return -EINVAL;
     }
 
-    if ($port < 1 || $port > 10) {
+    if ($port < 1 || $port > conf_io()[$io_name]['in_ports']) {
         perror("port number must be in interval [1:10]\n");
         return -EINVAL;
     }

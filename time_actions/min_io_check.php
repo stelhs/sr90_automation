@@ -19,7 +19,7 @@ function main($argv) {
 
         $response = json_decode($content, true);
         if ($response === NULL) {
-            telegram_send_admin(sprintf("Модуль ввода вывода %s вернула не корректный ответ на запрос: %s",
+            telegram_send_admin(sprintf("Модуль ввода вывода %s вернул не корректный ответ на запрос: %s",
                                   $io_name, $content));
             continue;
         }
@@ -29,6 +29,9 @@ function main($argv) {
                                   $io_name, $response['error_msg']));
             continue;
         }
+
+        if ($response['uptime'] == '0 min' || $response['uptime'] == '1 min')
+            telegram_send_admin(sprintf("Модуль ввода-вывода %s недавно перезагрузился", $io_name));
 
         if (isset($response['termo_sensors'])) {
             $sensors = $response['termo_sensors'];
@@ -41,10 +44,11 @@ function main($argv) {
 
         if (count($response['trigger_log'])) {
             foreach ($response['trigger_log'] as $time => $msg) {
-                telegram_send_admin(sprintf("Модуль ввода-вывода %s сообщил, что не смог вовремя передать событие %s. Которое произошло %s",
-                                      $io_name, $msg, date("m.d.Y H:i:s", $time)));
+                telegram_send_admin(sprintf("Модуль ввода-вывода %s сообщил, " .
+                                            "что не смог вовремя передать событие %s. " .
+                                            "Которое произошло %s",
+                                                 $io_name, $msg, date("m.d.Y H:i:s", $time)));
             }
-            continue;
         }
     }
 

@@ -6,11 +6,13 @@ require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'guard_lib.php';
 
+define("CHARGER_DISABLE_FILE", "/tmp/charger_disable");
 define("STAGE_FILE", "/tmp/battery_charge_stage");
 define("CHARGE_LASTTIME_FILE", "/tmp/battery_charge_lasttime");
 define("DISCHARGE_LASTTIME_FILE", "/tmp/battery_discharge_lasttime");
 define("LOW_BATT_VOLTAGE_FILE", "/tmp/battery_low_voltage");
 define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
+define("PREV_VOLTAGE_FILE", "/tmp/prev_voltage");
 
 $charger_enable_port = httpio_port(conf_ups()['charger_enable_port']);
 $middle_current_enable_port = httpio_port(conf_ups()['middle_current_enable_port']);
@@ -154,6 +156,20 @@ function switch_mode_to_stage4($batt_info)
 }
 
 
+function stop_charger()
+{
+    set_low_current_charge();
+    switch_to_charge();
+    disable_charge();
+    file_put_contents(CHARGER_DISABLE_FILE);
+}
+
+function restart_charger()
+{
+    unlink(CHARGER_DISABLE_FILE);
+    unlink(STAGE_FILE);
+}
+
 function main($argv)
 {
     global $external_power_port;
@@ -180,28 +196,47 @@ function main($argv)
                      ['state' => ($current_ext_power_state ? 'on' : 'off')]);
 
         if (!$current_ext_power_state) {
-            switch_to_charge();
-            set_low_current_charge();
-            disable_charge();
-            unlink(STAGE_FILE);
+            stop_charger();
             return 0;
         }
+        restart_charger();
     }
+
+    if (file_exists(CHARGER_DISABLE_FILE))
+        return 0;
 
     $batt_info = get_battery_info();
     if (!is_array($batt_info)) {
-        telegram_send_admin('ups_system', ['error' => $info]);
+        telegram_send_admin('ups_system', ['error' => 'get_battery_info() return abnormal']);
+        stop_charger();
+        return -1;
+    }
+
+    if ($batt_info['status'] != 'ok') {
+        telegram_send_admin('ups_system', ['error' => $batt_info['err_msg']]);
+        stop_charger();
         return -1;
     }
 
     $voltage = $batt_info['voltage'];
+    @$prev_voltage = (float)file_get_contents(PREV_VOLTAGE_FILE);
+    if (!$prev_voltage) {
+        file_put_contents(PREV_VOLTAGE_FILE, $voltage);
+        return 0;
+    }
+
+    // drop purge ADC values
+    if (abs($voltage - $prev_voltage) > 3)
+        return 0;
+
+    file_put_contents(PREV_VOLTAGE_FILE, $voltage);
 
     if ($voltage < 11.98) {
         @$notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
         if (!$notified) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                 $voltage);
-//            telegram_send_admin('ups_system', ['text' => $msg]);
+            telegram_send_admin('ups_system', ['text' => $msg]);
             file_put_contents(LOW_BATT_VOLTAGE_FILE, time());
         }
     } else
@@ -271,7 +306,7 @@ function main($argv)
         return 0;
 
     case 'monitoring':
-        if ($voltage > 12.6)
+        if ($voltage > 12.8)
             return 0;
 
         switch_mode_to_stage4($batt_info);

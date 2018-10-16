@@ -487,7 +487,7 @@ function format_global_status_for_sms($stat)
 
     if (isset($stat['battery'])) {
         if ($stat['battery']['status'] != 'ok')
-            $text .= sprintf("АКБ ошибка: %s, ", $stat['battery']['status']);
+            $text .= sprintf("АКБ ошибка: %s, ", $stat['battery']['msg_error']);
         else
             $text .= sprintf("АКБ: %.2fv, ", $stat['battery']['voltage']);
     }
@@ -704,7 +704,12 @@ function get_battery_info()
 
     $ret_data = json_decode($content, true);
     if (!$ret_data)
-        return ['status' => sprintf('Can`t decoded battery info: %s', $content)];
+        return ['status' => 'error',
+                'error_msg' => sprintf('Can`t decoded battery info: %s', $content)];
+
+    if ($ret_data['status'] != 'ok')
+        return ['status' => $ret_data['status'],
+                'error_msg' => $ret_data['error_msg']];
 
     return ['status' => 'ok',
             'voltage' => $ret_data['voltage'],
