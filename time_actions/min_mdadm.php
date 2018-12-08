@@ -8,6 +8,8 @@ require_once 'common_lib.php';
 define("MDSTAT_FILE", "/run/mdstat_mode");
 
 function main($argv) {
+    return 0; // disable mdadm monitor
+
     @$prev_mode = file_get_contents(MDSTAT_FILE);
     $curr_stat = get_mdstat();
     if ($prev_mode === FALSE) {
@@ -22,7 +24,7 @@ function main($argv) {
 
     file_put_contents(MDSTAT_FILE, $curr_stat['state']);
 
-    telegram_send('mdadm', $curr_stat);
+    telegram_send_admin('mdadm', $curr_stat);
 //    sms_send('mdadm', ['groups' => ['sms_observer']], $curr_stat);
     return 0;
 }

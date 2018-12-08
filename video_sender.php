@@ -39,7 +39,7 @@ function main($argv)
         foreach(conf_guard()['video_cameras'] as $cam) {
             $video_files = get_video_files($alarm_timestamp - 10, 20, $cam['name']);
             if (!$video_files || !count($video_files)) {
-                run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось получить видеофайлы для камеры %s'",
+                run_cmd(sprintf("./telegram.php msg_send_admin 'Неудалось получить видеофайлы для камеры %s'",
                                 $cam['name']));
                 perror("Can't get videos for camera %s\n", $cam['name']);
                 continue;
@@ -56,7 +56,7 @@ function main($argv)
                 $ret = run_cmd(sprintf('scp %s stelhs@sr38.org:/storage/www/plato/alarm_video/%s',
                                    $file['file'], $server_filename));
                 if ($ret['rc']) {
-                    run_cmd(sprintf("./telegram.php msg_send_all 'Неудалось загрузить видеофайл %s для камеры %s: %s'",
+                    run_cmd(sprintf("./telegram.php msg_send_admin 'Неудалось загрузить видеофайл %s для камеры %s: %s'",
                                     $file['file'], $cam['name'], $ret['log']));
                     perror("Can't upload videos for camera %s: %s\n", $cam['name'], $ret['log']);
                     continue;

@@ -23,7 +23,7 @@ function main($argv) {
         if ($info['price'] < $threshold)
             continue;
 
-        telegram_send('crypto_currancy', ['coin' => $coin, 'price' => $info['price']]);
+        telegram_send_admin('crypto_currancy', ['coin' => $coin, 'price' => $info['price']]);
         file_put_contents($filename, "");
     }
 

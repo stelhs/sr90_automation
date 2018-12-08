@@ -54,7 +54,7 @@ function main($argv)
         $ret = json_decode($content, true);
         if ($ret === NULL) {
             $rc = -1;
-            run_cmd(sprintf("./telegram.php msg_send_all 'Не удалось получить изобрадение с камер: %s'",
+            run_cmd(sprintf("./telegram.php msg_send_admin 'Не удалось получить изображение с камер: %s'",
                                    $content));
             perror("can't getting images: %s\n", $ret);
             goto out;

@@ -60,7 +60,7 @@ $commands = [
 function mk_help()
 {
     global $commands;
-
+    $msg = '';
     foreach($commands as $row) {
         $msg .= sprintf("   - 'skynet %s'\n", $row['cmd'][0]);
         if (isset($row['wr']))
@@ -120,7 +120,7 @@ function main($argv) {
         return -EINVAL;
 
     $arg1 = $words[0];
-    $arg2 = $words[1];
+    $arg2 = isset($words[1]) ? $words[1] : "";
     if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
         return -EINVAL;
     if ($arg2 == "голос") {
