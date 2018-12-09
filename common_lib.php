@@ -701,6 +701,9 @@ function get_battery_info()
     $content = file_get_contents(sprintf("http://%s:%d/battery",
                                  conf_io()['sbio1']['ip_addr'],
                                  conf_io()['sbio1']['tcp_port']));
+    if (!$content)
+        return ['status' => 'error',
+                'error_msg' => sprintf('Can`t response from sbio1')];
 
     $ret_data = json_decode($content, true);
     if (!$ret_data)
@@ -716,6 +719,29 @@ function get_battery_info()
             'current' => $ret_data['current']];
 }
 
+
+function reboot_sbio($sbio_name)
+{
+    if (!isset(conf_io()[$sbio_name]))
+        return;
+    $io_conf = conf_io()[$sbio_name];
+
+    $content = file_get_contents(sprintf("http://%s:%d/reboot",
+                                 $io_conf['ip_addr'],
+                                 $io_conf['tcp_port']));
+    if (!$content)
+        return ['status' => 'error',
+                'error_msg' => sprintf('Can`t response from %s', $sbio_name)];
+
+    $ret_data = json_decode($content, true);
+    if (!$ret_data)
+        return ['status' => 'error',
+                'error_msg' => sprintf('Can`t decoded response: %s', $content)];
+
+    if ($ret_data['status'] != 'ok')
+        return -1;
+    return 0;
+}
 
 define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
 

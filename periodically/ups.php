@@ -176,6 +176,9 @@ function main($argv)
     global $disable_ups_output_port;
     global $disable_ups_power_port;
 
+// Uncomment for disable autostart
+//    if (isset($argv[1]) && $argv[1] == 'auto') return;
+
     if (is_halt_all_systems())
         return 0;
 
@@ -207,13 +210,15 @@ function main($argv)
 
     $batt_info = get_battery_info();
     if (!is_array($batt_info)) {
-        telegram_send_admin('ups_system', ['error' => 'get_battery_info() return abnormal']);
         stop_charger();
         return -1;
     }
 
     if ($batt_info['status'] != 'ok') {
-        telegram_send_admin('ups_system', ['error' => $batt_info['err_msg']]);
+        telegram_send_admin('ups_system',
+                           ['error' => sprintf('get_battery_info() return %s, sbio1 go to reboot',
+                                               $batt_info['error_msg'])]);
+        reboot_sbio('sbio1');
         stop_charger();
         return -1;
     }
@@ -306,7 +311,7 @@ function main($argv)
         return 0;
 
     case 'monitoring':
-        if ($voltage > 12.8)
+        if ($voltage > 12.7)
             return 0;
 
         switch_mode_to_stage4($batt_info);
