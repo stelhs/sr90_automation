@@ -19,8 +19,7 @@ $middle_current_enable_port = httpio_port(conf_ups()['middle_current_enable_port
 $full_current_enable_port = httpio_port(conf_ups()['full_current_enable_port']);
 $discharge_enable_port = httpio_port(conf_ups()['discharge_enable_port']);
 $external_power_port = httpio_port(conf_ups()['external_power_port']);
-$disable_ups_power_port = httpio_port(conf_ups()['disable_ups_power_port']);
-$disable_ups_output_port = httpio_port(conf_ups()['disable_ups_output_port']);
+$stop_ups_power_port = httpio_port(conf_ups()['stop_ups_power_port']);
 
 function switch_to_discharge() {
     global $discharge_enable_port;
@@ -70,7 +69,8 @@ function enable_charge()
 function disable_charge()
 {
     global $charger_enable_port;
-    switch_to_charge();
+    if ($charger_enable_port->get())
+        switch_to_charge();
     set_low_current_charge();
     $charger_enable_port->set(0);
 }
@@ -158,8 +158,6 @@ function switch_mode_to_stage4($batt_info)
 
 function stop_charger()
 {
-    set_low_current_charge();
-    switch_to_charge();
     disable_charge();
     file_put_contents(CHARGER_DISABLE_FILE);
 }
@@ -175,16 +173,24 @@ function main($argv)
     global $external_power_port;
     global $disable_ups_output_port;
     global $disable_ups_power_port;
+    global $stop_ups_power_port;
 
 // Uncomment for disable autostart
-//    if (isset($argv[1]) && $argv[1] == 'auto') return;
+    //if (isset($argv[1]) && $argv[1] == 'auto') return;
 
     if (is_halt_all_systems())
         return 0;
 
+    $current_ext_power_state = $external_power_port->get();
+    $current_ext_ups_power_state = $stop_ups_power_port->get();
+
     // check for external power is absent
     @$prev_state = file_get_contents(EXT_POWER_STATE_FILE);
-    $current_ext_power_state = $external_power_port->get();
+    if (!$prev_state) {
+        file_put_contents(EXT_POWER_STATE_FILE, $current_ext_power_state);
+        return 0;
+    }
+
     if ($current_ext_power_state != $prev_state) {
         file_put_contents(EXT_POWER_STATE_FILE, $current_ext_power_state);
 
@@ -200,6 +206,7 @@ function main($argv)
 
         if (!$current_ext_power_state) {
             stop_charger();
+            restart_charger();
             return 0;
         }
         restart_charger();
@@ -248,19 +255,26 @@ function main($argv)
         @unlink(LOW_BATT_VOLTAGE_FILE);
 
     // if external power is absent and voltage down below 12 volts
-    // stop server
-    if (!$current_ext_power_state && $voltage <= 12) {
-        $msg = 'Напряжение на АКБ снизилось ниже 12v а внешнее питание так и не появилось. ' .
-               'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
+    // stop server and same systems
+    if ((!$current_ext_power_state || $current_ext_ups_power_state) && $voltage <= 12) {
+        $msg = 'Напряжение на АКБ снизилось ниже 12v а внешнее питание так и не появилось. ';
+
+        @$last_ext_power_state = db()->query("SELECT * FROM ext_power_log ORDER BY id DESC LIMIT 1");
+        if (is_array($last_ext_power_state) && $last_ext_power_state['state'] == 'off')
+            $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",
+                            time() - $last_ext_power_state['created']);
+
+        $msg .= 'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
         telegram_send_admin('ups_system', ['text' => $msg]);
-        $disable_ups_power_port->set(1);
-        $disable_ups_output_port->set(1);
-        halt_all_systems();
+        restart_charger();
+        run_cmd("./hard_reboot.php");
         return 0;
     }
 
-    if (!$current_ext_power_state)
+    if (!$current_ext_power_state || $current_ext_ups_power_state) {
+        disable_charge();
         return;
+    }
 
     @$stage = file_get_contents(STAGE_FILE);
     $stage = trim($stage);

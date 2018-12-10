@@ -6,12 +6,12 @@ require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
 require_once 'modem3g.php';
-$utility_name = $argv[0];
 
 
 function print_help()
 {
-    global $utility_name;
+    global $argv;
+    $utility_name = $argv[0];
     echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\t$utility_name alarm <alarm_id> - Send all cameras photos associated with alarm_id to sr38.org and send links to Telegram\n" .

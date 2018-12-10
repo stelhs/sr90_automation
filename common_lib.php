@@ -747,10 +747,8 @@ define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
 
 function halt_all_systems()
 {
-    if (@file_get_contents(HALT_ALL_SYSTEMS_FILE)) {
-        perror("FAKE: all systems stop at the moment.\n");
+    if (is_halt_all_systems())
         return;
-    }
 
     if (DISABLE_HW) {
         perror("FAKE: halt all systems, goodbuy. For undo - remove %s\n",
@@ -758,7 +756,7 @@ function halt_all_systems()
         file_put_contents(HALT_ALL_SYSTEMS_FILE, 1);
         return;
     }
-
+    run_cmd("halt");
 }
 
 function is_halt_all_systems()
