@@ -486,10 +486,12 @@ function format_global_status_for_sms($stat)
     }
 
     if (isset($stat['battery'])) {
-        if ($stat['battery']['status'] != 'ok')
-            $text .= sprintf("АКБ ошибка: %s, ", $stat['battery']['msg_error']);
+        if (!is_array($stat['battery']))
+            $text .= sprintf("ошибка АКБ, ");
         else
-            $text .= sprintf("АКБ: %.2fv, ", $stat['battery']['voltage']);
+            $text .= sprintf("АКБ: %.2fv,%.2fA, ",
+                             $stat['battery']['voltage'],
+                             $stat['battery']['current']);
     }
 
     return $text;
@@ -604,10 +606,12 @@ function format_global_status_for_telegram($stat)
     }
 
     if (isset($stat['battery'])) {
-        if ($stat['battery']['status'] != 'ok')
-            $text .= sprintf("АКБ: Ошибка: %s, ", $stat['battery']['status']);
+        if (!is_array($stat['battery']))
+            $text .= sprintf("ошибка АКБ, ");
         else
-            $text .= sprintf("Напряжение АКБ: %.2fv, ", $stat['battery']['voltage']);
+            $text .= sprintf("АКБ: %.2fv, %.2fA, ",
+                             $stat['battery']['voltage'],
+                             $stat['battery']['current']);
     }
 
     return $text;
@@ -688,35 +692,21 @@ function get_stored_io_states()
 }
 
 
+define("UPS_BATT_VOLTAGE_FILE", "/tmp/ups_batt_voltage");
+define("UPS_BATT_CURRENT_FILE", "/tmp/ups_batt_current");
+
 function get_battery_info()
 {
-    if (DISABLE_HW) {
-        $voltage = 12.0;
-        perror("FAKE: get_battery_info() return voltage %.2fv\n", $voltage);
-        return ['status' => 'ok',
-                'voltage' => $voltage,
-                'current' => 0];
-    }
+    @$voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
+    if ($voltage === FALSE)
+        return null;
 
-    $content = file_get_contents(sprintf("http://%s:%d/battery",
-                                 conf_io()['sbio1']['ip_addr'],
-                                 conf_io()['sbio1']['tcp_port']));
-    if (!$content)
-        return ['status' => 'error',
-                'error_msg' => sprintf('Can`t response from sbio1')];
+    @$current = trim(file_get_contents(UPS_BATT_CURRENT_FILE));
+    if ($current === FALSE)
+        return null;
 
-    $ret_data = json_decode($content, true);
-    if (!$ret_data)
-        return ['status' => 'error',
-                'error_msg' => sprintf('Can`t decoded battery info: %s', $content)];
-
-    if ($ret_data['status'] != 'ok')
-        return ['status' => $ret_data['status'],
-                'error_msg' => $ret_data['error_msg']];
-
-    return ['status' => 'ok',
-            'voltage' => $ret_data['voltage'],
-            'current' => $ret_data['current']];
+    return ['voltage' => $voltage,
+            'current' => $current];
 }
 
 
@@ -762,5 +752,20 @@ function halt_all_systems()
 function is_halt_all_systems()
 {
     return @file_get_contents(HALT_ALL_SYSTEMS_FILE);
+}
+
+function get_power_states()
+{
+    $power = [];
+    $row = db()->query('SELECT state FROM ext_power_log ' .
+                       'WHERE type = "input" ' .
+                       'ORDER BY id DESC LIMIT 1');
+    $power['input'] = $row['state'];
+
+    $row = db()->query('SELECT state FROM ext_power_log ' .
+                       'WHERE type = "ups" ' .
+                       'ORDER BY id DESC LIMIT 1');
+    $power['ups'] = $row['state'];
+    return $power;
 }
 

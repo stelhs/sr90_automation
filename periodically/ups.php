@@ -12,13 +12,11 @@ define("CHARGE_LASTTIME_FILE", "/tmp/battery_charge_lasttime");
 define("DISCHARGE_LASTTIME_FILE", "/tmp/battery_discharge_lasttime");
 define("LOW_BATT_VOLTAGE_FILE", "/tmp/battery_low_voltage");
 define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
-define("PREV_VOLTAGE_FILE", "/tmp/prev_voltage");
 
 $charger_enable_port = httpio_port(conf_ups()['charger_enable_port']);
 $middle_current_enable_port = httpio_port(conf_ups()['middle_current_enable_port']);
 $full_current_enable_port = httpio_port(conf_ups()['full_current_enable_port']);
 $discharge_enable_port = httpio_port(conf_ups()['discharge_enable_port']);
-$external_power_port = httpio_port(conf_ups()['external_power_port']);
 $stop_ups_power_port = httpio_port(conf_ups()['stop_ups_power_port']);
 
 function switch_to_discharge() {
@@ -91,7 +89,7 @@ function get_micro_cycling_state()
 }
 
 
-function switch_mode_to_stage1($batt_info)
+function switch_mode_to_stage1($batt_info, $reason = "")
 {
     switch_to_charge();
     set_high_current_charge();
@@ -102,6 +100,7 @@ function switch_mode_to_stage1($batt_info)
     $msg = sprintf('Включен заряд током 3A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
     telegram_send_admin('ups_system', ['text' => $msg]);
+    db()->insert('ups_actions', ['stage' => 'charge1', 'reason' => $reason]);
 }
 
 function switch_mode_to_stage2($batt_info)
@@ -115,6 +114,7 @@ function switch_mode_to_stage2($batt_info)
     $msg = sprintf('Включен заряд током 1.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
     telegram_send_admin('ups_system', ['text' => $msg]);
+    db()->insert('ups_actions', ['stage' => 'charge2']);
 }
 
 function switch_mode_to_stage3($batt_info)
@@ -128,6 +128,7 @@ function switch_mode_to_stage3($batt_info)
     $msg = sprintf('Включен заряд током 0.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
     telegram_send_admin('ups_system', ['text' => $msg]);
+    db()->insert('ups_actions', ['stage' => 'charge3']);
 }
 
 function switch_mode_to_monitoring($batt_info)
@@ -139,6 +140,7 @@ function switch_mode_to_monitoring($batt_info)
     $msg = sprintf('Заряд окончен, напряжение на АКБ %.2fv',
                    $batt_info['voltage']);
     telegram_send_admin('ups_system', ['text' => $msg]);
+    db()->insert('ups_actions', ['stage' => 'idle']);
 }
 
 function switch_mode_to_stage4($batt_info)
@@ -153,142 +155,158 @@ function switch_mode_to_stage4($batt_info)
                    'включился капельный дозаряд до 14.4v',
                    $batt_info['voltage']);
     telegram_send_admin('ups_system', ['text' => $msg]);
+    db()->insert('ups_actions', ['stage' => 'recharging']);
 }
 
 
 function stop_charger()
 {
     disable_charge();
-    file_put_contents(CHARGER_DISABLE_FILE);
+    file_put_contents(CHARGER_DISABLE_FILE, "");
 }
 
 function restart_charger()
 {
-    unlink(CHARGER_DISABLE_FILE);
-    unlink(STAGE_FILE);
+    @unlink(CHARGER_DISABLE_FILE);
+    @unlink(STAGE_FILE);
 }
+
 
 function main($argv)
 {
-    global $external_power_port;
-    global $disable_ups_output_port;
-    global $disable_ups_power_port;
     global $stop_ups_power_port;
 
 // Uncomment for disable autostart
    // if (isset($argv[1]) && $argv[1] == 'auto') return;
 
-    if (is_halt_all_systems())
+    if (is_halt_all_systems()) {
+        perror("systems is halted\n");
         return 0;
+    }
 
-    $current_ext_power_state = $external_power_port->get();
-    $current_ext_ups_power_state = $stop_ups_power_port->get();
+    $power_states = get_power_states();
+    $current_ups_power_state = $power_states['ups'];
+    $current_input_power_state = $power_states['input'];
+    printf("current_ups_power_state = %d\n", $current_ups_power_state);
+    printf("current_input_power_state = %d\n", $current_input_power_state);
 
     // check for external power is absent
     @$prev_state = file_get_contents(EXT_POWER_STATE_FILE);
-    if (!$prev_state) {
-        file_put_contents(EXT_POWER_STATE_FILE, $current_ext_power_state);
+    if ($prev_state === FALSE) {
+        file_put_contents(EXT_POWER_STATE_FILE, $current_ups_power_state);
+        perror("prev_state unknown\n");
         return 0;
     }
 
-    if ($current_ext_power_state != $prev_state) {
-        file_put_contents(EXT_POWER_STATE_FILE, $current_ext_power_state);
-
-        if ($current_ext_power_state)
-            $msg = 'Внешнее питание восстановлено';
-        else
-            $msg = 'Отключено внешнее питание';
-
-        telegram_send_admin('ups_system', ['text' => $msg]);
-
-        db()->insert('ext_power_log',
-                     ['state' => ($current_ext_power_state ? 'on' : 'off')]);
-
-        if (!$current_ext_power_state) {
+    if ($current_ups_power_state != $prev_state) {
+        printf("external power changed to %d\n", $current_ups_power_state);
+        file_put_contents(EXT_POWER_STATE_FILE, $current_ups_power_state);
+        if (!$current_ups_power_state) {
+            if ($stop_ups_power_port->get())
+                $reason = "external UPS power is off forcibly";
+            else
+                $reason = "external power is absent";
+            db()->insert('ups_actions', ['stage' => 'discarge', 'reason' => $reason]);
+            printf("stop_charger\n");
             stop_charger();
-            restart_charger();
             return 0;
         }
+        printf("restart_charger\n");
         restart_charger();
     }
 
-    if (file_exists(CHARGER_DISABLE_FILE))
-        return 0;
-
     $batt_info = get_battery_info();
     if (!is_array($batt_info)) {
-        stop_charger();
-        return -1;
-    }
-
-    if ($batt_info['status'] != 'ok') {
-        telegram_send_admin('ups_system',
-                           ['error' => sprintf('get_battery_info() return %s, sbio1 go to reboot',
-                                               $batt_info['error_msg'])]);
-        reboot_sbio('sbio1');
+        perror("can't get baterry info\n");
         stop_charger();
         return -1;
     }
 
     $voltage = $batt_info['voltage'];
-    @$prev_voltage = (float)file_get_contents(PREV_VOLTAGE_FILE);
-    if (!$prev_voltage) {
-        file_put_contents(PREV_VOLTAGE_FILE, $voltage);
-        return 0;
-    }
-
-    // drop purge ADC values
-    if (abs($voltage - $prev_voltage) > 3)
-        return 0;
-
-    file_put_contents(PREV_VOLTAGE_FILE, $voltage);
+    printf("voltage = %f\n", $voltage);
+    $current = $batt_info['current'];
+    printf("current = %f\n", $current);
 
     if ($voltage < 11.88) {
+        printf("voltage drop bellow 11.88v\n");
         @$notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
-        if (!$notified) {
+        if ((time() - $notified) > 300) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                 $voltage);
             telegram_send_admin('ups_system', ['text' => $msg]);
             file_put_contents(LOW_BATT_VOLTAGE_FILE, time());
+            restart_charger();
         }
     } else
         @unlink(LOW_BATT_VOLTAGE_FILE);
 
-    // if external power is absent and voltage down below 12 volts
+    // if external power is absent and voltage down below 11.9 volts
     // stop server and same systems
-    if ((!$current_ext_power_state || $current_ext_ups_power_state) && $voltage <= 11.9) {
+    if (!$current_ups_power_state && $voltage <= 11.9) {
+        printf("voltage drop bellow 11.9v\n");
+        @$last_ext_power_state = db()->query("SELECT UNIX_TIMESTAMP(created) as created, state ' .
+                                             'FROM ext_power_log ' .
+                                             'ORDER BY id DESC LIMIT 1");
+        if (is_array($last_ext_power_state) &&
+            $last_ext_power_state['state'] == '0') {
+            $duration = time() - $last_ext_power_state['created'];
+        }
+
+        if ($current_input_power_state) {
+            $stop_ups_power_port->set(0);
+            printf("UPS test is success finished. Duration %d seconds\n", $duration);
+            $msg = sprintf('Испытание ИБП завершено. Система проработала от АКБ %d секунд.',
+                           $duration);
+            telegram_send_admin('ups_system', ['text' => $msg]);
+            return 0;
+        }
+
         $msg = 'Напряжение на АКБ снизилось ниже 11.9v а внешнее питание так и не появилось. ';
-
-        @$last_ext_power_state = db()->query("SELECT * FROM ext_power_log ORDER BY id DESC LIMIT 1");
-        if (is_array($last_ext_power_state) && $last_ext_power_state['state'] == 'off')
-            $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",
-                            time() - $last_ext_power_state['created']);
-
+        $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",
+                        $duration);
         $msg .= 'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
         telegram_send_admin('ups_system', ['text' => $msg]);
-        restart_charger();
+        stop_charger();
+        printf("charger stopped, run hard_reboot\n");
         run_cmd("./hard_reboot.php");
         return 0;
     }
 
-    if (!$current_ext_power_state || $current_ext_ups_power_state) {
-        disable_charge();
-        return;
-    }
-
-    @$stage = file_get_contents(STAGE_FILE);
-    $stage = trim($stage);
-    if (!$stage) {
-        switch_mode_to_stage1($batt_info);
+    if (file_exists(CHARGER_DISABLE_FILE)) {
+        printf("charger disabled\n");
         return 0;
     }
+
+    @$stage = trim(file_get_contents(STAGE_FILE));
+    if (!$stage) {
+        printf("stage is not defined, run stage 1\n");
+        switch_mode_to_stage1($batt_info, "start charge after reboot");
+        return 0;
+    }
+    printf("current stage %s\n", $stage);
 
     $cycling_state = get_micro_cycling_state();
     $mode = $cycling_state['mode'];
     $switch_interval = $cycling_state['interval'];
+    printf("switch_interval %d\n", $switch_interval);
 
     switch($stage) {
     case 'charge_stage1':
+        if ($switch_interval > 10 && $switch_interval < 40) {
+            if ($mode == 'charge' && $current < 3.0) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 3A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No charge current 3A!\n");
+                stop_charger();
+            }
+            if ($mode == 'discharge' && $current > -0.2 && $switch_interval > 10) {
+                $msg = sprintf("Ошибка! Нет разрядного тока 0.3A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No discharge current 0.3A!\n");
+                stop_charger();
+            }
+        }
+
         if ($mode == 'charge' && $switch_interval > 30)
             switch_to_discharge();
         else if ($mode == 'discharge' && $switch_interval > 20)
@@ -301,6 +319,20 @@ function main($argv)
         return 0;
 
     case 'charge_stage2':
+        if ($switch_interval > 10 && $switch_interval < 40) {
+            if ($mode == 'charge' && $current < 1.0) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 1.5A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No charge current 1.5A!\n");
+                stop_charger();
+            }
+            if ($mode == 'discharge' && $current > -0.8) {
+                $msg = sprintf("Ошибка! Нет разрядного тока 0.15A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No discharge current 0.15A!\n");
+                stop_charger();
+            }
+        }
         if ($mode == 'charge' && $switch_interval > 20)
             switch_to_discharge();
         else if ($mode == 'discharge' && $switch_interval > 30)
@@ -313,6 +345,20 @@ function main($argv)
         return 0;
 
     case 'charge_stage3':
+        if ($switch_interval > 10 && $switch_interval < 40) {
+            if ($mode == 'charge' && $current < 0.3) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No charge current 0.5A!\n");
+                stop_charger();
+            }
+            if ($mode == 'discharge' && $current > -0.03) {
+                $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No discharge current 0.5A!\n");
+                stop_charger();
+            }
+        }
         if ($mode == 'charge' && $switch_interval > 20)
             switch_to_discharge();
         else if ($mode == 'discharge' && $switch_interval > 30)
@@ -332,6 +378,21 @@ function main($argv)
         return 0;
 
     case 'charge_stage4':
+        if ($switch_interval > 10 && $switch_interval < 40) {
+            if ($mode == 'charge' && $current < 0.3) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No charge current 0.5A!\n");
+                stop_charger();
+            }
+            if ($mode == 'discharge' && $current > -0.03) {
+                $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
+                telegram_send_admin('ups_system', ['text' => $msg]);
+                perror("No discharge current 0.5A!\n");
+                stop_charger();
+            }
+        }
+
         if ($mode == 'charge' && $switch_interval > 20)
             switch_to_discharge();
         else if ($mode == 'discharge' && $switch_interval > 30)
