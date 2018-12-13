@@ -14,6 +14,7 @@ function main($argv) {
                                      $io_data['ip_addr'], $io_data['tcp_port']));
         if ($content === FALSE) {
             telegram_send_admin(sprintf("Сбой связи с модулем ввода-вывода %s", $io_name));
+            run_cmd(sprintf("./init_io_actions.php %s", $io_name));
             continue;
         }
 
