@@ -176,7 +176,7 @@ function main($argv)
     global $stop_ups_power_port;
 
 // Uncomment for disable autostart
-    //if (isset($argv[1]) && $argv[1] == 'auto') return;
+   // if (isset($argv[1]) && $argv[1] == 'auto') return;
 
     if (is_halt_all_systems())
         return 0;
@@ -243,7 +243,7 @@ function main($argv)
 
     file_put_contents(PREV_VOLTAGE_FILE, $voltage);
 
-    if ($voltage < 11.98) {
+    if ($voltage < 11.88) {
         @$notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
         if (!$notified) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
@@ -256,8 +256,8 @@ function main($argv)
 
     // if external power is absent and voltage down below 12 volts
     // stop server and same systems
-    if ((!$current_ext_power_state || $current_ext_ups_power_state) && $voltage <= 12) {
-        $msg = 'Напряжение на АКБ снизилось ниже 12v а внешнее питание так и не появилось. ';
+    if ((!$current_ext_power_state || $current_ext_ups_power_state) && $voltage <= 11.9) {
+        $msg = 'Напряжение на АКБ снизилось ниже 11.9v а внешнее питание так и не появилось. ';
 
         @$last_ext_power_state = db()->query("SELECT * FROM ext_power_log ORDER BY id DESC LIMIT 1");
         if (is_array($last_ext_power_state) && $last_ext_power_state['state'] == 'off')
