@@ -87,6 +87,17 @@ function get_current_battery_info()
 }
 
 
+function is_around($probe_val, $reference_val, $tolerance)
+{
+    if (($reference_val - $probe_val) > $tolerance)
+        return False;
+
+    if (($probe_val - $reference_val) > $tolerance)
+        return False;
+
+    return True;
+}
+
 
 function main($argv)
 {
@@ -114,10 +125,8 @@ function main($argv)
 
     @$prev_voltage = file_get_contents(UPS_BATT_VOLTAGE_FILE);
     @$prev_current = file_get_contents(UPS_BATT_CURRENT_FILE);
-    if ($filtred_voltage == $prev_voltage &&
-        $filtred_current == $prev_current) {
+    if ($filtred_voltage == $prev_voltage && is_around($filtred_current, $prev_current, 0.03))
         return;
-    }
 
     file_put_contents(UPS_BATT_VOLTAGE_FILE, $filtred_voltage);
     file_put_contents(UPS_BATT_CURRENT_FILE, $filtred_current);
