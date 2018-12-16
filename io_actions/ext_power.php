@@ -23,6 +23,8 @@ function main($argv)
 
     $external_input_power_port = conf_ups()['external_input_power_port'];
     $external_ups_power_port = conf_ups()['external_ups_power_port'];
+    $vdc_out_check_port = conf_ups()['vdc_out_check_port'];
+    $standby_check_port = conf_ups()['standby_check_port'];
 
     if ($io_name == $external_input_power_port['io'] &&
         $port == $external_input_power_port['in_port']) {
@@ -70,6 +72,14 @@ function main($argv)
         return 0;
     }
 
+    if ($io_name == $vdc_out_check_port['io'] &&
+        $port == $vdc_out_check_port['in_port']) {
+        if ($port_state)
+            return 0;
+        $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
+        telegram_send_admin('ups_system', ['text' => $msg]);
+        return 0;
+    }
 }
 
 exit(main($argv));

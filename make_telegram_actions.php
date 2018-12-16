@@ -54,7 +54,14 @@ $commands = [
                  'script' => 'stat_cmd.php'],
 
                 ['cmd' => ['скажи', 'tell'],
-                    'script' => 'tell_cmd.php'],
+                 'script' => 'tell_cmd.php', 'wr' => 1],
+
+                ['cmd' => ['запусти проверку ибп', 'start test ups'],
+                 'script' => 'ups.php', 'args' => 'start_test'],
+
+                ['cmd' => ['останови проверку ибп', 'stop test ups'],
+                 'script' => 'ups.php', 'args' => 'stop_test'],
+
 ];
 
 function mk_help()

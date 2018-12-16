@@ -91,7 +91,7 @@ function sms_send($type, $recepient, $args = array())
 
     case 'alarm':
         $sms_text = sprintf("Внимание!\nСработала %s, событие: %d",
-                                $args['zone'], $args['action_id']);
+                            $args['zone'], $args['action_id']);
         break;
 
     case 'guard_disable':
@@ -287,7 +287,7 @@ function get_day_night()
 
     if ($curr_time > $sun_info['nautical_twilight_begin'] &&
         $curr_time < ($sun_info['nautical_twilight_end'] - 3600))
-            return 'day';
+        return 'day';
 
     return 'night';
 }
@@ -295,7 +295,7 @@ function get_day_night()
 function user_get_by_phone($phone)
 {
     $user = db()->query("SELECT * FROM users " .
-                      "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
+                        "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
 
     if (!$user)
         return NULL;
@@ -307,7 +307,7 @@ function user_get_by_phone($phone)
 function user_get_by_id($user_id)
 {
     $user = db()->query(sprintf("SELECT * FROM users " .
-                              "WHERE id = %d AND enabled = 1", $user_id));
+                                "WHERE id = %d AND enabled = 1", $user_id));
 
     if (!$user)
         return NULL;
@@ -319,7 +319,8 @@ function user_get_by_id($user_id)
 function user_get_by_telegram_id($telegram_user_id)
 {
     $user = db()->query(sprintf("SELECT * FROM users " .
-                              "WHERE telegram_id = %d AND enabled = 1", $telegram_user_id));
+                                "WHERE telegram_id = %d AND enabled = 1",
+                                $telegram_user_id));
 
     if (!$user)
         return NULL;
@@ -332,7 +333,7 @@ function user_get_by_telegram_id($telegram_user_id)
 function get_users_phones_by_access_type($type)
 {
     $users = db()->query_list(sprintf('SELECT * FROM users '.
-                             'WHERE %s = 1 AND enabled = 1', $type));
+                                      'WHERE %s = 1 AND enabled = 1', $type));
     $list_phones = array();
     foreach ($users as $user)
         $list_phones[] = string_to_array($user['phones'])[0];
@@ -343,7 +344,7 @@ function get_users_phones_by_access_type($type)
 function get_all_users_phones_by_access_type($type)
 {
     $users = db()->query_list(sprintf('SELECT * FROM users '.
-                              'WHERE %s = 1 AND enabled = 1', $type));
+                                      'WHERE %s = 1 AND enabled = 1', $type));
     $list_phones = array();
     foreach ($users as $user) {
         $phones = string_to_array($user['phones']);
@@ -370,8 +371,6 @@ function get_global_status()
     preg_match('/up (.+),/U', $ret['log'], $mathes);
     $uptime = $mathes[1];
 
-    $mdstat = get_mdstat();
-
     return ['guard_stat' => $guard_stat,
             'balance' => $balance,
             'modem_stat' => $modem_stat,
@@ -379,8 +378,9 @@ function get_global_status()
             'lighting_stat' => $lighting_stat,
             'padlocks_stat' => $padlocks_stat,
             'termo_sensors' => $termosensors,
-            'mdadm' => $mdstat,
             'battery' => get_battery_info(),
+            'power_states' => get_power_states(),
+            'ups_state' => get_ups_state(),
     ];
 }
 
@@ -420,7 +420,7 @@ function format_global_status_for_sms($stat)
 
         if (isset($stat['guard_stat']['user_name']) && $mode)
             $text .= sprintf("%s: %s, ", $mode,
-                                              $stat['guard_stat']['user_name']);
+                             $stat['guard_stat']['user_name']);
     }
 
     if (isset($stat['lighting_stat'])) {
@@ -452,31 +452,6 @@ function format_global_status_for_sms($stat)
         }
     }
 
-    if (isset($stat['mdadm'])) {
-        switch ($stat['mdadm']['state']) {
-        case "normal":
-            $mode = "исправен";
-            break;
-
-        case "no_exist":
-            $mode = "отсутсвует";
-            break;
-
-        case "resync":
-            $mode = "синхронизируется " . $mdstat['progress'] . '%';
-            break;
-
-        case "recovery":
-            $mode = "восстанавливается " . $mdstat['progress'] . '%';
-            break;
-
-        case "damage":
-            $mode = "поврежден";
-            break;
-        }
-        $text .= sprintf("RAID1: %s, ", $mode);
-    }
-
     if (isset($stat['uptime'])) {
         $text .= sprintf("Uptime: %s, ", $stat['uptime']);
     }
@@ -492,6 +467,19 @@ function format_global_status_for_sms($stat)
             $text .= sprintf("АКБ: %.2fv,%.2fA, ",
                              $stat['battery']['voltage'],
                              $stat['battery']['current']);
+    }
+
+    if (isset($stat['power_states'])) {
+        $text .= sprintf("Внешн. пит:%d, пит.ИБП:%d, ",
+                         $stat['power_states']['input'],
+                         $stat['power_states']['ups']);
+    }
+
+    if (isset($stat['ups_state'])) {
+        $text .= sprintf("250VDC:%d, 14VDC:%d, ups_stat:%s ",
+                         $stat['ups_state']['vdc_out_state'],
+                         $stat['ups_state']['standby_state'],
+                         $stat['ups_state']['charger_state']);
     }
 
     return $text;
@@ -532,9 +520,9 @@ function format_global_status_for_telegram($stat)
 
         if (isset($stat['guard_stat']['user_name']) && $text_who)
             $text .= sprintf("%s: %s через %s в %s\n", $text_who,
-                                              $stat['guard_stat']['user_name'],
-                                              $stat['guard_stat']['method'],
-                                              $stat['guard_stat']['created']);
+                             $stat['guard_stat']['user_name'],
+                             $stat['guard_stat']['method'],
+                             $stat['guard_stat']['created']);
     }
 
     if (isset($stat['lighting_stat'])) {
@@ -567,31 +555,6 @@ function format_global_status_for_telegram($stat)
         }
     }
 
-    if (isset($stat['mdadm'])) {
-        switch ($stat['mdadm']['state']) {
-        case "normal":
-            $mode = "исправен";
-            break;
-
-        case "no_exist":
-            $mode = "отсутсвует";
-            break;
-
-        case "resync":
-            $mode = "синхронизируется " . $mdstat['progress'] . '%';
-            break;
-
-        case "recovery":
-            $mode = "восстанавливается " . $mdstat['progress'] . '%';
-            break;
-
-        case "damage":
-            $mode = "поврежден";
-            break;
-        }
-        $text .= sprintf("RAID1: %s\n", $mode);
-    }
-
     if (isset($stat['uptime'])) {
         $text .= sprintf("Uptime: %s\n", $stat['uptime']);
     }
@@ -609,9 +572,25 @@ function format_global_status_for_telegram($stat)
         if (!is_array($stat['battery']))
             $text .= sprintf("ошибка АКБ, ");
         else
-            $text .= sprintf("АКБ: %.2fv, %.2fA, ",
+            $text .= sprintf("АКБ: %.2fv, %.2fA\n",
                              $stat['battery']['voltage'],
                              $stat['battery']['current']);
+    }
+
+    if (isset($stat['power_states'])) {
+        $text .= sprintf("Питание на вводе: %s\n" .
+                         "Питание на ИБП: %s\n" ,
+                         $stat['power_states']['input'] ? 'присутствует' : 'отсутствует',
+                         $stat['power_states']['ups'] ? 'присутствует' : 'отсутствует');
+    }
+
+    if (isset($stat['ups_state'])) {
+        $text .= sprintf("Выходное питание ИБП: %s\n" .
+                         "Дежурное питание ИБП: %s\n" .
+                         "Состояние ИБП: %s\n",
+                         $stat['ups_state']['vdc_out_state'] ? 'присутствует' : 'отсутствует',
+                         $stat['ups_state']['standby_state'] ? 'присутствует' : 'отсутствует',
+                         $stat['ups_state']['charger_state']);
     }
 
     return $text;
@@ -663,8 +642,8 @@ function get_termosensors_stat()
     foreach ($rows as $row) {
         if (!isset(conf_termo_sensors()[$row['sensor_name']]))
             continue;
-            $list[] = ['name' => conf_termo_sensors()[$row['sensor_name']],
-                       'value' => $row['temperaure']];
+        $list[] = ['name' => conf_termo_sensors()[$row['sensor_name']],
+                   'value' => $row['temperaure']];
     }
     return $list;
 }
@@ -677,8 +656,8 @@ function get_stored_io_states()
              'FROM io_output_actions ' .
              'INNER JOIN ' .
                 '( SELECT io_name, port, max(id) as last_id ' .
-                  'FROM io_output_actions ' .
-                  'GROUP BY io_name, port ) as b '.
+                 'FROM io_output_actions ' .
+                 'GROUP BY io_name, port ) as b '.
              'ON io_output_actions.port = b.port AND ' .
                 'io_output_actions.io_name = b.io_name AND ' .
                 'io_output_actions.id = b.last_id ' .
@@ -694,6 +673,7 @@ function get_stored_io_states()
 
 define("UPS_BATT_VOLTAGE_FILE", "/tmp/ups_batt_voltage");
 define("UPS_BATT_CURRENT_FILE", "/tmp/ups_batt_current");
+define("CHARGER_STAGE_FILE", "/tmp/battery_charge_stage");
 
 function get_battery_info()
 {
@@ -767,5 +747,32 @@ function get_power_states()
                        'ORDER BY id DESC LIMIT 1');
     $power['ups'] = $row['state'];
     return $power;
+}
+
+function get_ups_state()
+{
+    $stat = [];
+    $vdc_out_check_port = httpio_port(conf_ups()['vdc_out_check_port']);
+    $standby_check_port = httpio_port(conf_ups()['standby_check_port']);
+
+    $stat['vdc_out_state'] = $vdc_out_check_port->get();
+    $stat['standby_state'] = $standby_check_port->get();
+    @$stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
+    return $stat;
+}
+
+/**
+ * Get duration between UPS power loss and UPS power resume
+ */
+function get_last_ups_duration()
+{
+    $last_ext_power_state = db()->query("SELECT UNIX_TIMESTAMP(created) as created, state " .
+                                        "FROM ext_power_log WHERE type='ups' " .
+                                        "ORDER BY id DESC LIMIT 1");
+    if (!is_array($last_ext_power_state) ||
+        $last_ext_power_state['state'] == 1)
+        return NULL;
+
+    return time() - $last_ext_power_state['created'];
 }
 
