@@ -21,12 +21,11 @@ function main($argv)
     printf("port = %s\n", $port);
     printf("port_state = %s\n", $port_state);
 
-    $external_power_port = conf_ups()['external_input_power_port'];
+    $external_input_power_port = conf_ups()['external_input_power_port'];
+    $external_ups_power_port = conf_ups()['external_ups_power_port'];
 
-    if ($io_name == $external_power_port['io'] &&
-        $port == $external_power_port['in_port']) {
-
-
+    if ($io_name == $external_input_power_port['io'] &&
+        $port == $external_input_power_port['in_port']) {
         $row = db()->query('SELECT state FROM ext_power_log ' .
                            'WHERE type == "input" ' .
                            'ORDER BY id DESC LIMIT 1');
@@ -43,6 +42,29 @@ function main($argv)
         db()->insert('ext_power_log',
                      ['state' => $port_state,
                       'type' => 'input']);
+
+        telegram_send_admin('ups_system', ['text' => $msg]);
+        return 0;
+    }
+
+    if ($io_name == $external_ups_power_port['io'] &&
+        $port == $external_ups_power_port['in_port']) {
+        $row = db()->query('SELECT state FROM ext_power_log ' .
+                           'WHERE type == "ups" ' .
+                           'ORDER BY id DESC LIMIT 1');
+
+        $prev_state = $row['state'];
+        if ($port_state == $prev_state)
+            return 0;
+
+        if ($port_state)
+            $msg = 'Питание ИБП восстановлено';
+        else
+            $msg = 'Питание ИБП отключено';
+
+        db()->insert('ext_power_log',
+                     ['state' => $port_state,
+                      'type' => 'ups']);
 
         telegram_send_admin('ups_system', ['text' => $msg]);
         return 0;
