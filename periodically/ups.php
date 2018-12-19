@@ -231,8 +231,8 @@ function main($argv)
 
     // if external power is absent and voltage down below 11.9 volts
     // stop server and same systems
-    if (!$ups_power_state && $voltage <= 11.9) {
-        printf("voltage drop bellow 11.9v\n");
+    if (!$ups_power_state && $voltage <= 12.0) {
+        printf("voltage drop bellow 12.0v\n");
         $duration = get_last_ups_duration();
 
         if ($input_power_state) {
@@ -245,7 +245,7 @@ function main($argv)
             return 0;
         }
 
-        $msg = 'Напряжение на АКБ снизилось ниже 11.9v а внешнее питание так и не появилось. ';
+        $msg = 'Напряжение на АКБ снизилось ниже 12.0v а внешнее питание так и не появилось. ';
         $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",
                         $duration);
         $msg .= 'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
@@ -342,7 +342,7 @@ function main($argv)
         else if ($mode == 'discharge' && $switch_interval > 30)
             switch_to_charge();
 
-        if ($voltage <= 14.9)
+        if ($voltage <= 15.2)
             return 0;
 
         switch_mode_to_ready($batt_info);
