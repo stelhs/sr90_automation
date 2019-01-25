@@ -7,7 +7,7 @@ require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'common_lib.php';
 require_once 'player_lib.php';
-$utility_name = $argv[0];
+require_once 'telegram_api.php';
 
 
 function main($argv)
@@ -114,9 +114,12 @@ function main($argv)
         $ret = run_cmd('./text_spech.php "Уходи" 0');
         player_start(['sounds/access_denyed.wav',
                       'sounds/text.wav'], 100);
-        telegram_send_admin('false_alarm', ['name' => $zone['name'],
-                                            'io' => $io_name,
-                                            'port' => $port]);
+
+        $msg = sprintf("Срабатал датчик на порту %s:%d из группы \"%s\".\n" .
+                       "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
+                       $io_name, $port, $zone['name']);
+        telegram_send_msg_admin($msg);
+
         run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id()));
         return 0;
     }

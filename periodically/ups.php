@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'guard_lib.php';
+require_once 'telegram_api.php';
 
 define("CHARGER_DISABLE_FILE", "/tmp/charger_disable");
 define("CHARGE_LASTTIME_FILE", "/tmp/battery_charge_lasttime");
@@ -96,7 +97,7 @@ function switch_mode_to_stage1($batt_info, $reason = "")
     file_put_contents(CHARGER_STAGE_FILE, 'charge_stage1');
     $msg = sprintf('Включен заряд током 3A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send_admin('ups_system', ['text' => $msg]);
+    telegram_send_msg_admin($msg);
     db()->insert('ups_actions', ['stage' => 'charge1', 'reason' => $reason]);
 }
 
@@ -108,7 +109,7 @@ function switch_mode_to_stage2($batt_info)
     file_put_contents(CHARGER_STAGE_FILE, 'charge_stage2');
     $msg = sprintf('Включен заряд током 1.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send_admin('ups_system', ['text' => $msg]);
+    telegram_send_msg_admin($msg);
     db()->insert('ups_actions', ['stage' => 'charge2']);
 }
 
@@ -120,7 +121,7 @@ function switch_mode_to_stage3($batt_info)
     file_put_contents(CHARGER_STAGE_FILE, 'charge_stage3');
     $msg = sprintf('Включен заряд током 0.5A, напряжение на АКБ %.2f',
                    $batt_info['voltage']);
-    telegram_send_admin('ups_system', ['text' => $msg]);
+    telegram_send_msg_admin($msg);
     db()->insert('ups_actions', ['stage' => 'charge3']);
 }
 
@@ -130,7 +131,7 @@ function switch_mode_to_ready($batt_info)
     disable_charge();
     $msg = sprintf('Заряд окончен, напряжение на АКБ %.2fv',
                    $batt_info['voltage']);
-    telegram_send_admin('ups_system', ['text' => $msg]);
+    telegram_send_msg_admin($msg);
     db()->insert('ups_actions', ['stage' => 'idle']);
 }
 
@@ -143,7 +144,7 @@ function switch_mode_to_stage4($batt_info)
     $msg = sprintf('Напряжение на АКБ снизилось до %.2fv, ' .
                    'включился капельный дозаряд до 14.4v',
                    $batt_info['voltage']);
-    telegram_send_admin('ups_system', ['text' => $msg]);
+    telegram_send_msg_admin($msg);
     db()->insert('ups_actions', ['stage' => 'recharging']);
 }
 
@@ -166,7 +167,7 @@ function main($argv)
     global $stop_ups_power_port;
 
 // Uncomment for disable autostart
-   // if (isset($argv[1]) && $argv[1] == 'auto') return;
+//   if (isset($argv[1]) && $argv[1] == 'auto') return;
 
     if (is_halt_all_systems()) {
         perror("systems is halted\n");
@@ -222,7 +223,7 @@ function main($argv)
         if ((time() - $notified) > 300) {
             $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                 $voltage);
-            telegram_send_admin('ups_system', ['text' => $msg]);
+            telegram_send_msg_admin($msg);
             file_put_contents(LOW_BATT_VOLTAGE_FILE, time());
             restart_charger();
         }
@@ -241,7 +242,7 @@ function main($argv)
             $msg = sprintf("Испытание ИБП завершено.\n" .
                            "Система проработала от АКБ: %d секунд.",
                            $duration);
-            telegram_send_admin('ups_system', ['text' => $msg]);
+            telegram_send_msg_admin($msg);
             return 0;
         }
 
@@ -249,7 +250,7 @@ function main($argv)
         $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",
                         $duration);
         $msg .= 'Skynet сворачивает свою деятельсноть и отключается. До свидания.';
-        telegram_send_admin('ups_system', ['text' => $msg]);
+        telegram_send_msg_admin($msg);
         stop_charger();
         printf("charger stopped, run hard_reboot\n");
         run_cmd("./hard_reboot.php");
@@ -276,15 +277,15 @@ function main($argv)
 
     switch($stage) {
     case 'charge_stage1':
-        if ($switch_interval > 10 && $switch_interval < 13) {
-            if ($mode == 'charge' && $current < 3.0) {
-                $msg = sprintf("Ошибка! Нет зарядного тока 3A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
-                perror("No charge current 3A!\n");
+        if ($switch_interval > 10 && $switch_interval < 18) {
+            if ($mode == 'charge' && $current < 2.2) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 2.5A. Текущий ток: %f", $current);
+                telegram_send_msg_admin($msg);
+                perror("No charge current 2.5A!\n");
             }
             if ($mode == 'discharge' && $current > -0.2 && $switch_interval > 10) {
                 $msg = sprintf("Ошибка! Нет разрядного тока 0.3A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No discharge current 0.3A!\n");
             }
         }
@@ -301,15 +302,15 @@ function main($argv)
         return 0;
 
     case 'charge_stage2':
-        if ($switch_interval > 10 && $switch_interval < 13) {
-            if ($mode == 'charge' && $current < 1.0) {
-                $msg = sprintf("Ошибка! Нет зарядного тока 1.5A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
-                perror("No charge current 1.5A!\n");
+        if ($switch_interval > 10 && $switch_interval < 18) {
+            if ($mode == 'charge' && $current < 0.9) {
+                $msg = sprintf("Ошибка! Нет зарядного тока 1.3A. Текущий ток: %f", $current);
+                telegram_send_msg_admin($msg);
+                perror("No charge current 1.3A!\n");
             }
             if ($mode == 'discharge' && $current > -0.08) {
                 $msg = sprintf("Ошибка! Нет разрядного тока 0.15A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No discharge current 0.15A!\n");
             }
         }
@@ -325,15 +326,15 @@ function main($argv)
         return 0;
 
     case 'charge_stage3':
-        if ($switch_interval > 10 && $switch_interval < 13) {
+        if ($switch_interval > 10 && $switch_interval < 18) {
             if ($mode == 'charge' && $current < 0.3) {
                 $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No charge current 0.5A!\n");
             }
             if ($mode == 'discharge' && $current > -0.03) {
                 $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No discharge current 0.5A!\n");
             }
         }
@@ -359,12 +360,12 @@ function main($argv)
         if ($switch_interval > 10 && $switch_interval < 13) {
             if ($mode == 'charge' && $current < 0.3) {
                 $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No charge current 0.5A!\n");
             }
             if ($mode == 'discharge' && $current > -0.03) {
                 $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
-                telegram_send_admin('ups_system', ['text' => $msg]);
+                telegram_send_msg_admin($msg);
                 perror("No discharge current 0.5A!\n");
             }
         }

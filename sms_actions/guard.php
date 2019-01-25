@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'common_lib.php';
+require_once 'telegram_api.php';
 
 function main($argv) {
     if (count($argv) < 4) {
@@ -35,8 +36,8 @@ function main($argv) {
         pnotice("run cmd = '%s'\n", $cmd);
         $ret = run_cmd($cmd);
         if ($ret['rc']) {
-            run_cmd(sprintf("./telegram.php msg_send_all 'Неполучилось отключить охрану через SMS: %s'",
-                            $ret['log']));
+            $msg = sprintf("Неполучилось отключить охрану через SMS: %s", $ret['log']);
+            telegram_send_msg_admin($msg);
             return $ret['rc'];
         }
         break;
@@ -48,8 +49,8 @@ function main($argv) {
 
         $ret = run_cmd($cmd);
         if ($ret['rc']) {
-            run_cmd(sprintf("./telegram.php msg_send_all 'Неполучилось включить охрану через SMS: %s'",
-                            $ret['log']));
+            $msg = sprintf("Неполучилось включить охрану через SMS: %s", $ret['log']);
+            telegram_send_msg_admin($msg);
             return $ret['rc'];
         }
         break;

@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once 'common_lib.php';
 
 class Telegram_api {
     private $last_update_id;
@@ -123,3 +124,42 @@ class Telegram_api {
     }
 }
 
+function telegram()
+{
+    static $telegram = NULL;
+    if ($telegram)
+        return $telegram;
+
+    $telegram = new Telegram_api();
+    return $telegram;
+}
+
+
+function telegram_get_chats($type = NULL)
+{
+    $query = "SELECT * FROM telegram_chats WHERE enabled = 1 ";
+    $query .= $type ? sprintf("AND type = '%s'", $type) : '';
+    $list = db()->query_list($query);
+    return $list;
+}
+
+function telegram_send_msg_admin($text)
+{
+    $chat_list = telegram_get_chats('admin');
+    foreach ($chat_list as $chat)
+        telegram()->send_message($chat['chat_id'], $text);
+}
+
+function telegram_send_msg_alarm($text)
+{
+    $chat_list = telegram_get_chats('alarm');
+    foreach ($chat_list as $chat)
+        telegram()->send_message($chat['chat_id'], $text);
+}
+
+function telegram_send_msg($text)
+{
+    $chat_list = telegram_get_chats('messages');
+    foreach ($chat_list as $chat)
+        telegram()->send_message($chat['chat_id'], $text);
+}

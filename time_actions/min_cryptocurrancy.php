@@ -5,10 +5,10 @@ require_once '/usr/local/lib/php/common.php';
 require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'guard_lib.php';
-
+require_once 'telegram_api.php';
 
 function main($argv) {
-    $coins = ['BNB', 'ETH'];
+    $coins = ['ETH'];
     foreach ($coins as $coin) {
         $filename = sprintf(".crypto_currency_%s_threshold", strtolower($coin));
         @$threshold = (float)(file_get_contents($filename));
@@ -23,7 +23,8 @@ function main($argv) {
         if ($info['price'] < $threshold)
             continue;
 
-        telegram_send_admin('crypto_currancy', ['coin' => $coin, 'price' => $info['price']]);
+        $msg = sprintf("Цена на %s %f USDT", $coin, $info['price']);
+        telegram_send_msg_admin($msg);
         file_put_contents($filename, "");
     }
 

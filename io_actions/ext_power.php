@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'guard_lib.php';
+require_once 'telegram_api.php';
 
 
 function main($argv)
@@ -40,12 +41,11 @@ function main($argv)
             $msg = 'Питание на вводе восстановлено';
         else
             $msg = 'Питание на вводе отключено';
+        telegram_send_msg_admin($msg);
 
         db()->insert('ext_power_log',
                      ['state' => $port_state,
                       'type' => 'input']);
-
-        telegram_send_admin('ups_system', ['text' => $msg]);
         return 0;
     }
 
@@ -63,12 +63,11 @@ function main($argv)
             $msg = 'Питание ИБП восстановлено';
         else
             $msg = 'Питание ИБП отключено';
+        telegram_send_msg_admin($msg);
 
         db()->insert('ext_power_log',
                      ['state' => $port_state,
                       'type' => 'ups']);
-
-        telegram_send_admin('ups_system', ['text' => $msg]);
         return 0;
     }
 
@@ -77,7 +76,7 @@ function main($argv)
         if ($port_state)
             return 0;
         $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
-        telegram_send_admin('ups_system', ['text' => $msg]);
+        telegram_send_msg_admin($msg);
         return 0;
     }
 }

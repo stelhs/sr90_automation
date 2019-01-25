@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/common.php';
 require_once 'config.php';
 require_once 'common_lib.php';
 require_once 'guard_lib.php';
+require_once 'telegram_api.php';
 
 define("VOLTAGE_FILE_QUEUE", "/tmp/ups_batt_voltage_queue");
 define("CURRENT_FILE_QUEUE", "/tmp/ups_batt_current_queue");
@@ -61,8 +62,8 @@ function get_current_battery_info()
         $current = 0;
         perror("FAKE: get_battery_info() return voltage %.2fv, curent %.2fA\n", $voltage, $current);
         return ['status' => 'ok',
-            'voltage' => $voltage,
-            'current' => $current];
+                'voltage' => $voltage,
+                'current' => $current];
     }
 
     $content = file_get_contents(sprintf("http://%s:%d/battery",
@@ -106,9 +107,9 @@ function main($argv)
         return -1;
 
     if ($batt_info['status'] != 'ok') {
-        telegram_send_admin('ups_system',
-            ['error' => sprintf('get_battery_info() return %s, sbio1 go to reboot',
-                $batt_info['error_msg'])]);
+        $msg = sprintf("Error: get_battery_info() return %s, sbio1 go to reboot",
+                       $batt_info['error_msg']);
+        telegram_send_msg_admin($msg);
         @unlink(UPS_BATT_VOLTAGE_FILE);
         @unlink(UPS_BATT_CURRENT_FILE);
         reboot_sbio('sbio1');
