@@ -60,10 +60,10 @@ function main($argv)
             if (isset($argv[5]) && trim($argv[5]) == 'sms')
                 $with_sms = true;
 
+            player_start('sounds/unlock.wav');
+
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
-
-            player_start('sounds/unlock.wav', 90);
 
             pnotice("Guard stoped by %s\n", $method);
 
@@ -121,10 +121,10 @@ function main($argv)
             if (isset($argv[5]) && trim($argv[5]) == 'sms')
                 $with_sms = true;
 
+            player_start('sounds/lock.wav', 75);
+
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
-
-            player_start('sounds/lock.wav', 75);
 
             pnotice("Guard started by %s\n", $method);
 
@@ -244,8 +244,8 @@ function main($argv)
         }
 
         // send to Telegram
-        telegram_send_msg(sprintf("!!! Внимание, Тревога !!!\nСработала %s, событие: %d\n",
-                                  $args['zone'], $guard_action_id));
+        telegram_send_msg_alarm(sprintf("!!! Внимание, Тревога !!!\nСработала зона: '%s', событие: %d\n",
+                                        $zone['name'], $guard_action_id));
 
         // send photos
         $ret = run_cmd(sprintf("./image_sender.php alarm %d", $guard_action_id));

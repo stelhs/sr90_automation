@@ -40,7 +40,7 @@ function main($argv)
     $message = trim($argv[1]);
     $volume = isset($argv[2]) ? (int)$argv[2] : 100;
     $voice_type = isset($argv[3]) ? (int)$argv[3] : 1;
-    $speed = isset($argv[4]) ? (int)$argv[4] : -0.8;
+    $speed = isset($argv[4]) ? (int)$argv[4] : -0.7;
 
     switch ($voice_type) {
         case 1:
