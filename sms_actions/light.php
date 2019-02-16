@@ -7,8 +7,7 @@ require_once 'config.php';
 require_once 'guard_lib.php';
 require_once 'modem3g.php';
 require_once 'common_lib.php';
-
-$utility_name = $argv[0];
+require_once 'telegram_api.php';
 
 function main($argv) {
     if (count($argv) < 4) {
@@ -30,7 +29,7 @@ function main($argv) {
         $ret = run_cmd('./street_light.php enable');
         perror("enable light: %s\n", $ret['log']);
 
-        telegram_send('lighting_on');
+        telegram_send_msg_admin('Освещение включено(все зоны)');
         sms_send('lighting_on',
                  ['user_id' => $user_id,
                   'groups' => ['sms_observer']]);
@@ -39,7 +38,7 @@ function main($argv) {
     case "off":
         $ret = run_cmd('./street_light.php disable');
         perror("disable light: %s\n", $ret['log']);
-        telegram_send('lighting_off');
+        telegram_send_msg_admin('Освещение отключенно(все зоны)');
         sms_send('lighting_off',
                  ['user_id' => $user_id,
                   'groups' => ['sms_observer']]);

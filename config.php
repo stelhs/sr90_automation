@@ -189,9 +189,12 @@ function conf_ups()
             'full_current_enable_port' => ['io' => 'sbio1', 'out_port' => '5'],
             'discharge_enable_port' => ['io' => 'sbio1', 'out_port' => '7'],
             'external_input_power_port' => ['io' => 'sbio1', 'in_port' => '1'],
+            'external_ups_power_port' => ['io' => 'sbio1', 'in_port' => '6'],
             'stop_ups_power_port' => ['io' => 'sbio1', 'out_port' => '8'],
             'stop_ups_battery_port' => ['io' => 'sbio1', 'out_port' => '9'],
-           ];
+            'vdc_out_check_port' => ['io' => 'sbio1', 'in_port' => '4'],
+            'standby_check_port' => ['io' => 'sbio1', 'in_port' => '5'],
+    ];
 }
 
 

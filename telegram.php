@@ -7,26 +7,34 @@ require_once 'common_lib.php';
 
 require_once 'config.php';
 require_once 'telegram_api.php';
-$utility_name = $argv[0];
 define("MSG_LOG_LEVEL", LOG_NOTICE);
 
 function print_help()
 {
-    global $utility_name;
+    global $argv;
+    $utility_name = $argv[0];
     echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\tmsg_recv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_recv ./make_telegram_actions.php\n" .
+
              "\tmsg_send <chat_id> <message_text> - Send message\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send 186579253 'hello world'\n" .
-             "\tmsg_send_all <message_text> - Send message in all chats\n" .
+
+             "\tmsg_send_msg <message_text> - Send message in 'message' chats\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_send_all 'hello world'\n" .
-             "\tmsg_send_admin <message_text> - Send message in admin chat\n" .
+             "\t\t\t $utility_name msg_send_msg 'hello world'\n" .
+
+             "\tmsg_send_admin <message_text> - Send message in 'admin' chats\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send_admin 'hello world'\n" .
+
+             "\tmsg_send_admin <message_text> - Send message in 'alarm' chats\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name msg_send_alarm 'hello world'\n" .
+
              "\n\n";
 }
 
@@ -36,13 +44,11 @@ function main($argv)
     if (!isset($argv[1]))
         return -EINVAL;
 
-    $telegram = new Telegram_api();
-
     $cmd = strtolower(trim($argv[1]));
     switch ($cmd) {
     case 'msg_recv':
         set_time_limit(90); // set timeout 90 seconds
-        $list_msg = $telegram->get_new_messages();
+        $list_msg = telegram()->get_new_messages();
 
         if (!is_array($list_msg))
             return 0;
@@ -89,20 +95,27 @@ function main($argv)
         $chat_id = strtolower(trim($argv[2]));
         $msg = strtolower(trim($argv[3]));
 
-        $telegram->send_message($chat_id, $msg);
+        telegram()->send_message($chat_id, $msg);
         break;
 
-    case 'msg_send_all':
+    case 'msg_send_msg':
         if (!isset($argv[2])) {
             perror("incorrect params");
             return -EINVAL;
         }
 
         $msg = trim($argv[2]);
-        $chat_list = db()->query_list("SELECT * FROM telegram_chats WHERE enabled = 1");
-        foreach ($chat_list as $row)
-            $telegram->send_message($row['chat_id'], $msg);
+        telegram_send_msg($msg);
+        break;
 
+    case 'msg_send_alarm':
+        if (!isset($argv[2])) {
+            perror("incorrect params");
+            return -EINVAL;
+        }
+
+        $msg = trim($argv[2]);
+        telegram_send_msg_alarm($msg);
         break;
 
     case 'msg_send_admin':
@@ -112,8 +125,7 @@ function main($argv)
         }
 
         $msg = trim($argv[2]);
-        $chat_id = telegram_get_admin_chat_id();
-        $telegram->send_message($chat_id, $msg);
+        telegram_send_msg_admin($msg);
         break;
 
 

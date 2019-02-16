@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
 require_once 'modem3g.php';
+require_once 'telegram_api.php';
 
 
 function print_help()
@@ -42,9 +43,9 @@ function main($argv)
         perror("scp to sr38.org: %s\n", $ret['log']);
 
         foreach (conf_guard()['video_cameras'] as $cam) {
-            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg'",
-                                   $cam['id'], $alarm_id, $cam['id']));
-            perror("send URL to telegram: %s\n", $ret['log']);
+            $msg = sprintf("Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg",
+                           $cam['id'], $alarm_id, $cam['id']);
+            telegram_send_msg_alarm($msg);
         }
         goto out;
 
@@ -54,22 +55,21 @@ function main($argv)
         $ret = json_decode($content, true);
         if ($ret === NULL) {
             $rc = -1;
-            run_cmd(sprintf("./telegram.php msg_send_admin 'Не удалось получить изображение с камер: %s'",
-                                   $content));
-            perror("can't getting images: %s\n", $ret);
+            $msg = sprintf("Не удалось получить изображение с камер: %s",
+                           $content);
+            telegram_send_msg_admin($msg);
+            perror("can't getting images\n");
             goto out;
         }
 
         foreach ($ret as $cam_num => $file) {
             if ($chat_id) {
-                $ret = run_cmd(sprintf("./telegram.php msg_send %d 'Камера %d:\n %s'",
-                                       $chat_id, $cam_num, $file));
-                perror("send URL to telegram: %s\n", $ret['log']);
+                $msg = sprintf("Камера %d:\n %s", $cam_num, $file);
+                telegram()->send_message($chat_id, $msg);
                 continue;
             }
-            $ret = run_cmd(sprintf("./telegram.php msg_send_all 'Камера %d:\n %s'",
-                                   $cam_num, $file));
-            perror("send URL to telegram: %s\n", $ret['log']);
+            $msg = sprintf("Камера %d:\n %s", $cam_num, $file);
+            telegram_send_msg($msg);
         }
         goto out;
 

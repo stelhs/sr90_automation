@@ -5,6 +5,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 require_once 'config.php';
 require_once 'common_lib.php';
+require_once 'telegram_api.php';
 
 define("SMS_ACTIONS_DIR", "sms_actions/");
 
@@ -58,8 +59,8 @@ function main($argv) {
                                    'text' => $sms_text,
                                    'received_date' => $sms_date]);
 
-    run_cmd(sprintf("./telegram.php msg_send_all 'Поступило входящее SMS сообщение от %s: %s'",
-                    $phone, $sms_text));
+    $msg = sprintf("SMS: от %s: %s", $phone, $sms_text);
+    telegram_send_msg_admin($msg);
     $words = string_to_words($sms_text);
     if (!$words)
         return -EINVAL;

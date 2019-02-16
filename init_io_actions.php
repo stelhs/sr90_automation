@@ -27,6 +27,7 @@ function subscribers_get_list()
 
 function main($argv)
 {
+    chdir(dirname($argv[0]));
     $list_subscribers = subscribers_get_list();
     if (!count($list_subscribers)) {
         perror("subscribers not found\n");

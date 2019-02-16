@@ -9,12 +9,13 @@ require_once 'common_lib.php';
 require_once 'httpio_lib.php';
 require_once 'guard_lib.php';
 require_once 'player_lib.php';
+require_once 'telegram_api.php';
 
-$utility_name = $argv[0];
 
 function print_help()
 {
-    global $utility_name;
+    global $argv;
+    $utility_name = $argv[0];
     echo "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t state: set guard state. Args: sleep/ready, method, user_id, [sms]\n" .
@@ -59,10 +60,10 @@ function main($argv)
             if (isset($argv[5]) && trim($argv[5]) == 'sms')
                 $with_sms = true;
 
+            player_start('sounds/unlock.wav');
+
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
-
-            player_start('sounds/unlock.wav', 90);
 
             pnotice("Guard stoped by %s\n", $method);
 
@@ -90,9 +91,9 @@ function main($argv)
 
             $stat_text = format_global_status_for_sms(get_global_status());
             perror("Guard set sleep\n");
+            telegram_send_msg(sprintf("Охрана отключена, отключил %s с помощью %s.",
+                                      $user['name'], $method));
 
-            telegram_send('guard_disable', ['user' => $user['name'],
-                                            'method' => $method]);
             run_cmd(sprintf("./image_sender.php current"));
 
             if ($method == 'cli') {
@@ -120,10 +121,10 @@ function main($argv)
             if (isset($argv[5]) && trim($argv[5]) == 'sms')
                 $with_sms = true;
 
+            player_start('sounds/lock.wav', 75);
+
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
-
-            player_start('sounds/lock.wav', 75);
 
             pnotice("Guard started by %s\n", $method);
 
@@ -183,8 +184,9 @@ function main($argv)
             $stat_text = format_global_status_for_sms(get_global_status());
             perror("Guard set ready\n");
 
-            telegram_send('guard_enable', ['user' => $user['name'],
-                                           'method' => $method]);
+            telegram_send_msg(sprintf("Охрана включена, включил %s с помощью %s.",
+                                      $user['name'], $method));
+
             run_cmd(sprintf("./image_sender.php current"));
 
             if ($method == 'cli') {
@@ -242,8 +244,8 @@ function main($argv)
         }
 
         // send to Telegram
-        telegram_send('alarm', ['zone' => $zone['name'],
-                                'action_id' => $guard_action_id]);
+        telegram_send_msg_alarm(sprintf("!!! Внимание, Тревога !!!\nСработала зона: '%s', событие: %d\n",
+                                        $zone['name'], $guard_action_id));
 
         // send photos
         $ret = run_cmd(sprintf("./image_sender.php alarm %d", $guard_action_id));
