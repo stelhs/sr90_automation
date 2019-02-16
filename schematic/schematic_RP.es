@@ -684,17 +684,27 @@
       "id": 25,
       "p1": 4174,
       "p2": 3900
+    },
+    {
+      "id": 138,
+      "p1": 4291,
+      "p2": 4300
+    },
+    {
+      "id": 139,
+      "p1": 4290,
+      "p2": 4301
     }
   ],
   "header": {
     "app": "Electro Schematic editor",
     "version": 1,
     "viewCenter": {
-      "x": 1070.4,
-      "y": 715.2
+      "x": 1002.4000000000001,
+      "y": 358.40000000000003
     },
     "viewPage": 8,
-    "viewZoom": 125.0
+    "viewZoom": 125
   },
   "pages": [
     {
@@ -30834,7 +30844,7 @@
           "id": 3897,
           "mountPoint": {
             "x": 1280.0,
-            "y": 840.0
+            "y": 940.0
           },
           "name": "",
           "penStyle": "solid",
@@ -30876,7 +30886,7 @@
           "id": 3900,
           "mountPoint": {
             "x": 1300.0,
-            "y": 840.0
+            "y": 940.0
           },
           "name": "",
           "penStyle": "solid",
@@ -35109,6 +35119,174 @@
           "thickness": 2,
           "type": "link",
           "zIndex": null
+        },
+        {
+          "id": 4286,
+          "mountPoint": {
+            "x": 1300.0,
+            "y": 840.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 100.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4288,
+          "mountPoint": {
+            "x": 1280.0,
+            "y": 940.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": -100.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4290,
+          "mountPoint": {
+            "x": 1240.0,
+            "y": 940.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": 20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4291,
+          "mountPoint": {
+            "x": 1220.0,
+            "y": 940.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "id": 4293,
+          "mountPoint": {
+            "x": 1300.0,
+            "y": 880.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -60.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4294,
+          "mountPoint": {
+            "x": 1240.0,
+            "y": 880.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 60.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4296,
+          "mountPoint": {
+            "x": 1280.0,
+            "y": 860.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": -60.0,
+            "y": 0.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4297,
+          "mountPoint": {
+            "x": 1220.0,
+            "y": 860.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 80.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
         }
       ],
       "name": "Панель 2",
@@ -46509,7 +46687,7 @@
           "penStyle": "solid",
           "rectSize": {
             "h": 40,
-            "w": 80.0
+            "w": 120.0
           },
           "text": "Наличие\n250VDC",
           "thickness": 2,
@@ -46548,7 +46726,7 @@
           },
           "id": 4160,
           "mountPoint": {
-            "x": 800.0,
+            "x": 840.0,
             "y": 40.0
           },
           "name": "",
@@ -46578,7 +46756,7 @@
           "penStyle": "dotLine",
           "rectSize": {
             "h": 60.0,
-            "w": 120.0
+            "w": 180.0
           },
           "thickness": 1,
           "type": "rectangle",
@@ -48063,6 +48241,136 @@
             "w": 40.0
           },
           "text": "100n",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "angle": 90,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4299,
+          "mountPoint": {
+            "x": 940.0,
+            "y": 220.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40.0,
+            "w": 20
+          },
+          "text": "160K",
+          "thickness": 2,
+          "type": "text",
+          "zIndex": 3
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4300,
+          "mountPoint": {
+            "x": 940.0,
+            "y": 200.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "arrowPoint": {
+            "x": 0.0,
+            "y": -20.0
+          },
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4301,
+          "mountPoint": {
+            "x": 960.0,
+            "y": 200.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "link",
+          "zIndex": null
+        },
+        {
+          "id": 4303,
+          "mountPoint": {
+            "x": 940.0,
+            "y": 200.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": 60.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "id": 4305,
+          "mountPoint": {
+            "x": 960.0,
+            "y": 260.0
+          },
+          "name": "",
+          "p1": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "p2": {
+            "x": 0.0,
+            "y": -60.0
+          },
+          "penStyle": "solid",
+          "thickness": 2,
+          "type": "line",
+          "typeLine": "trace",
+          "zIndex": 2
+        },
+        {
+          "angle": 0,
+          "color": {
+            "B": 200,
+            "G": 0,
+            "R": 0
+          },
+          "id": 4307,
+          "mountPoint": {
+            "x": 920.0,
+            "y": 60.0
+          },
+          "name": "",
+          "penStyle": "solid",
+          "rectSize": {
+            "h": 40,
+            "w": 80.0
+          },
+          "text": "Наличие\n220VAC",
           "thickness": 2,
           "type": "text",
           "zIndex": 3
