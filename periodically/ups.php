@@ -137,9 +137,8 @@ function switch_mode_to_ready($batt_info)
 
 function switch_mode_to_stage4($batt_info)
 {
-    switch_to_charge();
     set_low_current_charge();
-    enable_charge();
+    switch_to_charge();
     file_put_contents(CHARGER_STAGE_FILE, 'charge_stage4');
     $msg = sprintf('Напряжение на АКБ снизилось до %.2fv, ' .
                    'включился капельный дозаряд до 14.4v',
