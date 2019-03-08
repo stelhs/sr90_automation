@@ -197,4 +197,9 @@ function conf_ups()
     ];
 }
 
+function conf_water()
+{
+    return ['well_pump_enable_port' => ['io' => 'sbio1', 'out_port' => 10]];
+}
+
 

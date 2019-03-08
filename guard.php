@@ -123,6 +123,8 @@ function main($argv)
 
             player_start('sounds/lock.wav', 75);
 
+            run_cmd(sprintf("./well_pump.php disable"));
+
             $user = user_get_by_id($user_id);
             $user_name = $user['name'];
 
