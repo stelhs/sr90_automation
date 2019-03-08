@@ -523,9 +523,10 @@ function get_padlocks_stat()
     return $report;
 }
 
+define("TEMPERATURES_FILE", "/tmp/temperatures");
 function get_termosensors_stat()
 {
-    $query = 'SELECT sensor_name, temperaure FROM `termo_sensors_log` LEFT JOIN ' .
+    $query = 'SELECT sensor_name, temperature FROM `termo_sensors_log` LEFT JOIN ' .
                  '(SELECT sensor_name, MAX(id) as max '.
                         'FROM `termo_sensors_log` GROUP BY sensor_name) as s ' .
              'USING (sensor_name) WHERE ' .
@@ -541,7 +542,9 @@ function get_termosensors_stat()
         if (!isset(conf_termo_sensors()[$row['sensor_name']]))
             continue;
         $list[] = ['name' => conf_termo_sensors()[$row['sensor_name']],
-                   'value' => $row['temperaure']];
+                   'value' => $row['temperature'],
+                   'sensor_name' => $row['sensor_name'],
+        ];
     }
     return $list;
 }

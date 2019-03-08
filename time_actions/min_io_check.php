@@ -40,7 +40,7 @@ function main($argv) {
             foreach ($sensors as $sensor) {
                 db()->insert('termo_sensors_log', ['io_name' => $io_name,
                                                    'sensor_name' => $sensor['name'],
-                                                   'temperaure' => $sensor['temperature']]);
+                                                   'temperature' => $sensor['temperature']]);
             }
         }
 

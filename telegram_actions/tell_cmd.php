@@ -32,8 +32,12 @@ function main($argv) {
             return 0;
     }
 
-    $ret = run_cmd(sprintf("./text_spech.php '%s'", $cmd));
-    $telegram->send_message($chat_id, sprintf("По громкоговорителю было озвученно сообщение:\n%s\n", $cmd), $msg_id);
+    run_cmd(sprintf("./text_spech.php '%s'", $cmd));
+    $telegram->send_message($chat_id, sprintf("По громкоговорителю озвучивается сообщение: '%s'.\n" .
+                                              "Ожидайте пару минут видео-звукозапись сообщения и реакции окружающих.", $cmd), $msg_id);
+
+
+    run_cmd(sprintf("./video_sender.php by_timestamp %d 10 1,2 %d", time(), $chat_id));
     return 0;
 }
 
