@@ -33,14 +33,14 @@ function main($argv)
         return;
 
     $ret = run_cmd("./well_pump.php duration");
-    $enable_time = trim($ret['log']);
-    if (!$enable_time) {
+    $duration = trim($ret['log']);
+    if (!$duration) {
         run_cmd(sprintf("./well_pump.php enable"));
         telegram_send_msg_admin("Подача воды включена");
         return;
     }
 
-    if (time() - $enable_time < 3)
+    if ($duration < 3)
         return;
 
     run_cmd("./well_pump.php disable");
