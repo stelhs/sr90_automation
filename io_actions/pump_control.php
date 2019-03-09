@@ -36,6 +36,7 @@ function main($argv)
     $enable_time = trim($ret['log']);
     if (!$enable_time) {
         run_cmd(sprintf("./well_pump.php enable"));
+        telegram_send_msg_admin("Подача воды включена");
         return;
     }
 
@@ -43,6 +44,7 @@ function main($argv)
         return;
 
     run_cmd("./well_pump.php disable");
+    telegram_send_msg_admin("Подача воды отключена");
 }
 
 exit(main($argv));
