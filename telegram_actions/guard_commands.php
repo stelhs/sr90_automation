@@ -58,10 +58,10 @@ function main($argv) {
             		"Неполучилось. Причина:\n" . $ret['log'], $msg_id);
 
         if ($lock) {
-            // close all padlocks
-            $ret = run_cmd('./padlock.php close');
+            // close all padlocks except 'Кунг'
+            $ret = run_cmd('./padlock.php close 1 3 4');
             perror("close all padlocks: %s\n", $ret['log']);
-            $telegram->send_message($chat_id, "все замки закрыла\n", $msg_id);
+            $telegram->send_message($chat_id, "все замки закрыла кроме кунга\n", $msg_id);
         }
         break;
     }

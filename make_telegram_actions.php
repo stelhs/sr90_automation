@@ -17,26 +17,32 @@ $commands = [
                 ['cmd' => ['отключи охрану', 'выключи охрану', 'guard off'],
                  'script' => 'guard_commands.php', 'args' => 'off'],
 
-                ['cmd' => ['отключи охрану замки не открывай'],
+                ['cmd' => ['отключи охрану для строителей'],
                  'script' => 'guard_commands.php', 'args' => 'off lock', 'wr' => 1],
 
-                ['cmd' => ['открой замок кунга'],
+                ['cmd' => ['открой замок РП'],
                  'script' => 'padlock_commands.php', 'args' => 'open 1'],
 
-                ['cmd' => ['закрой замок кунга'],
+                ['cmd' => ['закрой замок РП'],
                  'script' => 'padlock_commands.php', 'args' => 'close 1', 'wr' => 1],
 
+                ['cmd' => ['открой замок кунга'],
+                    'script' => 'padlock_commands.php', 'args' => 'open 2'],
+
+                ['cmd' => ['закрой замок кунга'],
+                    'script' => 'padlock_commands.php', 'args' => 'close 2', 'wr' => 1],
+
                 ['cmd' => ['открой замок малого контейнера'],
-                 'script' => 'padlock_commands.php', 'args' => 'open 2'],
-
-                ['cmd' => ['закрой замок малого контейнера'],
-                 'script' => 'padlock_commands.php', 'args' => 'close 2', 'wr' => 1],
-
-                ['cmd' => ['открой замок синего контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'open 3'],
 
-                ['cmd' => ['закрой замок синего контейнера'],
+                ['cmd' => ['закрой замок малого контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'close 3', 'wr' => 1],
+
+                ['cmd' => ['открой замок синего контейнера'],
+                 'script' => 'padlock_commands.php', 'args' => 'open 4'],
+
+                ['cmd' => ['закрой замок синего контейнера'],
+                 'script' => 'padlock_commands.php', 'args' => 'close 4', 'wr' => 1],
 
                 ['cmd' => ['закрой замки'],
                  'script' => 'padlock_commands.php', 'args' => 'close', 'wr' => 1],
