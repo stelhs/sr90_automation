@@ -39,7 +39,7 @@ function main($argv)
         return;
     }
 
-    if (time() - $enable_time < 1)
+    if (time() - $enable_time < 3)
         return;
 
     run_cmd("./well_pump.php disable");
