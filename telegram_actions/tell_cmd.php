@@ -37,7 +37,7 @@ function main($argv) {
                                               "Ожидайте пару минут видео-звукозапись сообщения и реакции окружающих.", $cmd), $msg_id);
 
 
-    run_cmd(sprintf("./video_sender.php by_timestamp %d 10 1,2 %d", time(), $chat_id));
+    run_cmd(sprintf("./video_sender.php by_timestamp %d 15 1,2 %d", time(), $chat_id));
     return 0;
 }
 
