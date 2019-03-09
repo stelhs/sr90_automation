@@ -18,8 +18,8 @@ function print_help()
                  "\t\t\texample: $utility_name relay_set usio1 4 1\n" .
                  "\t\t relay_get: get relay state. Args: <io_name> <port_num>\n" .
                  "\t\t\texample: $utility_name relay_get usio1 3\n" .
-                 "\t\t input: get input state. Args: <io_name> <port_num>\n" .
-                 "\t\t\texample: $utility_name input usio1 3\n" .
+                 "\t\t input_get: get input state. Args: <io_name> <port_num>\n" .
+                 "\t\t\texample: $utility_name input_get usio1 3\n" .
                  "\t\t make_action: Generate I/O action. Args: <io_name> <port_num> <port_state>\n" .
                  "\t\t\texample: $utility_name make_action usio1 2 0\n" .
 
@@ -72,58 +72,69 @@ function main($argv)
         return 0;
 
     case 'relay_get':
-        if (!isset($argv[3])) {
+        if (!isset($argv[2])) {
             perror("Invalid arguments: command arguments is not set\n");
             return -EINVAL;
         }
 
         $io_name = $argv[2];
-        $port = $argv[3];
+        @$port = (int)$argv[3];
 
         if (!isset(conf_io()[$io_name])) {
             perror("Board name %s is not found\n", $io_name);
             return -EINVAL;
         }
 
-        if ($port < 1 || $port > conf_io()[$io_name]['out_ports']) {
+        $total_out_cnt = conf_io()[$io_name]['out_ports'];
+        if ($port && $port > $total_out_cnt) {
             perror("Invalid arguments: port is not correct. port > 0 and port <= %d\n",
                 conf_io()[$io_name]['out_ports']);
             return -EINVAL;
         }
 
-        $rc = httpio($io_name)->relay_get_state($port);
-        if ($rc < 0) {
-            perror("Can't get relay state\n");
+        for ($p = 1; $p <= $total_out_cnt; $p++) {
+            if ($port && $port != $p)
+                continue;
+            $rc = httpio($io_name)->relay_get_state($p);
+            if ($rc < 0) {
+                perror("Can't get output state for port %d\n", $p);
+                continue;
+            }
+            perror("%s: out %d = %d\n", $io_name, $p, $rc);
         }
-        perror("Relay port %d = %d\n", $port, $rc);
         return 0;
 
-    case 'input':
-        if (!isset($argv[3])) {
+    case 'input_get':
+        if (!isset($argv[2])) {
             perror("Invalid arguments: command arguments is not set\n");
             return -EINVAL;
         }
 
         $io_name = $argv[2];
-        $port = $argv[3];
+        @$port = (int)$argv[3];
 
         if (!isset(conf_io()[$io_name])) {
             perror("Board name %s is not found\n", $io_name);
             return -EINVAL;
         }
 
-
-        if ($port < 1 || $port > conf_io()[$io_name]['in_ports']) {
+        $total_in_cnt = conf_io()[$io_name]['in_ports'];
+        if ($port && $port > $total_in_cnt) {
             perror("Invalid arguments: port is not correct. port > 0 and port <= %d\n",
                 conf_io()[$io_name]['in_ports']);
             return -EINVAL;
         }
 
-        $rc = httpio($io_name)->input_get_state($port);
-        if ($rc < 0) {
-            perror("Can't get input state\n");
+        for ($p = 1; $p <= $total_in_cnt; $p++) {
+            if ($port && $port != $p)
+                continue;
+                $rc = httpio($io_name)->input_get_state($p);
+                if ($rc < 0) {
+                    perror("Can't get output state for port %d\n", $p);
+                    continue;
+                }
+                perror("%s: in %d = %d\n", $io_name, $p, $rc);
         }
-        perror("Input port %d = %d\n", $port, $rc);
         return 0;
 
     case 'wdt_on':
