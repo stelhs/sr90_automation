@@ -24,8 +24,8 @@ function main($argv)
 
     $guard_state = get_guard_state();
     if ($guard_state['state'] == 'ready') {
+        run_cmd("./image_sender.php current", TRUE);
         telegram_send_msg("Ктото нажал на кнопку подачи воды");
-        run_cmd("./image_sender.php current");
         return;
     }
 
@@ -40,7 +40,7 @@ function main($argv)
         return;
     }
 
-    if ($duration < 3)
+    if ($duration < 5)
         return;
 
     run_cmd("./well_pump.php disable");
