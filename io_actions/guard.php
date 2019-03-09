@@ -185,7 +185,7 @@ function main($argv)
         $ret = db()->query(sprintf("SELECT id FROM guard_actions " .
                                    "WHERE id = %d " .
                                        "AND (created + interval %d second) > now() ",
-                                   $alarm_id, $alarm_zone['alarm_time']));
+                                   $alarm_id, $alarm_zone['alarm_time'] * 2));
         if (isset($ret['id'])) {
             pnotice("alarm was ignored because system already in alarm state\n");
             return 0;
