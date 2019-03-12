@@ -22,15 +22,15 @@ function main($argv)
     printf("port = %s\n", $port);
     printf("port_state = %s\n", $port_state);
 
+    if ($io_name != 'sbio1' || $port != 7 || $port_state != 1)
+        return;
+
     $guard_state = get_guard_state();
     if ($guard_state['state'] == 'ready') {
         run_cmd("./image_sender.php current", TRUE);
         telegram_send_msg("Ктото нажал на кнопку подачи воды");
         return;
     }
-
-    if ($io_name != 'sbio1' || $port != 7 || $port_state != 1)
-        return;
 
     $ret = run_cmd("./well_pump.php duration");
     $duration = trim($ret['log']);
