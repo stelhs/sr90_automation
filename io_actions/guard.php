@@ -58,6 +58,13 @@ function main($argv)
         return 0;
     $zone = $ret;
 
+    // check for sensor is lock
+    $zone_locking_mode = get_zone_locking_mode($zone['id']);
+    if ($zone_locking_mode == 'lock') {
+        printf("zone %d is locked\n", $zone['id']);
+        return 0;
+    }
+
     // define normal state for current port
     $normal_state = -1;
     foreach ($zone['sensors'] as $row)
@@ -135,13 +142,6 @@ function main($argv)
         $ret = run_cmd(sprintf("./street_light.php enable %d",
                                $light_interval));
         pnotice("street_light return: %s\n", $ret['log']);
-    }
-
-    // check for sensor is lock
-    $zone_locking_mode = get_zone_locking_mode($zone['id']);
-    if ($zone_locking_mode == 'lock') {
-        printf("zone %d is locked\n", $zone['id']);
-        return 0;
     }
 
     // store guard action
