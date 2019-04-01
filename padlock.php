@@ -53,7 +53,7 @@ function main($argv)
         foreach (conf_padlocks() as $row) {
             $found = FALSE;
             foreach ($padlock_nums as $num) {
-                if ($num == $row['num']) {
+                if ($num == $row['num'] || $num == 0) {
                     $found = TRUE;
                     break;
                 }
@@ -67,7 +67,7 @@ function main($argv)
                 perror("Can't set relay state %d\n", $row['io_port']);
         }
         if (!$ok) {
-            perror("Incorrect padlock number %d\n", $padlock_num);
+            perror("Incorrect padlock numbers\n");
             return -EINVAL;
         }
         return 0;
