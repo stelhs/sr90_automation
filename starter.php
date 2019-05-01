@@ -46,7 +46,8 @@ function main($argv)
 
     $end_time = time() + $timeout;
     pnotice("timeout = %d\n", $timeout);
-    while (time() < $end_time);
+    while (time() < $end_time)
+        sleep(1);
     pnotice("kill %d\n", $pid);
     run_cmd(sprintf('pkill -9 -P %d', $pid));
     posix_kill($pid, SIGKILL);
