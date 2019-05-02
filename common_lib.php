@@ -586,6 +586,9 @@ function get_battery_info()
     if ($current === FALSE)
         return null;
 
+    if ($voltage == 0)
+        return null;
+
     return ['voltage' => $voltage,
             'current' => $current];
 }
