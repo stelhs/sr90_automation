@@ -84,16 +84,18 @@ function conf_guard()
                                                    'port' => 2,
                                                   'normal_state' => 1]]
                                 ],
-
-/*                                ['id' => '3',
-                                 'name' => 'Датчик двери Кунга',
-                                 'diff_interval' => 10,
-                                 'alarm_time' => 300,
-                                 'run_lighter' => 1,
-                                 'sensors' => [['io' => 'usio1',
-                                                'port' => 5,
-                                                'normal_state' => 1]]
-                                ]*/
+                                ['id' => '6',
+                                    'name' => 'Угол',
+                                    'diff_interval' => 10,
+                                    'alarm_time' => 60,
+                                    'run_lighter' => 1,
+                                    'sensors' => [['io' => 'sbio2',
+                                                   'port' => 3,
+                                                   'normal_state' => 1],
+                                                  ['io' => 'sbio2',
+                                                   'port' => 4,
+                                                  'normal_state' => 1]]
+                                ],
                                ],
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
@@ -115,7 +117,12 @@ function conf_guard()
                                       ['id' => 3,
                                        'name' => "03-Kamera_3",
                                        'v4l_dev' => '/dev/video16',
-                                       'resolution' => '1920:1080']
+                                       'resolution' => '1920:1080'],
+                                     ['id' => 4,
+                                         'name' => "04-Kamera_4",
+                                         'v4l_dev' => '/dev/video17',
+                                         'resolution' => '1280:1024']
+
                  ],
                  'remote_control_sleep' => ['io' => 'sbio1', 'port' => 2],
                  'remote_control_ready' => ['io' => 'sbio1', 'port' => 3],
