@@ -9,7 +9,7 @@ require_once 'common_lib.php';
 function main($argv) {
     $ret = run_cmd("./well_pump.php duration");
     $duration = trim($ret['log']);
-    if ($duration < (3 * 60))
+    if ($duration < (10 * 60))
         return 0;
 
     run_cmd("./well_pump.php disable");
