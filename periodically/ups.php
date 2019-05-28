@@ -342,7 +342,7 @@ function main($argv)
         else if ($mode == 'discharge' && $switch_interval > 30)
             switch_to_charge();
 
-        if ($voltage <= 15.2)
+        if ($voltage <= 15.1)
             return 0;
 
         switch_mode_to_ready($batt_info);
