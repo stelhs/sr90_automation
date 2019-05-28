@@ -66,7 +66,13 @@ $commands = [
                  'script' => 'ups.php', 'args' => 'start_test'],
 
                 ['cmd' => ['останови проверку ибп', 'stop test ups'],
-                 'script' => 'ups.php', 'args' => 'stop_test'],
+                 'script' => 'ups.php', 'args' => 'stop_test', 'wr' => 1],
+
+                ['cmd' => ['переключи на основной модем', 'modem 2'],
+                 'script' => 'modem.php', 'args' => 'modem_2'],
+
+                ['cmd' => ['переключи на вспомогательный модем', 'modem 1'],
+                 'script' => 'modem.php', 'args' => 'modem_1'],
 
 ];
 
