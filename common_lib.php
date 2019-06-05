@@ -524,17 +524,15 @@ function get_padlocks_stat()
 }
 
 define("TEMPERATURES_FILE", "/tmp/temperatures");
+define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
 function get_termosensors_stat()
 {
-    $query = 'SELECT sensor_name, temperature FROM `termo_sensors_log` LEFT JOIN ' .
-                 '(SELECT sensor_name, MAX(id) as max '.
-                        'FROM `termo_sensors_log` GROUP BY sensor_name) as s ' .
-             'USING (sensor_name) WHERE ' .
-                    'termo_sensors_log.id >= s.max AND ' .
-                    'created > now() - INTERVAL 2 MINUTE';
+    @$content = file_get_contents(CURRENT_TEMPERATURES_FILE);
+    if (!$content)
+        return [];
 
-    $rows = db()->query_list($query);
-    if (!is_array($rows) || !count($rows))
+    @$rows = json_decode($content, true);
+    if (!$rows || !is_array($rows))
         return [];
 
     $list = [];

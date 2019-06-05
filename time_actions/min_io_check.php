@@ -7,6 +7,7 @@ require_once 'common_lib.php';
 require_once 'telegram_api.php';
 
 function main($argv) {
+    $temperatures = [];
     foreach(conf_io() as $io_name => $io_data) {
         if ($io_name == 'usio1')
             continue;
@@ -38,9 +39,11 @@ function main($argv) {
         if (isset($response['termo_sensors'])) {
             $sensors = $response['termo_sensors'];
             foreach ($sensors as $sensor) {
-                db()->insert('termo_sensors_log', ['io_name' => $io_name,
-                                                   'sensor_name' => $sensor['name'],
-                                                   'temperature' => $sensor['temperature']]);
+                $row = ['io_name' => $io_name,
+                           'sensor_name' => $sensor['name'],
+                           'temperature' => $sensor['temperature']];
+                db()->insert('termo_sensors_log', $sensor);
+                $temperatures[] = $row;
             }
         }
 
@@ -53,6 +56,7 @@ function main($argv) {
             }
         }
     }
+    file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
 
     return 0;
 }
