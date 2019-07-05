@@ -638,15 +638,10 @@ function is_halt_all_systems()
 function get_power_states()
 {
     $power = [];
-    $row = db()->query('SELECT state FROM ext_power_log ' .
-                       'WHERE type = "input" ' .
-                       'ORDER BY id DESC LIMIT 1');
-    $power['input'] = $row['state'];
-
-    $row = db()->query('SELECT state FROM ext_power_log ' .
-                       'WHERE type = "ups" ' .
-                       'ORDER BY id DESC LIMIT 1');
-    $power['ups'] = $row['state'];
+    $external_input_power_port = httpio_port(conf_ups()['external_input_power_port']);
+    $external_ups_power_port = httpio_port(conf_ups()['external_ups_power_port']);
+    $power['input']= $external_input_power_port->get();
+    $power['ups'] = $external_ups_power_port->get();
     return $power;
 }
 
