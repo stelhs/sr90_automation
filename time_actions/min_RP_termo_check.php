@@ -6,7 +6,7 @@ require_once 'config.php';
 require_once 'common_lib.php';
 
 function main($argv) {
-    $fan_io = 'sbio1';
+    $fan_io = 'usio1';
     $fan_port = 7;
 
     $list = get_termosensors_stat();
@@ -14,7 +14,7 @@ function main($argv) {
         if ($row['sensor_name'] != "28-00000a5ecf0b")
             continue;
 
-        $fan_state = httpio($fan_io)->relay_get_state($fan_port);
+	$fan_state = httpio($fan_io)->relay_get_state($fan_port);
 
         if ($row['value'] < 33) {
             if ($fan_state)
