@@ -174,10 +174,15 @@ function main($argv)
     }
 
     $power_states = get_power_states();
-    $ups_power_state = $power_states['ups'];
-    $input_power_state = $power_states['input'];
+    $ups_power_state = isset($power_states['ups']) ? $power_states['ups'] : -1;
+    $input_power_state = isset($power_states['input']) ? $power_states['input'] : -1;
     printf("current_ups_power_state = %d\n", $ups_power_state);
     printf("current_input_power_state = %d\n", $input_power_state);
+
+    if ($ups_power_state < 0 || $input_power_state < 0) {
+        perror("incorrect ups_power_state or input_power_state\n");
+        return -1;
+    }
 
     // check for external power is absent
     @$prev_state = file_get_contents(EXT_POWER_STATE_FILE);

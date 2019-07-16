@@ -640,8 +640,14 @@ function get_power_states()
     $power = [];
     $external_input_power_port = httpio_port(conf_ups()['external_input_power_port']);
     $external_ups_power_port = httpio_port(conf_ups()['external_ups_power_port']);
-    $power['input']= $external_input_power_port->get();
-    $power['ups'] = $external_ups_power_port->get();
+    $input_state = $external_input_power_port->get();
+    $ups_state = $external_ups_power_port->get();
+
+    if ($input_state >= 0)
+        $power['input'] = $input_state;
+
+    if ($ups_state >= 0)
+        $power['ups'] = $ups_state;
     return $power;
 }
 
