@@ -71,12 +71,14 @@ function get_current_battery_info()
         conf_io()['sbio1']['tcp_port']));
     if (!$content)
         return ['status' => 'error',
-            'error_msg' => sprintf('Can`t response from sbio1')];
+                'error' => "no_io",
+                'error_msg' => sprintf('Can`t response from sbio1')];
 
     $ret_data = json_decode($content, true);
     if (!$ret_data)
         return ['status' => 'error',
-            'error_msg' => sprintf('Can`t decoded battery info: %s', $content)];
+                'error' => "no_batt",
+                'error_msg' => sprintf('Can`t decoded battery info: %s', $content)];
 
     if ($ret_data['status'] != 'ok')
         return ['status' => $ret_data['status'],
@@ -107,12 +109,17 @@ function main($argv)
         return -1;
 
     if ($batt_info['status'] != 'ok') {
-        $msg = sprintf("Error: get_battery_info() return %s, sbio1 go to reboot",
-                       $batt_info['error_msg']);
-        telegram_send_msg_admin($msg);
-        @unlink(UPS_BATT_VOLTAGE_FILE);
-        @unlink(UPS_BATT_CURRENT_FILE);
-        reboot_sbio('sbio1');
+        if (isset($batt_info['error'])) {
+            if ($batt_info['error'] == 'no_io')
+                return -1;
+
+            $msg = sprintf("Error: get_battery_info() return %s, sbio1 go to reboot",
+                $batt_info['error_msg']);
+            telegram_send_msg_admin($msg);
+            @unlink(UPS_BATT_VOLTAGE_FILE);
+            @unlink(UPS_BATT_CURRENT_FILE);
+            reboot_sbio('sbio1');
+        }
         return -1;
     }
 

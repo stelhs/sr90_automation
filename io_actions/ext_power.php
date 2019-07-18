@@ -43,12 +43,10 @@ function main($argv)
         case 0:
             $msg = 'Питание на вводе отключено';
         default:
-            $msg = NULL;
+            return 0;
         }
 
-        if ($msg)
-            telegram_send_msg_admin($msg);
-
+        telegram_send_msg_admin($msg);
         db()->insert('ext_power_log',
                      ['state' => $port_state,
                       'type' => 'input']);
@@ -71,12 +69,10 @@ function main($argv)
             case 0:
                 $msg = 'Питание ИБП отключено';
             default:
-                $msg = NULL;
+                return 0;
         }
 
-        if ($msg)
-            telegram_send_msg_admin($msg);
-
+        telegram_send_msg_admin($msg);
         db()->insert('ext_power_log',
                      ['state' => $port_state,
                       'type' => 'ups']);
