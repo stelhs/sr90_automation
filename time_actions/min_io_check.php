@@ -42,11 +42,10 @@ function main($argv) {
                 $row = ['io_name' => $io_name,
                            'sensor_name' => $sensor['name'],
                            'temperature' => $sensor['temperature']];
-                db()->insert('termo_sensors_log', $sensor);
+                db()->insert('termo_sensors_log', $row);
                 $temperatures[] = $row;
             }
         }
-
         if (count($response['trigger_log'])) {
             foreach ($response['trigger_log'] as $time => $msg) {
                 telegram_send_msg_admin(sprintf("Модуль ввода-вывода %s сообщил, " .
@@ -56,6 +55,8 @@ function main($argv) {
             }
         }
     }
+    dump($temperatures);
+
     file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
 
     return 0;
