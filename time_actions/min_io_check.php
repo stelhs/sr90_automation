@@ -8,6 +8,31 @@ require_once 'telegram_api.php';
 
 function main($argv) {
     $temperatures = [];
+
+    // actualize current quard sensor state
+    foreach(conf_guard()['zones'] as $zone) {
+        foreach($zone['sensors'] as $sensor) {
+            $row = db()->query(sprintf("SELECT state FROM io_input_actions " .
+                                       "WHERE io_name = '%s' ".
+                                           "AND port = %d " .
+                                       "ORDER BY id desc LIMIT 1",
+                                       $sensor['io'], $sensor['port']));
+            $prev_state = $row['state'];
+            if ($prev_state == $sensor['normal_state'])
+                continue;
+
+            $current_state = httpio($sensor['io'])->input_get_state($sensor['port']);
+            if ($current_state != $sensor['normal_state'])
+                continue;
+
+            db()->insert('io_input_actions', ['io_name' => $sensor['io'],
+                                              'port' => $sensor['port'],
+                                              'state' => $sensor['normal_state']]);
+            printf("Fixed IO '%s', port %d\n", $sensor['io'], $sensor['port']);
+        }
+    }
+
+
     foreach(conf_io() as $io_name => $io_data) {
         if ($io_name == 'usio1')
             continue;
