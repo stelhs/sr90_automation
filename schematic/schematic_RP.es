@@ -880,11 +880,11 @@
     "app": "Electro Schematic editor",
     "version": 1,
     "viewCenter": {
-      "x": 649.6,
-      "y": 587.2
+      "x": 193.0,
+      "y": 199.0
     },
-    "viewPage": 6,
-    "viewZoom": 125
+    "viewPage": 1,
+    "viewZoom": 100.00000000000001
   },
   "pages": [
     {
@@ -8324,7 +8324,7 @@
           "zIndex": 2
         }
       ],
-      "name": "РП Кабльный ввод",
+      "name": "РП Кабельный ввод",
       "num": 1
     },
     {
