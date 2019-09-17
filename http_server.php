@@ -140,7 +140,7 @@ function main($argv)
 
     $url_parts = parse_url($query);
     $path = str_replace('/', '', $url_parts['path']);
-    $parts = string_to_array($url_parts['path'], '/');
+    $parts = string_to_array($path, '/');
 
     $http_log['remote_host'] = $remote_host;
     $http_log['query'] = $query;
