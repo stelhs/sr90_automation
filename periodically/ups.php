@@ -201,6 +201,8 @@ function main($argv)
             else
                 $reason = "external power is absent";
             db()->insert('ups_actions', ['stage' => 'discarge', 'reason' => $reason]);
+            telegram_send_msg_admin(sprintf("остановка зарядки из за ups_power_state, ups_power_state = %d, prev_state = %d",
+                                            $ups_power_state, $prev_state));
             printf("stop_charger\n");
             stop_charger();
             return 0;
@@ -213,6 +215,7 @@ function main($argv)
     if (!is_array($batt_info)) {
         perror("can't get baterry info\n");
         stop_charger();
+        telegram_send_msg_admin("Ошибка получения инфорамции о АКБ");
         return -1;
     }
 
@@ -220,6 +223,9 @@ function main($argv)
     printf("voltage = %f\n", $voltage);
     $current = $batt_info['current'];
     printf("current = %f\n", $current);
+
+    if ($voltage <= 0)
+        return -1;
 
     if ($voltage < 11.88) {
         printf("voltage drop bellow 11.88v\n");

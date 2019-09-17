@@ -82,11 +82,11 @@ function get_current_battery_info()
 
     if ($ret_data['status'] != 'ok')
         return ['status' => $ret_data['status'],
-            'error_msg' => $ret_data['error_msg']];
+                'error_msg' => $ret_data['error_msg']];
 
     return ['status' => 'ok',
-        'voltage' => $ret_data['voltage'],
-        'current' => $ret_data['current']];
+            'voltage' => $ret_data['voltage'],
+            'current' => $ret_data['current']];
 }
 
 
@@ -120,6 +120,7 @@ function main($argv)
             @unlink(UPS_BATT_CURRENT_FILE);
             reboot_sbio('sbio1');
         }
+        telegram_send_msg_admin("Ошибка АКБ");
         return -1;
     }
 
