@@ -143,7 +143,11 @@ function conf_io()
                             'tcp_port' => 400,
                             'in_ports' => 12,
                             'out_ports' => 11],
-               ];
+                'sbio3' => ['ip_addr' => '192.168.10.6',
+                            'tcp_port' => 400,
+                            'in_ports' => 12,
+                            'out_ports' => 11],
+		    ];
 }
 
 function conf_termo_sensors()
