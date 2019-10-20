@@ -143,7 +143,11 @@ function conf_io()
                             'tcp_port' => 400,
                             'in_ports' => 12,
                             'out_ports' => 11],
-               ];
+                'sbio3' => ['ip_addr' => '192.168.10.6',
+                            'tcp_port' => 400,
+                            'in_ports' => 12,
+                            'out_ports' => 11],
+		    ];
 }
 
 function conf_termo_sensors()
@@ -178,15 +182,17 @@ function conf_padlocks()
                 ['num' => 2, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 3, 'name' => 'коричневый контейнер', 'io' => 'sbio2', 'io_port' => 3],
                 ['num' => 4, 'name' => 'синий контейнер', 'io' => 'sbio2', 'io_port' => 2],
+                ['num' => 5, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 2],
     ];
 }
 
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'слабое', 'io' => 'usio1', 'io_port' => 3],
-                ['zone' => 2, 'name' => 'основное', 'io' => 'usio1', 'io_port' => 4],
-                ];
+                ['zone' => 1, 'name' => 'слабое РП', 'io' => 'usio1', 'io_port' => 3],
+		['zone' => 2, 'name' => 'основное РП', 'io' => 'usio1', 'io_port' => 4],
+		['zone' => 3, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 3],
+           ];
 }
 
 function conf_ups()
