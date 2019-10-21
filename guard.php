@@ -139,8 +139,8 @@ function main($argv)
             $ret = run_cmd('./io.php relay_set sbio1 2 0');
             pnotice("disable power in RP: %s\n", $ret['log']);
 
-	    $ret = run_cmd('./io.php relay_set sbio3 1 0');
-	    pnotice("disable power in Workshop: %s\n", $ret['log']);
+            $ret = run_cmd('./io.php relay_set sbio3 1 0');
+            pnotice("disable power in Workshop: %s\n", $ret['log']);
 
             // close all padlocks
             $ret = run_cmd('./padlock.php close');
