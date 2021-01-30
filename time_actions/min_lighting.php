@@ -28,7 +28,7 @@ function main($argv) {
     if (conf_guard()['light_mode'] == 'off')
         return 0;
 
-    $ret = run_cmd('./street_light.php enable 0 1');
+    $ret = run_cmd('./street_light.php enable');
     if ($ret['rc']) {
         perror("Can't enable street_light: %s\n", $ret['log']);
         return $rc;
@@ -39,7 +39,7 @@ function main($argv) {
             conf_guard()['light_mode'] == 'by_sensors')
         return 0;
 
-    $ret = run_cmd('./street_light.php enable 0 2');
+    $ret = run_cmd('./street_light.php enable');
     if ($ret['rc']) {
         perror("Can't enable street_light: %s\n", $ret['log']);
         return $rc;
