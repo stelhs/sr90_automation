@@ -9,22 +9,6 @@ require_once 'httpio_lib.php';
 require_once 'telegram_api.php';
 
 
-function db()
-{
-    static $db = NULL;
-
-    if ($db)
-        return $db;
-
-    $db = new Database;
-    $rc = $db->connect(conf_db());
-    if ($rc)
-        throw new Exception("can't connect to database");
-    return $db;
-}
-
-
-
 function sms_send($type, $recepient, $args = array())
 {
     $sms_text = '';

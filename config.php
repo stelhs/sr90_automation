@@ -73,7 +73,7 @@ function conf_guard()
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '5',
-                                    'name' => 'СК',
+                                    'name' => 'КК',
                                     'diff_interval' => 15,
                                     'alarm_time' => 60,
                                     'run_lighter' => 1,
@@ -131,6 +131,30 @@ function conf_guard()
                                     'sensors' => [['io' => 'sbio3',
                                         'port' => 4,
                                         'normal_state' => 1]]
+				],
+                                ['id' => '11',
+                                    'name' => 'СК',
+                                    'diff_interval' => 15,
+                                    'alarm_time' => 60,
+                                    'run_lighter' => 1,
+                                    'sensors' => [['io' => 'sbio2',
+                                                   'port' => 5,
+                                                   'normal_state' => 1],
+                                                  ['io' => 'sbio2',
+                                                   'port' => 6,
+                                                  'normal_state' => 1]]
+				],
+                                ['id' => '12',
+                                    'name' => 'На_мастерской-запад',
+                                    'diff_interval' => 15,
+                                    'alarm_time' => 60,
+                                    'run_lighter' => 1,
+                                    'sensors' => [['io' => 'sbio3',
+                                                   'port' => 5,
+                                                   'normal_state' => 1],
+                                                  ['io' => 'sbio2',
+                                                   'port' => 6,
+                                                  'normal_state' => 1]]
                                 ],
                                ],
                  'ready_set_interval' => 30, /* in seconds */
@@ -252,3 +276,8 @@ function conf_water()
 }
 
 
+function conf_boiler()
+{
+    return ['ip' => "192.168.10.90",
+            'port' => "8890"];
+}
