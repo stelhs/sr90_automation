@@ -40,7 +40,7 @@ function main($argv) {
         @$content = file_get_contents(sprintf('http://%s:%d/stat',
                                      $io_data['ip_addr'], $io_data['tcp_port']));
         if ($content === FALSE) {
-            telegram_send_msg_admin(sprintf("Сбой связи с модулем ввода-вывода %s", $io_name));
+            telegram_send_msg_admin(sprintf("Сбой связи с модулем %s", $io_name));
             run_cmd(sprintf("./init_io_actions.php %s", $io_name));
             continue;
         }

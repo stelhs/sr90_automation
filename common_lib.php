@@ -7,6 +7,7 @@ require_once 'config.php';
 require_once 'modem3g.php';
 require_once 'httpio_lib.php';
 require_once 'telegram_api.php';
+require_once 'boiler_api.php';
 
 
 function sms_send($type, $recepient, $args = array())
@@ -263,6 +264,7 @@ function get_global_status()
             'battery' => get_battery_info(),
             'power_states' => get_power_states(),
             'ups_state' => get_ups_state(),
+            'boiler_state' => boiler_stat(),
     ];
 }
 
@@ -475,6 +477,24 @@ function format_global_status_for_telegram($stat)
                          $stat['ups_state']['charger_state']);
     }
 
+    if (isset($stat['boiler_state'])) {
+        $s = $stat['boiler_state'];
+        $text .= sprintf("Состояние котла: %s\n" .
+                         "Установленная температура котла: %.1f - %.1f градусов\n" .
+                         "Установленная температура в мастерской: %.1f градусов\n" .
+                         "Текущая температура в мастерской: %.1f градусов\n" .
+                         "Средняя температура в мастерской: %.1f градусов\n" .
+                         "Средняя температура в радиаторах: %.1f градусов\n" .
+                         "Количество запусков котла за текущие сутки: %d\n" .
+                         "Время нагрева за текущие сутки: %s\n" .
+                         "Объём потраченного топлива за текущие сутки: %.1f л.\n",
+                         $s['state'], $s['target_boiler_t_min'], $s['target_boiler_t_max'],
+                         $s['target_room_t'], $s['current_room_t'],
+                         $s['overage_room_t'], $s['overage_return_water_t'],
+                         $s['ignition_counter'], $s['total_burning_time_text'],
+                         $s['total_fuel_consumption']);
+    }
+
     return $text;
 }
 
@@ -643,6 +663,7 @@ function get_ups_state()
     @$stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
     return $stat;
 }
+
 
 /**
  * Get duration between UPS power loss and UPS power resume
