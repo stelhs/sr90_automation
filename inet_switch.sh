@@ -30,7 +30,15 @@ case "$1" in
 		iptables -t mangle -A PREROUTING -i enp2s0 -j TTL --ttl-set 64
 		killall ssh
 	;;
-	
+
+	current)
+                CURR_IP=`route -n | head -n 3 | tail -n 1 | awk '{print $2}'`
+                [ "$CURR_IP" = "192.168.1.1" ] && echo "current modem: 1" && exit 1
+                [ "$CURR_IP" = "192.168.2.1" ] && echo "current modem: 2" && exit 2
+                echo "current modem: unknown"
+                exit -1
+        ;;
+
 	*)
 		echo "Incorrect modem number"
 	;;
