@@ -140,24 +140,27 @@ function main($argv)
 
     $url_parts = parse_url($query);
     $path = str_replace('/', '', $url_parts['path']);
-    $parts = string_to_array($path, '/');
+    $parts = string_to_array($url_parts['path'], '/');
+
+    unset($parts[0]);
 
     $http_log['remote_host'] = $remote_host;
     $http_log['query'] = $query;
     if (!count($parts))
         return_404_request();
 
-    $php_file = sprintf('http_page_%s.php', $parts[0]);
+    $php_file = sprintf('http_page_%s.php', $parts[1]);
     if (!file_exists($php_file))
         return_404_request();
     $http_data['script'] = $php_file;
+    $http_log['script'] = $php_file;
 
     $query = '';
     if (isset($url_parts['query']))
         $query = $url_parts['query'];
 
     $script = sprintf('./%s "%s"', $php_file, $query);
-    unset($parts[0]);
+    unset($parts[1]);
     foreach ($parts as $part)
         $script .= ' ' . $part;
 
