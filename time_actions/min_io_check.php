@@ -63,10 +63,12 @@ function main($argv) {
 
         if (isset($response['termo_sensors'])) {
             $sensors = $response['termo_sensors'];
-            foreach ($sensors as $sensor) {
+	    foreach ($sensors as $sensor) {
+                if ($sensor['temperature'] < -60 || $sensor['temperature'] > 60)
+		    continue;
                 $row = ['io_name' => $io_name,
-                           'sensor_name' => $sensor['name'],
-                           'temperature' => $sensor['temperature']];
+                        'sensor_name' => $sensor['name'],
+                        'temperature' => $sensor['temperature']];
                 db()->insert('termo_sensors_log', $row);
                 $temperatures[] = $row;
             }
