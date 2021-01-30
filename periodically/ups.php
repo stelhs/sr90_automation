@@ -166,7 +166,7 @@ function main($argv)
     global $stop_ups_power_port;
 
 // Uncomment for disable autostart
-//   if (isset($argv[1]) && $argv[1] == 'auto') return;
+//   if (isset($argv[1]) && $argv[1] == 'auto'){ stop_charger(); return; }
 
     if (is_halt_all_systems()) {
         perror("systems is halted\n");
@@ -385,7 +385,7 @@ function main($argv)
         else if ($mode == 'discharge' && $switch_interval > 30)
             switch_to_charge();
 
-        if ($voltage < 14.4)
+        if ($voltage < 15.1)
             return 0;
 
         switch_mode_to_ready($batt_info);
