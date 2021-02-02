@@ -64,7 +64,7 @@ function main($argv) {
         if (isset($response['termo_sensors'])) {
             $sensors = $response['termo_sensors'];
 	    foreach ($sensors as $sensor) {
-                if ($sensor['temperature'] < -60 || $sensor['temperature'] > 60)
+                if ($sensor['temperature'] < -60 || $sensor['temperature'] > 100)
 		    continue;
                 $row = ['io_name' => $io_name,
                         'sensor_name' => $sensor['name'],

@@ -18,13 +18,24 @@ function main($argv) {
 
     db()->insert('boiler_statistics',
                  ['burning_time' => $stat['total_burning_time'],
-                  'fuel_consumption' => $stat['total_fuel_consumption'],
+                  'fuel_consumption' => ($stat['total_fuel_consumption'] * 1000),
                   'ignition_counter' => $stat['ignition_counter'],
                   'return_water_t' => $stat['overage_return_water_t'],
                   'room_t' => $stat['overage_room_t'],
                   'outside_t' => $outside_t]);
 
     boiler_reset_stat();
+    $msg = sprintf("Отчёт по котлу за прошедшие сутки: \n" .
+                   "Время горения: %s\n" .
+                   "Количество запусков: %d\n" .
+                   "Усреднённая температура в мастерской (за сутки): %.1f градусов\n" .
+                   "Усреднённая температура в чугунных радиаторах (за сутки): %.1f градусов\n" .
+                   "Усреднённая температура на улице (за сутки): %.1f градусов\n" .
+                   "Израсходованно дизельного топлива: %.1f литров",
+                   $stat['total_burning_time_text'], $stat['ignition_counter'],
+                   $stat['overage_room_t'], $stat['overage_return_water_t'],
+                   $outside_t, $stat['total_fuel_consumption']);
+    telegram()->send_message("-1001397133801", $msg);
     return 0;
 }
 

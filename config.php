@@ -207,7 +207,7 @@ function conf_io()
                             'tcp_port' => 400,
                             'in_ports' => 12,
                             'out_ports' => 11],
-                'boiler' => ['ip_addr' => '192.168.10.90',
+                'boiler' => ['ip_addr' => '192.168.10.10',
                             'tcp_port' => 8890,
                             'in_ports' => 0,
                             'out_ports' => 0],
@@ -287,6 +287,6 @@ function conf_water()
 
 function conf_boiler()
 {
-    return ['ip' => "192.168.10.90",
+    return ['ip' => "192.168.10.10",
             'port' => "8890"];
 }
