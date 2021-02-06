@@ -14,7 +14,7 @@ function main($argv) {
     $user_id = strtolower(trim($argv[1]));
     $chat_id = strtolower(trim($argv[2]));
     $msg_id = strtolower(trim($argv[3]));
-    $cmd = strtolower(trim($argv[4]));
+    $cmd = strtolower(trim($argv[5]));
 
     $telegram = new Telegram_api();
     if ($user_id == 0) {

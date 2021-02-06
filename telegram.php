@@ -73,9 +73,9 @@ function main($argv)
             if ($user_id == 0)
                 perror("unrecognized user ID: %d\n", $msg['from_id']);
 
-            $ret = run_cmd(sprintf("%s '%d' '%s' '%s' '%s'",
+            $ret = run_cmd(sprintf("%s '%d' '%s' '%s' '%s' '%s'",
                                    $action_script, $user_id, $msg['chat_id'],
-                                   $msg['text'], $msg['msg_id']));
+                                   $msg['text'], $msg['msg_id'], $msg['from_id']));
             if ($ret['rc']) {
                 perror("script %s: return error: %s\n",
                                          $action_script, $ret['log']);

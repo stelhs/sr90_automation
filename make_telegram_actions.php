@@ -72,7 +72,10 @@ $commands = [
                  'script' => 'modem.php', 'args' => 'modem_2'],
 
                 ['cmd' => ['переключи на вспомогательный модем', 'modem 1'],
-                 'script' => 'modem.php', 'args' => 'modem_1'],
+                 'script' => 'modem.php', 'args' => 'modem_1', 'wr' => 1],
+
+                ['cmd' => ['еду', 'go'],
+                 'script' => 'boiler_cmd.php', 'args' => 'go'],
 
 ];
 
@@ -122,13 +125,14 @@ function main($argv) {
     $chat_id = strtolower(trim($argv[2]));
     $msg_text = mb_strtolower(trim($argv[3]), 'utf8');
     $msg_id = isset($argv[4]) ? strtolower(trim($argv[4])) : 0;
+    $from_telegram_id = isset($argv[5]) ? strtolower(trim($argv[5])) : 0;
 
     $telegram = new Telegram_api();
 
 //    $telegram->send_message($chat_id, sprintf("from_user_id = %s, chat_id = %s, msg_text = %s, msg_id = %s",
 //                                               $from_user_id, $chat_id, $msg_text, $msg_id), $msg_id);
 
-    $marazm_resp = check_for_marazm($msg_text);
+//    $marazm_resp = check_for_marazm($msg_text);
     if ($marazm_resp) {
         $telegram->send_message($chat_id, $marazm_resp . "\n", $msg_id);
         return 0;
@@ -180,8 +184,8 @@ function main($argv) {
         return -EINVAL;
     }
 
-    $cmd = sprintf("%s '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
-    $from_user_id, $chat_id, $msg_id, $args);
+    $cmd = sprintf("%s '%s' '%s' '%s' '%s' '%s'", TELEGRAM_ACTIONS_DIR . $script,
+    $from_user_id, $chat_id, $msg_id, $from_telegram_id, $args);
 
     $ret = run_cmd($cmd);
     if ($ret['rc']) {

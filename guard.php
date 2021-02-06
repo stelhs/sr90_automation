@@ -9,6 +9,7 @@ require_once 'common_lib.php';
 require_once 'httpio_lib.php';
 require_once 'guard_lib.php';
 require_once 'player_lib.php';
+require_once 'boiler_api.php';
 require_once 'telegram_api.php';
 
 
@@ -98,6 +99,9 @@ function main($argv)
                                       $user['name'], $method));
 
             run_cmd(sprintf("./image_sender.php current"));
+
+
+            boiler_set_room_t(18);
 
             if ($method == 'cli') {
                 perror("stat: %s\n", $stat_text);
@@ -198,6 +202,8 @@ function main($argv)
                                       $user['name'], $method));
 
             run_cmd(sprintf("./image_sender.php current"));
+
+            boiler_set_room_t(11);
 
             if ($method == 'cli') {
                 perror("stat: %s\n", $stat_text);
