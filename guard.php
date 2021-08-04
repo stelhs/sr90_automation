@@ -101,7 +101,7 @@ function main($argv)
             run_cmd(sprintf("./image_sender.php current"));
 
 
-            boiler_set_room_t(18);
+            boiler_set_room_t(16);
 
             if ($method == 'cli') {
                 perror("stat: %s\n", $stat_text);
@@ -203,7 +203,7 @@ function main($argv)
 
             run_cmd(sprintf("./image_sender.php current"));
 
-            boiler_set_room_t(11);
+            boiler_set_room_t(5);
 
             if ($method == 'cli') {
                 perror("stat: %s\n", $stat_text);

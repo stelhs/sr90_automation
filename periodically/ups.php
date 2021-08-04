@@ -360,7 +360,7 @@ function main($argv)
         return 0;
 
     case 'ready':
-        if ($voltage > 12.7)
+        if ($voltage > 12.6)
             return 0;
 
         switch_mode_to_stage4($batt_info);

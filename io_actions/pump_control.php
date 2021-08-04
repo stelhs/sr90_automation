@@ -22,7 +22,7 @@ function main($argv)
     printf("port = %s\n", $port);
     printf("port_state = %s\n", $port_state);
 
-    if ($io_name != 'sbio1' || $port != 7 || $port_state != 1)
+    if ($io_name != 'sbio3' || $port != 4 || $port_state != 1)
         return;
 
     $guard_state = get_guard_state();

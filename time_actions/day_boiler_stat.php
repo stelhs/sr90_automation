@@ -8,7 +8,7 @@ require_once 'common_lib.php';
 
 
 function main($argv) {
-
+    return 0;
     $stat = boiler_stat();
 
     $row = db()->query('select avg(`temperature`) as t from termo_sensors_log '.

@@ -49,6 +49,7 @@ function main($argv) {
 
     $user_id = 0;
     $user = user_get_by_phone($phone);
+    dump($user);
     if ($user) {
         $user_id = $user['id'];
         if (!$user && !$user['serv_control'])

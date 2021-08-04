@@ -165,11 +165,11 @@ function server_reboot($method, $user_id = NULL)
 
 function get_day_night()
 {
-    $sun_info = date_sun_info(time(), 54.014634, 28.013484);
     $curr_time = time();
+    $sun_info = date_sun_info($curr_time, 54.014634, 28.013484);
 
-    if ($curr_time > $sun_info['nautical_twilight_begin'] &&
-        $curr_time < ($sun_info['nautical_twilight_end'] - 3600))
+    if ($curr_time > ($sun_info['nautical_twilight_begin']) &&
+        $curr_time < ($sun_info['nautical_twilight_end'] + 3600))
         return 'day';
 
     return 'night';
@@ -177,8 +177,9 @@ function get_day_night()
 
 function user_get_by_phone($phone)
 {
-    $user = db()->query("SELECT * FROM users " .
-                        "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1");
+    $query = "SELECT * FROM users " .
+                        "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1";
+    $user = db()->query("%s", $query);
 
     if (!$user)
         return NULL;
