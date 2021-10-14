@@ -72,10 +72,13 @@ function main($argv)
             pnotice("enable power in containers: %s\n", $ret['log']);
 
             $ret = run_cmd('./io.php relay_set sbio1 2 1');
-            pnotice("enable power in RP: %s\n", $ret['log']);
+            pnotice("enable power for sliding gates: %s\n", $ret['log']);
 
-	    $ret = run_cmd('./io.php relay_set sbio3 1 1');
-	    pnotice("enable power in Workshop: %s\n", $ret['log']);
+    	    $ret = run_cmd('./io.php relay_set sbio3 1 1');
+    	    pnotice("enable power in Workshop: %s\n", $ret['log']);
+
+            $ret = run_cmd('./io.php relay_set usio1 6 1');
+            pnotice("enable power sockets in RP: %s\n", $ret['log']);
 
             // open all padlocks
             $ret = run_cmd('./padlock.php open');
@@ -141,10 +144,13 @@ function main($argv)
             pnotice("disable power in containers: %s\n", $ret['log']);
 
             $ret = run_cmd('./io.php relay_set sbio1 2 0');
-            pnotice("disable power in RP: %s\n", $ret['log']);
+            pnotice("disable power for sliding gates: %s\n", $ret['log']);
 
             $ret = run_cmd('./io.php relay_set sbio3 1 0');
             pnotice("disable power in Workshop: %s\n", $ret['log']);
+
+            $ret = run_cmd('./io.php relay_set usio1 6 0');
+            pnotice("disable power sockets in RP: %s\n", $ret['log']);
 
             // close all padlocks
             $ret = run_cmd('./padlock.php close');

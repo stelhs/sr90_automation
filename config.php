@@ -55,7 +55,7 @@ function conf_guard()
                                                   'normal_state' => 1]]
                                 ],
                                 ['id' => '3',
-                                 'name' => 'Датчик дверцы ВРУ',
+                                 'name' => 'Дверца ВРУ',
                                  'diff_interval' => 4,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
@@ -64,7 +64,7 @@ function conf_guard()
                                                 'normal_state' => 1]]
                                 ],
                                 ['id' => '4',
-                                 'name' => 'Датчик двери РП',
+                                 'name' => 'Дверь РП',
                                  'diff_interval' => 4,
                                  'alarm_time' => 300,
                                  'run_lighter' => 1,
@@ -168,6 +168,15 @@ function conf_guard()
                                                    'port' => 10,
                                                   'normal_state' => 1]]
                                 ],
+                                ['id' => '15',
+                                 'name' => 'Дверца откатных ворот',
+                                 'diff_interval' => 4,
+                                 'alarm_time' => 300,
+                                 'run_lighter' => 1,
+                                 'sensors' => [['io' => 'sbio1',
+                                                'port' => 10,
+                                                'normal_state' => 1]]
+                                ],
                                ],
                  'ready_set_interval' => 30, /* in seconds */
 			     'light_ready_timeout' => 30 * 60, /* in seconds */
@@ -222,7 +231,7 @@ function conf_io()
                 'boiler' => ['ip_addr' => '192.168.10.10',
                             'tcp_port' => 8890,
                             'in_ports' => 0,
-			    'out_ports' => 0],  
+			                'out_ports' => 0],
 		    ];
 }
 
@@ -260,7 +269,6 @@ function conf_padlocks()
 {
     return [
                 ['num' => 1, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
-                ['num' => 2, 'name' => 'кунг', 'io' => 'usio1', 'io_port' => 6],
                 ['num' => 3, 'name' => 'коричневый контейнер', 'io' => 'sbio2', 'io_port' => 3],
                 ['num' => 4, 'name' => 'синий контейнер', 'io' => 'sbio2', 'io_port' => 2],
                 ['num' => 5, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 2],
@@ -271,8 +279,7 @@ function conf_street_light()
 {
     return [
                 ['zone' => 1, 'name' => 'слабое РП', 'io' => 'usio1', 'io_port' => 3],
-		['zone' => 2, 'name' => 'основное РП', 'io' => 'usio1', 'io_port' => 4],
-		['zone' => 3, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 3],
+        		['zone' => 3, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 3],
            ];
 }
 
