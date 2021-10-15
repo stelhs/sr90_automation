@@ -77,6 +77,14 @@ $commands = [
                 ['cmd' => ['еду', 'go'],
                  'script' => 'boiler_cmd.php', 'args' => 'go'],
 
+                ['cmd' => ['открой ворота', 'gates open'],
+                 'script' => 'gates_cmd.php', 'args' => 'open'],
+
+                ['cmd' => ['открой пешеходу', 'gates open ped'],
+                 'script' => 'gates_cmd.php', 'args' => 'open-ped'],
+
+                ['cmd' => ['закрой ворота', 'gates close'],
+                 'script' => 'gates_cmd.php', 'args' => 'close'],
 ];
 
 function mk_help()

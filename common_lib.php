@@ -8,6 +8,7 @@ require_once 'modem3g.php';
 require_once 'httpio_lib.php';
 require_once 'telegram_api.php';
 require_once 'boiler_api.php';
+require_once 'gates_api.php';
 
 
 function sms_send($type, $recepient, $args = array())
@@ -266,6 +267,7 @@ function get_global_status()
             'power_states' => get_power_states(),
             'ups_state' => get_ups_state(),
             'boiler_state' => boiler_stat(),
+            'gates_state' => gates_stat(),
     ];
 }
 
@@ -361,10 +363,15 @@ function format_global_status_for_sms($stat)
     }
 
     if (isset($stat['ups_state'])) {
-        $text .= sprintf("250VDC:%d, 14VDC:%d, ups_stat:%s ",
+        $text .= sprintf("250VDC:%d, 14VDC:%d, ups_stat:%s, ",
                          $stat['ups_state']['vdc_out_state'],
                          $stat['ups_state']['standby_state'],
                          $stat['ups_state']['charger_state']);
+    }
+
+    if (isset($stat['gates_state'])) {
+        $s = $stat['gates_state'];
+        $text .= sprintf("ворота %s\n", ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
     }
 
     return $text;
@@ -495,7 +502,13 @@ function format_global_status_for_telegram($stat)
                          $s['ignition_counter'], $s['total_burning_time_text'],
                          $s['total_fuel_consumption']);
     }
-
+    if (isset($stat['gates_state'])) {
+        $s = $stat['gates_state'];
+        $text .= sprintf("Питание ворот: %s\n" .
+                         "Ворота %s\n",
+                         ($s['power'] == "enabled") ? 'присутствует' : 'отсутствует',
+                         ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
+    }
     return $text;
 }
 

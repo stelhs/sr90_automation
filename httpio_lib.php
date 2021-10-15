@@ -8,7 +8,6 @@ require_once 'common_lib.php';
 class Httpio {
     public $ip_addr;
     public $tcp_port;
-    public $io;
 
     function __construct($name, $ip_addr, $tcp_port)
     {
@@ -46,7 +45,7 @@ class Httpio {
 
     public function relay_set_state($port, $state)
     {
-        db()->insert('io_output_actions', ['io_name' => $this->io,
+        db()->insert('io_output_actions', ['io_name' => $this->name,
                                            'port' => $port,
                                            'state' => $state]);
         if (DISABLE_HW) {
@@ -146,7 +145,7 @@ class Httpio {
 
 function httpio($name)
 {
-    static $httpio = NULL;
+    $httpio = NULL;
 
     if (!isset(conf_io()[$name])) {
         perror("I/O module %s is not found\n", $name);
@@ -156,15 +155,7 @@ function httpio($name)
     $ip_addr = conf_io()[$name]['ip_addr'];
     $tcp_port = conf_io()[$name]['tcp_port'];
 
-    if ($httpio) {
-        $httpio->io = $name;
-        $httpio->ip_addr = $ip_addr;
-        $httpio->tcp_port = $tcp_port;
-        return $httpio;
-    }
-
     $httpio = new Httpio($name, $ip_addr, $tcp_port);
-    $httpio->io = $name;
     return $httpio;
 }
 

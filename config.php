@@ -303,6 +303,16 @@ function conf_water()
     return ['well_pump_enable_port' => ['io' => 'sbio1', 'out_port' => 10]];
 }
 
+function conf_gates()
+{
+    return ['enable_port' => ['io' => 'sbio1', 'out_port' => 2],
+            'open_port' => ['io' => 'sbio1', 'out_port' => 3],
+            'open_ped_port' => ['io' => 'usio1', 'out_port' => 4],
+            'close_port' => ['io' => 'sbio1', 'out_port' => 11],
+            'state_port' => ['io' => 'sbio1', 'in_port' => '11'],
+            ];
+}
+
 
 function conf_boiler()
 {

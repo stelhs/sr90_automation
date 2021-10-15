@@ -10,6 +10,7 @@ require_once 'httpio_lib.php';
 require_once 'guard_lib.php';
 require_once 'player_lib.php';
 require_once 'boiler_api.php';
+require_once 'gates_api.php';
 require_once 'telegram_api.php';
 
 
@@ -68,11 +69,10 @@ function main($argv)
 
             pnotice("Guard stoped by %s\n", $method);
 
+            gates_power_enable();
+
             $ret = run_cmd('./io.php relay_set sbio2 1 1');
             pnotice("enable power in containers: %s\n", $ret['log']);
-
-            $ret = run_cmd('./io.php relay_set sbio1 2 1');
-            pnotice("enable power for sliding gates: %s\n", $ret['log']);
 
     	    $ret = run_cmd('./io.php relay_set sbio3 1 1');
     	    pnotice("enable power in Workshop: %s\n", $ret['log']);
@@ -90,6 +90,9 @@ function main($argv)
                 $ret = run_cmd('./street_light.php enable');
                 pnotice("enable lighter: %s\n", $ret['log']);
             }
+
+            gates_open();
+            gates_close_after(60);
 
             $state_id = db()->insert('guard_states',
                                     ['state' => 'sleep',
@@ -142,9 +145,6 @@ function main($argv)
 
             $ret = run_cmd('./io.php relay_set sbio2 1 0');
             pnotice("disable power in containers: %s\n", $ret['log']);
-
-            $ret = run_cmd('./io.php relay_set sbio1 2 0');
-            pnotice("disable power for sliding gates: %s\n", $ret['log']);
 
             $ret = run_cmd('./io.php relay_set sbio3 1 0');
             pnotice("disable power in Workshop: %s\n", $ret['log']);
@@ -211,6 +211,13 @@ function main($argv)
 
             boiler_set_room_t(5);
 
+            $rc = gates_close_sync();
+            if ($rc)
+                telegram_send_msg(sprintf("Возникла неполадка: ворота не закрылись: %d", $rc));
+            else
+                telegram_send_msg("Ворота закрылись");
+            gates_power_disable();
+
             if ($method == 'cli') {
                 perror("stat: %s\n", $stat_text);
                 return 0;
@@ -224,6 +231,7 @@ function main($argv)
                           'user_name' => $user_name,
                           'state_id' => $state_id,
                           'global_status' => $stat_text]);
+
 
             return 0;
 
