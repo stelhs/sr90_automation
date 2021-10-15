@@ -26,12 +26,6 @@ $commands = [
                 ['cmd' => ['закрой замок РП'],
                  'script' => 'padlock_commands.php', 'args' => 'close 1', 'wr' => 1],
 
-                ['cmd' => ['открой замок кунга'],
-                    'script' => 'padlock_commands.php', 'args' => 'open 2'],
-
-                ['cmd' => ['закрой замок кунга'],
-                    'script' => 'padlock_commands.php', 'args' => 'close 2', 'wr' => 1],
-
                 ['cmd' => ['открой замок малого контейнера'],
                  'script' => 'padlock_commands.php', 'args' => 'open 3'],
 
@@ -75,7 +69,7 @@ $commands = [
                  'script' => 'modem.php', 'args' => 'modem_1', 'wr' => 1],
 
                 ['cmd' => ['еду', 'go'],
-                 'script' => 'boiler_cmd.php', 'args' => 'go'],
+                 'script' => 'boiler_cmd.php', 'args' => 'go', 'wr' => 1],
 
                 ['cmd' => ['открой ворота', 'gates open'],
                  'script' => 'gates_cmd.php', 'args' => 'open'],
