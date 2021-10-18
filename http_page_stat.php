@@ -11,8 +11,8 @@ function main($argv)
     if ($content)
         $stat['termo_sensors'] = json_decode($content, 1);
 
-    $stat['io_states'] = get_stored_io_states();
-    $stat['batt_info'] = get_battery_info();
+    $stat['io_states'] = io_states();
+    $stat['batt_info'] = battery_info();
     echo json_encode($stat);
 }
 

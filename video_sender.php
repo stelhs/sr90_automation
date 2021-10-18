@@ -1,11 +1,12 @@
 #!/usr/bin/php
 <?php
+// DEPRICATED
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 require_once 'config.php';
 require_once 'avreg_lib.php';
-require_once 'telegram_api.php';
+require_once 'telegram_lib.php';
 
 
 
@@ -34,7 +35,7 @@ function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "
     if (!$video_files || !count($video_files)) {
         $msg = sprintf("Неудалось получить видеофайлы для камеры %s",
             $cam['name']);
-        telegram_send_msg_admin($msg);
+        tn()->send_to_admin($msg);
         perror("Can't get videos for camera %s\n", $cam['name']);
         return -1;
     }
@@ -55,7 +56,7 @@ function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "
         if ($ret['rc']) {
             $msg = sprintf("Неудалось загрузить видеофайл %s для камеры %s: %s",
                 $file['file'], $cam['name'], $ret['log']);
-            telegram_send_msg_admin($msg);
+            tn()->send_to_admin($msg);
             perror("Can't upload videos for camera %s: %s\n", $cam['name'], $ret['log']);
             continue;
         }
@@ -87,7 +88,7 @@ function main($argv)
         printf("alarm_timestamp = %d\n", $alarm_timestamp);
 
         $msg = sprintf("Загружаю видео файлы по событию %d, ожидайте...", $alarm_id);
-        telegram_send_msg_alarm($msg);
+        tn()->send_to_alarm($msg);
         foreach(conf_guard()['video_cameras'] as $cam) {
             $server_video_urls = upload_cam_video($cam, 'alarm_video',
                                                   $alarm_timestamp - 10, 20,
@@ -100,21 +101,21 @@ function main($argv)
                                 $alarm_id, $cam['id'], $url);
             }
             if ($msg)
-                telegram_send_msg_alarm($msg);
+                tn()->send_to_alarm($msg);
         }
         $msg = sprintf("Процесс загрузки видео по событию %d завершен", $alarm_id);
-        telegram_send_msg_alarm($msg);
+        tn()->send_to_alarm($msg);
         goto out;
 
     case 'by_timestamp':
         $timestamp = $argv[2];
         $duration = $argv[3];
         $cam_list_id_comma = isset($argv[4]) ? $argv[4] : NULL;
-        $telegram_id = isset($argv[5]) ? $argv[5] : NULL;
-        if (!$telegram_id) {
-            foreach (telegram_get_chats('admin') as $chat)
+        $chat_id = isset($argv[5]) ? $argv[5] : NULL;
+        if (!$chat_id) {
+            foreach (tn()->chats('admin') as $chat)
                 break;
-            $telegram_id = $chat['chat_id'];
+            $chat_id = $chat['chat_id'];
         }
 
         $cam_list_id = NULL;
@@ -125,7 +126,7 @@ function main($argv)
         printf("duration = %d\n", $duration);
         printf("cam_list_id = \n");
         dump($cam_list_id);
-        printf("telegram_id = %d\n", $telegram_id);
+        printf("chat_id = %d\n", $chat_id);
 
         foreach(conf_guard()['video_cameras'] as $cam) {
             if ($cam_list_id) {
@@ -147,7 +148,7 @@ function main($argv)
                 $msg .= sprintf("Видео запись с камеры %d:\n %s\n",
                                $cam['id'], $url);
             if ($msg)
-                telegram()->send_message($telegram_id, $msg);
+                tn()->send($chat_id, 0, $msg);
         }
         goto out;
 

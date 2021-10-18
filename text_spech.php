@@ -5,8 +5,8 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
-require_once 'httpio_lib.php';
-require_once 'guard_lib.php';
+require_once 'board_io_api.php';
+require_once 'guard_api.php';
 require_once 'player_lib.php';
 require_once 'common_lib.php';
 
@@ -66,6 +66,12 @@ function main($argv)
         return 0;
     player_start(['sounds/text_preamb.wav',
                   'sounds/text.wav'], $volume);
+
+    db()->insert('audio_broadcast_messages',
+                ['voice' => $voice_name,
+                 'speed' => $speed,
+                 'message' => $message]);
+
     return 0;
 }
 

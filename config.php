@@ -9,9 +9,6 @@ if (is_file('DISABLE_HW'))
 else
     define("DISABLE_HW", 0);
 
-function conf_global()
-{
-}
 
 function conf_db()
 {
@@ -27,213 +24,270 @@ function conf_local_io()
     return array("socket_file" => '/tmp/usio_sock');
 }
 
-function conf_guard()
-{
-    return array('zones' => [
-                                ['id' => '1',
-                                 'name' => 'север колитка',
-                                 'diff_interval' => 15,
-                                 'alarm_time' => 60,
-                                 'run_lighter' => 1,
-                                 'sensors' => [['io' => 'sbio3',
-                                                'port' => 7,
-                                                'normal_state' => 1],
-                                               ['io' => 'sbio3',
-                                                'port' => 8,
-                                                'normal_state' => 1]]
-                                ],
-                                ['id' => '2',
-                                    'name' => 'РП',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'usio1',
-                                                   'port' => 6,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'usio1',
-                                                   'port' => 7,
-                                                  'normal_state' => 1]]
-                                ],
-                                ['id' => '3',
-                                 'name' => 'Дверца ВРУ',
-                                 'diff_interval' => 4,
-                                 'alarm_time' => 300,
-                                 'run_lighter' => 1,
-                                 'sensors' => [['io' => 'usio1',
-                                                'port' => 4,
-                                                'normal_state' => 1]]
-                                ],
-                                ['id' => '4',
-                                 'name' => 'Дверь РП',
-                                 'diff_interval' => 4,
-                                 'alarm_time' => 300,
-                                 'run_lighter' => 1,
-                                 'sensors' => [['io' => 'usio1',
-                                                'port' => 5,
-                                                'normal_state' => 1]]
-                                ],
-                                ['id' => '6',
-                                    'name' => 'Юг улица',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio2',
-                                                   'port' => 3,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'sbio2',
-                                                   'port' => 4,
-                                                  'normal_state' => 1]]
-                                ],
-                                ['id' => '7',
-                                    'name' => 'Помещение-запад',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 300,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                        'port' => 1,
-                                        'normal_state' => 1]]
-                                ],
-                                ['id' => '8',
-                                    'name' => 'Помещение-север',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 300,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                        'port' => 2,
-                                        'normal_state' => 1]]
-                                ],
-                                ['id' => '9',
-                                    'name' => 'Помещение-восток',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 300,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                        'port' => 3,
-                                        'normal_state' => 1]]
-                                ],
-                             /*   ['id' => '10',
-                                    'name' => 'Помещение-юг',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 300,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                        'port' => 4,
-                                        'normal_state' => 1]]
-				],*/
-                                ['id' => '11',
-                                    'name' => 'Дорога-восток',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio2',
-                                                   'port' => 5,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'sbio2',
-                                                   'port' => 6,
-                                                  'normal_state' => 1]]
-				],
-                                ['id' => '12',
-                                    'name' => 'Запад улица',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                                   'port' => 5,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'sbio3',
-                                                   'port' => 6,
-                                                  'normal_state' => 1]]
-                                ],
-                                ['id' => '13',
-                                    'name' => 'Площадка ворота',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                                   'port' => 11,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'sbio3',
-                                                   'port' => 12,
-                                                  'normal_state' => 1]]
-                                ],
-                                ['id' => '14',
-                                    'name' => 'Под балконом',
-                                    'diff_interval' => 15,
-                                    'alarm_time' => 60,
-                                    'run_lighter' => 1,
-                                    'sensors' => [['io' => 'sbio3',
-                                                   'port' => 9,
-                                                   'normal_state' => 1],
-                                                  ['io' => 'sbio3',
-                                                   'port' => 10,
-                                                  'normal_state' => 1]]
-                                ],
-                                ['id' => '15',
-                                 'name' => 'Дверца откатных ворот',
-                                 'diff_interval' => 4,
-                                 'alarm_time' => 300,
-                                 'run_lighter' => 1,
-                                 'sensors' => [['io' => 'sbio1',
-                                                'port' => 10,
-                                                'normal_state' => 1]]
-                                ],
-                               ],
-                 'ready_set_interval' => 30, /* in seconds */
-			     'light_ready_timeout' => 30 * 60, /* in seconds */
-			     'light_sleep_timeout' => 30 * 60, /* in seconds */
-                 'light_mode' => 'by_sensors', // 'by_sensors', 'auto', 'off'
-                 'alarm_snapshot_dir' => '/storage/sr90_automation/images/alarm_actions',
-                 'sensor_snapshot_dir' => '/storage/sr90_automation/images/sensor_actions',
-                 'video_cameras' => [
-                                      ['id' => 1,
-                                       'name' => "01-Kamera_1",
-                                       'v4l_dev' => '/dev/video14',
-                                       'resolution' => '1920:1080'],
-
-                                      ['id' => 2,
-                                       'name' => "02-Kamera_2",
-                                       'v4l_dev' => '/dev/video15',
-                                       'resolution' => '1920:1080'],
-
-                                      ['id' => 3,
-                                       'name' => "03-Kamera_3",
-                                       'v4l_dev' => '/dev/video16',
-                                       'resolution' => '1920:1080'],
-                                     ['id' => 4,
-                                         'name' => "04-Kamera_4",
-                                         'v4l_dev' => '/dev/video17',
-                                         'resolution' => '1280:1024']
-
-                 ],
-                 'remote_control_sleep' => ['io' => 'sbio1', 'port' => 2],
-                 'remote_control_ready' => ['io' => 'sbio1', 'port' => 3],
-    );
-}
 
 function conf_io()
 {
-        return ['usio1' => ['ip_addr' => 'localhost',
-                            'tcp_port' => 400,
-                            'in_ports' => 10,
-                            'out_ports' => 7],
-                'sbio1' => ['ip_addr' => '192.168.10.3',
-                            'tcp_port' => 400,
-                            'in_ports' => 12,
-                            'out_ports' => 11],
-                'sbio2' => ['ip_addr' => '192.168.10.4',
-                            'tcp_port' => 400,
-                            'in_ports' => 12,
-                            'out_ports' => 11],
-                'sbio3' => ['ip_addr' => '192.168.10.6',
-                            'tcp_port' => 400,
-                            'in_ports' => 12,
-                            'out_ports' => 11],
-                'boiler' => ['ip_addr' => '192.168.10.10',
-                            'tcp_port' => 8890,
-                            'in_ports' => 0,
-			                'out_ports' => 0],
-		    ];
+    return [
+        'usio1' => ['location' => 'RP',
+                    'ip_addr' => 'localhost',
+                    'tcp_port' => 400,
+                    'in' => [
+                        1 => 'server_power',
+                        2 => '',
+                        3 => '',
+                        4 => 'vru_door',
+                        5 => 'RP_door',
+                        6 => 'guard_motion_sensor_1',
+                        7 => 'guard_motion_sensor_2',
+                        8 => '',
+                        9 => '',
+                        10 => ''
+                    ],
+                    'out' => [
+                        1 => 'server_break_power',
+                        2 => 'server_start',
+                        3 => 'lighting_pole',
+                        4 => 'gates_open_pedestration',
+                        5 => 'RP_padlock',
+                        6 => 'RP_sockets',
+                        7 => 'RP_exhaust_fan'
+                    ]],
+
+        'sbio1' => ['location' => 'RP',
+                    'ip_addr' => '192.168.10.3',
+                    'tcp_port' => 400,
+                    'in' => [
+                        1 => 'ext_power',
+                        2 => 'remote_guard_sleep',
+                        3 => 'remote_guard_ready',
+                        4 => 'ups_250vdc',
+                        5 => 'ups_14vdc',
+                        6 => 'ups_220vac',
+                        7 => 'RP_water_pump_button',
+                        8 => 'remote_gates_open_close',
+                        9 => '',
+                        10 => 'gates_motor_door',
+                        11 => 'gates_closed',
+                        12 => ''
+                    ],
+                    'out' => [
+                        1 => 'voice_power',
+                        2 => 'gates_power',
+                        3 => 'gates_open',
+                        4 => 'charger_1.5A',
+                        5 => 'charger_3A',
+                        6 => 'charger_en',
+                        7 => 'charge_discharge',
+                        8 => 'ups_break_power',
+                        9 => 'battery_relay',
+                        10 => 'water_pump',
+                        11 => 'gates_close'
+                    ]],
+
+        'sbio2' => ['location' => 'SK',
+                    'ip_addr' => '192.168.10.4',
+                    'tcp_port' => 400,
+                    'in' => [
+                        1 => '',
+                        2 => '',
+                        3 => 'guard_motion_sensor_3',
+                        4 => 'guard_motion_sensor_4',
+                        5 => 'guard_motion_sensor_5',
+                        6 => 'guard_motion_sensor_6',
+                        7 => '',
+                        8 => '',
+                        9 => '',
+                        10 => '',
+                        11 => '',
+                        12 => ''
+                    ],
+                    'out' => [
+                        1 => 'sk_power',
+                        2 => 'sk_padlock',
+                        3 => 'kk_padlock',
+                        4 => '',
+                        5 => '',
+                        6 => '',
+                        7 => '',
+                        8 => '',
+                        9 => '',
+                        10 => '',
+                        11 => ''
+                    ]],
+
+        'sbio3' => ['location' => 'Workshop',
+                    'ip_addr' => '192.168.10.6',
+                    'tcp_port' => 400,
+                    'in' => [
+                        1 => 'guard_motion_sensor_7',
+                        2 => 'guard_motion_sensor_8',
+                        3 => 'guard_motion_sensor_9',
+                        4 => 'workshop_water_pump_button',
+                        5 => 'guard_motion_sensor_10',
+                        6 => 'guard_motion_sensor_11',
+                        7 => 'guard_motion_sensor_12',
+                        8 => 'guard_motion_sensor_13',
+                        9 => 'guard_motion_sensor_14',
+                        10 => 'guard_motion_sensor_15',
+                        11 => 'guard_motion_sensor_16',
+                        12 => 'guard_motion_sensor_17'
+                    ],
+                    'out' => [
+                        1 => 'workshop_power',
+                        2 => 'workshop_padlock',
+                        3 => 'workshop_lighter',
+                        4 => 'boiler_break_power',
+                        5 => '',
+                        6 => '',
+                        7 => '',
+                        8 => '',
+                        9 => '',
+                        10 => '',
+                        11 => ''
+                    ]],
+
+        'boiler' => ['ip_addr' => '192.168.10.10',
+                    'tcp_port' => 8890,
+                    'in' => [],
+                    'out' => []],
+    ];
 }
+
+
+function conf_guard()
+{
+    return [
+        'zones' => [
+            ['name' => 'north_colitis',
+             'desc' => 'север колитка',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_12' => 0,
+                              'guard_motion_sensor_13' => 0]
+            ],
+
+            ['name' => 'rp',
+             'desc' => 'РП',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_1' => 0,
+                              'guard_motion_sensor_2' => 0]
+            ],
+
+            ['name' => 'vru_door',
+             'desc' => 'Дверца ВРУ',
+             'diff_interval' => 4,
+             'alarm_time' => 300,
+             'io_sensors' => ['vru_door' => 0]
+            ],
+
+            ['name' => 'rp_door',
+             'desc' => 'Дверь РП',
+             'diff_interval' => 4,
+             'alarm_time' => 300,
+             'io_sensors' => ['RP_door' => 0]
+            ],
+
+            ['name' => 'south_street',
+             'desc' => 'Юг улица',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_3' => 0,
+                              'guard_motion_sensor_4' => 0]
+            ],
+
+            ['name' => 'workshop_west',
+             'desc' => 'Помещение-запад',
+             'diff_interval' => 15,
+             'alarm_time' => 300,
+             'io_sensors' => ['guard_motion_sensor_7' => 0]
+            ],
+
+            ['name' => 'workshop_north',
+             'desc' => 'Помещение-север',
+             'diff_interval' => 15,
+             'alarm_time' => 300,
+             'io_sensors' => ['guard_motion_sensor_8' => 0]
+            ],
+
+            ['name' => 'workshop_east',
+             'desc' => 'Помещение-восток',
+             'diff_interval' => 15,
+             'alarm_time' => 300,
+             'io_sensors' => ['guard_motion_sensor_9' => 0]
+            ],
+
+            ['name' => 'road_east',
+             'desc' => 'Дорога-восток',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_5' => 0,
+                              'guard_motion_sensor_6' => 0]
+            ],
+
+            ['name' => 'west_street',
+             'desc' => 'Запад улица',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_10' => 0,
+                              'guard_motion_sensor_11' => 0]
+            ],
+
+            ['name' => 'workshop_street',
+             'desc' => 'Площадка у мастерской',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'io_sensors' => ['guard_motion_sensor_16' => 0,
+                              'guard_motion_sensor_17' => 0]
+            ],
+
+            ['name' => 'under_balcony',
+             'desc' => 'Под балконом',
+             'diff_interval' => 15,
+             'alarm_time' => 60,
+             'run_lighter' => 1,
+             'io_sensors' => ['guard_motion_sensor_14' => 0,
+                              'guard_motion_sensor_15' => 0]
+            ],
+
+            ['name' => 'gates_motor_door',
+             'desc' => 'Дверца откатных ворот',
+             'diff_interval' => 4,
+             'alarm_time' => 300,
+             'run_lighter' => 1,
+             'io_sensors' => ['gates_motor_door' => 0]
+            ],
+        ],
+
+        'ready_set_interval' => 30, /* in seconds */
+        'light_ready_timeout' => 30 * 60, /* in seconds */
+        'light_sleep_timeout' => 30 * 60, /* in seconds */
+        'alarm_snapshot_dir' => '/storage/sr90_automation/images/alarm_actions',
+        'sensor_snapshot_dir' => '/storage/sr90_automation/images/sensor_actions',
+        'video_cameras' => [
+                            ['id' => 1,
+                             'name' => "01-Kamera_1",
+                             'v4l_dev' => '/dev/video14',
+                             'resolution' => '1920:1080'],
+
+                             ['id' => 2,
+                             'name' => "02-Kamera_2",
+                             'v4l_dev' => '/dev/video15',
+                             'resolution' => '1920:1080'],
+
+                             ['id' => 3,
+                             'name' => "03-Kamera_3",
+                             'v4l_dev' => '/dev/video16',
+                             'resolution' => '1920:1080'],
+
+                            ['id' => 4,
+                             'name' => "04-Kamera_4",
+                             'v4l_dev' => '/dev/video17',
+                             'resolution' => '1280:1024']
+                            ],
+    ];
+}
+
 
 function conf_termo_sensors()
 {
@@ -268,54 +322,26 @@ function conf_telegram_bot()
 function conf_padlocks()
 {
     return [
-                ['num' => 1, 'name' => 'РП', 'io' => 'usio1', 'io_port' => 5],
-                ['num' => 3, 'name' => 'коричневый контейнер', 'io' => 'sbio2', 'io_port' => 3],
-                ['num' => 4, 'name' => 'синий контейнер', 'io' => 'sbio2', 'io_port' => 2],
-                ['num' => 5, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 2],
+        ['name' => 'rp', 'desc' => 'РП', 'port' => 'RP_padlock'],
+        ['name' => 'kk', 'desc' => 'Коричневый контейнер', 'port' => 'kk_padlock'],
+        ['name' => 'sk', 'desc' => 'Синий контейнер', 'port' => 'sk_padlock'],
+        ['name' => 'workshop', 'desc' => 'Мастерская', 'port' => 'workshop_padlock'],
     ];
 }
 
 function conf_street_light()
 {
     return [
-                ['zone' => 1, 'name' => 'слабое РП', 'io' => 'usio1', 'io_port' => 3],
-        		['zone' => 3, 'name' => 'мастерская', 'io' => 'sbio3', 'io_port' => 3],
-           ];
-}
-
-function conf_ups()
-{
-    return ['charger_enable_port' => ['io' => 'sbio1', 'out_port' => '6'],
-            'middle_current_enable_port' => ['io' => 'sbio1', 'out_port' => '4'],
-            'full_current_enable_port' => ['io' => 'sbio1', 'out_port' => '5'],
-            'discharge_enable_port' => ['io' => 'sbio1', 'out_port' => '7'],
-            'external_input_power_port' => ['io' => 'sbio1', 'in_port' => '1'],
-            'external_ups_power_port' => ['io' => 'sbio1', 'in_port' => '6'],
-            'stop_ups_power_port' => ['io' => 'sbio1', 'out_port' => '8'],
-            'stop_ups_battery_port' => ['io' => 'sbio1', 'out_port' => '9'],
-            'vdc_out_check_port' => ['io' => 'sbio1', 'in_port' => '4'],
-            'standby_check_port' => ['io' => 'sbio1', 'in_port' => '5'],
+        ['name' => 'lighting_pole', 'desc' => 'Столб', 'port' => 'lighting_pole'],
+        ['name' => 'workshop', 'desc' => 'Мастерская', 'port' => 'workshop_lighter'],
     ];
 }
-
-function conf_water()
-{
-    return ['well_pump_enable_port' => ['io' => 'sbio1', 'out_port' => 10]];
-}
-
-function conf_gates()
-{
-    return ['enable_port' => ['io' => 'sbio1', 'out_port' => 2],
-            'open_port' => ['io' => 'sbio1', 'out_port' => 3],
-            'open_ped_port' => ['io' => 'usio1', 'out_port' => 4],
-            'close_port' => ['io' => 'sbio1', 'out_port' => 11],
-            'state_port' => ['io' => 'sbio1', 'in_port' => '11'],
-            ];
-}
-
 
 function conf_boiler()
 {
     return ['ip' => "192.168.10.10",
             'port' => "8890"];
 }
+
+
+

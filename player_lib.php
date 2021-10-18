@@ -2,8 +2,8 @@
 
 require_once '/usr/local/lib/php/os.php';
 require_once 'config.php';
+require_once 'common_lib.php';
 
-define("PID_DIR", getenv('HOME') . '/');
 
 function player_start($files, $volume = 100, $duration = 0)
 {
@@ -19,6 +19,7 @@ function player_start($files, $volume = 100, $duration = 0)
 
     run_daemon($cmd, $pid_file);
 }
+
 
 function player_stop($io_name, $port)
 {

@@ -1,0 +1,1 @@
+mysqldump --no-data -u login -p sr90_automation > sr90_automation.sql

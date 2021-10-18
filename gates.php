@@ -38,31 +38,25 @@ function main($argv)
         return -EINVAL;
     }
 
-    $enable_port = httpio_port(conf_gates()['enable_port']);
-    $open_port = httpio_port(conf_gates()['open_port']);
-    $open_ped_port = httpio_port(conf_gates()['open_ped_port']);
-    $close_port = httpio_port(conf_gates()['close_port']);
-    $state_port = httpio_port(conf_gates()['state_port']);
-
     $cmd = strtolower($argv[1]);
 
     switch ($cmd) {
     case "enable":
-        gates_power_enable();
+        gates()->power_enable();
         printf("Gates power enabled\n");
         return 0;
 
     case "disable":
-        $rc = gates_power_disable();
+        $rc = gates()->power_disable();
         if ($rc) {
-            printf("Error: Gates is not closed\n");
+            printf("Error: Can't stop power: gates is not closed\n");
             return $rc;
         }
         printf("Gates power disabled\n");
         return 0;
 
     case "open":
-        $rc = gates_open();
+        $rc = gates()->open();
         if ($rc) {
             printf("Error: Gates power is disabled\n");
             return $rc;
@@ -71,7 +65,7 @@ function main($argv)
         return 0;
 
     case "open-ped":
-        $rc = gates_open_ped();
+        $rc = gates()->open_ped();
         if ($rc) {
             printf("Error: Gates power is disabled\n");
             return $rc;
@@ -80,7 +74,7 @@ function main($argv)
         return 0;
 
     case "close":
-        $rc = gates_close();
+        $rc = gates()->close();
         if ($rc) {
             printf("Error: Gates power is disabled\n");
             return $rc;
@@ -90,7 +84,7 @@ function main($argv)
 
     case "close-sync":
         printf("Gates start to closing\n");
-        $rc = gates_close_sync();
+        $rc = gates()->close_sync();
 
         if ($rc == -EBUSY) {
             printf("Error: Gates power is disabled\n");
@@ -106,7 +100,7 @@ function main($argv)
         return 0;
 
     case "stat":
-        $stat = gates_stat();
+        $stat = gates()->stat();
         dump($stat);
         printf("Gates power is %s\n", $stat['power']);
         printf("Gates is %s\n", $stat['gates']);

@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'common_lib.php';
 require_once 'config.php';
 require_once 'usio_lib.php';
+require_once 'board_io_api.php';
 
 
 
@@ -19,12 +20,9 @@ function print_help()
 
 function main($argv)
 {
-    $stop_ups_power_port = httpio_port(conf_ups()['stop_ups_power_port']);
-    $stop_ups_battery_port = httpio_port(conf_ups()['stop_ups_battery_port']);
-
     usio()->wdt_off();
-    $stop_ups_power_port->set(1);
-    $stop_ups_battery_port->set(1);
+    iop('ups_break_power')->up();
+    iop('battery_relay')->up();
     halt_all_systems();
     return 0;
 }

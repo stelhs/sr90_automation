@@ -5,64 +5,49 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
-require_once 'httpio_lib.php';
-require_once 'guard_lib.php';
+require_once 'board_io_api.php';
 require_once 'sequencer_lib.php';
 require_once 'common_lib.php';
-
-$utility_name = $argv[0];
+require_once 'well_pump_api.php';
 
 function print_help()
 {
-    global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" .
+    global $app_name;
+    echo "\nUsage: $app_name <command> <args>\n" .
              "\tcommands:\n" .
-                 "\t\t enable: enable well pump.\n" .
-                 "\t\t\texample: $utility_name enable\n" .
-                 "\t\t disable: disable well pump.\n" .
-                 "\t\t\texample: $utility_name disable\n" .
+                 "\t\t enable: run well pump.\n" .
+                 "\t\t\texample: $app_name run\n" .
+                 "\t\t disable: stop well pump.\n" .
+                 "\t\t\texample: $app_name stop\n" .
                  "\t\t stat: return current status.\n" .
-                 "\t\t\texample: $utility_name stat\n" .
-                 "\t\t duration: return pumping duration in seconds or 0 if pump was disabled.\n" .
-                 "\t\t\texample: $utility_name duration\n" .
+                 "\t\t\texample: $app_name stat\n" .
                  "\n\n";
 }
-define("PUMP_STATE_FILE", "/tmp/well_pump_enable");
 
 
 function main($argv)
 {
+    global $app_name;
+    $app_name = $argv[0];
+
     if (!isset($argv[1]))
         return -EINVAL;
 
-    $pump_port = httpio_port(conf_water()['well_pump_enable_port']);
     $cmd = strtolower($argv[1]);
 
     switch ($cmd) {
-    case "enable":
-        @file_put_contents(PUMP_STATE_FILE, time());
-        $pump_port->set(1);
-        printf("Pump enabled\n");
+    case "run":
+        well_pump()->start();
         return 0;
 
-    case "disable":
-        @unlink(PUMP_STATE_FILE);
-        $pump_port->set(0);
-        printf("Pump disabled\n");
+    case "stop":
+        well_pump()->stop();
         return 0;
 
     case "stat":
-        printf("Pump state = %d\n", $pump_port->get());
-        return 0;
-
-    case "duration":
-        @$enable_time = file_get_contents(PUMP_STATE_FILE);
-        if (!$enable_time) {
-            printf("0\n");
-            return;
-        }
-
-        printf("%d\n", time() - $enable_time);
+        $stat = well_pump()->stat();
+        pnotice("Pump state: %d\n", $stat['state']);
+        pnotice("Duration time: %d\n", $stat['duration']);
         return 0;
 
     default:

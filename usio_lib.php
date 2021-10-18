@@ -6,12 +6,19 @@ require_once '/usr/local/lib/php/os.php';
 class Usio {
     private $debug_output_states = [];
 
+    function __construct()
+    {
+        $this->log = new Plog('sr90:Usio');
+    }
+
     private function send_cmd($cmd)
     {
         $result = "";
         $fd = stream_socket_client("unix://" . conf_local_io()['socket_file'], $errno, $errstr, 30);
-        if (!$fd)
+        if (!$fd) {
+            $this->log->err('send_cmd(): cant stream_socket_client: %s\n', $fd);
             return -EBUSY;
+        }
 
         fwrite($fd, $cmd);
         while (!feof($fd))
@@ -25,7 +32,7 @@ class Usio {
     public function relay_set_state($port, $state)
     {
         if (DISABLE_HW) {
-            perror("FAKE: io.relay_set_state %d to %d\n", $port, $state);
+            $this->log->err("FAKE: io.relay_set_state %d to %d\n", $port, $state);
             $this->debug_output_states[$port] = $state;
             return '0';
         }
@@ -34,7 +41,7 @@ class Usio {
         if ($ret == "ok")
             return 0;
 
-        msg_log(LOG_ERR, sprintf("USIO: can't set relay state: %s\n", $ret));
+        $this->log->err("can't set relay state %d %d: %s", $port, $state, $ret);
         return -EBUSY;
     }
 
@@ -49,7 +56,7 @@ class Usio {
         if ($ret == "0" || $ret == "1")
             return $ret;
 
-        msg_log(LOG_ERR, sprintf("USIO: can't get relay state: %s\n", $ret));
+        $this->log->err("can't get relay state %d ret: %s", $port, $ret);
         return -EBUSY;
     }
 
@@ -64,7 +71,7 @@ class Usio {
         if ($ret == "0" || $ret == "1")
             return $ret;
 
-        msg_log(LOG_ERR, sprintf("USIO: can't get input state: %s\n", $ret));
+        $this->log->err("can't get input state %d: %s", $port, $ret);
         return -EBUSY;
     }
 
@@ -76,20 +83,24 @@ class Usio {
     public function wdt_on()
     {
         $ret = $this->send_cmd("wdt_on\n");
-        if ($ret == "ok")
+        if ($ret == "ok") {
+            $this->log->info("Watchdog enabled");
             return 0;
+        }
 
-        msg_log(LOG_ERR, sprintf("USIO: can't wdt on: %s\n", $ret));
+        $this->log->err("can't wdt on: %s", $ret);
         return -EBUSY;
     }
 
     public function wdt_off()
     {
         $ret = $this->send_cmd("wdt_off\n");
-        if ($ret == "ok")
+        if ($ret == "ok") {
+            $this->log->info("Watchdog disabled");
             return 0;
+        }
 
-        msg_log(LOG_ERR, sprintf("USIO: can't wdt off : %s\n", $ret));
+        $this->log->err("can't wdt off: %s", $ret);
         return -EBUSY;
     }
 }

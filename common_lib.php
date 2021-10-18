@@ -5,132 +5,136 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once 'config.php';
 require_once 'modem3g.php';
-require_once 'httpio_lib.php';
-require_once 'telegram_api.php';
+require_once 'telegram_lib.php';
 require_once 'boiler_api.php';
 require_once 'gates_api.php';
+require_once 'guard_api.php';
+require_once 'power_api.php';
 
 
-function sms_send($type, $recepient, $args = array())
+define("PID_DIR", '/tmp/');
+
+define("TEMPERATURES_FILE", "/tmp/temperatures");
+define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
+define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
+
+$log = new Plog('sr90:common');
+
+interface IO_handler {
+    function name();
+    function trigger_ports();
+    function event_handler($port, $state);
+}
+
+interface Periodically_events {
+    function name();
+    function do();
+}
+
+interface Cron_events {
+    function name();
+    function interval();
+    function do();
+}
+
+interface Tg_skynet_events {
+    function name();
+    function cmd_list();
+}
+
+interface Sms_events {
+    function name();
+    function cmd_list();
+}
+
+
+function periodically_list()
 {
-    $sms_text = '';
+    return [new Gates_periodically,
+            new Ups_batterry_periodically,
+            new Ups_periodically,
+            new Telegram_periodically,
+            new Modem3g_periodically,
+            ];
+}
 
-    switch ($type) {
-    case 'reboot':
-        if (isset($recepient['user_id'])) {
-            $user = user_get_by_id($recepient['user_id']);
-            $sms_text = sprintf("%s отправил сервер на перезагрузку через %s",
-                                $user['name'], $args);
-            break;
-        }
-        $sms_text = sprintf("Сервер ушел на перезагрузку по запросу %s", $args);
-        break;
+function cron_handlers()
+{
+    return [new Boiler_cron_events,
+            new Temperatures_cron_events,
+            new Cryptocurrancy_cron_events,
+            new Boards_io_cron_events,
+            new Guard_cron_events,
+            new Lighting_cron_events,
+            new Well_pump_cron_events,
+            ];
+}
 
-    case 'status':
-        $sms_text = $args;
-        break;
+function io_handlers()
+{
+    return [new Guard_io_handler,
+            new Well_pump_io_handler,
+            new Ext_power_io_handler,
+            new Gates_io_handler,
+            ];
+}
 
-    case 'lighting_on':
-        $sms_text = sprintf("Освещение %s включено.", $args['name']);
-        break;
+function telegram_handlers()
+{
+    return [new Guard_tg_events,
+            new Gates_tg_events,
+            new Padlock_tg_events,
+            new Lighters_tg_events,
+            new Boiler_tg_events,
+            new Modem_tg_events,
+            new Common_tg_events,
+            new Ups_tg_events
+            ];
+}
 
-    case 'lighting_off':
-        $sms_text = sprintf("Освещение %s отключено.", $args['name']);
-        break;
 
-    case 'mdadm':
-        switch ($args['state']) {
-        case "resync":
-            $raid_stat = "синхронизируется " . $args['progress'] . '%';
-            break;
 
-        case "recovery":
-            $raid_stat = "восстанавливается " . $args['progress'] . '%';
-            break;
+class Queue_file {
+    function __construct($filename, $size)
+    {
+        $this->size = $size;
+        $this->filename = $filename;
+    }
 
-        case "damage":
-            $raid_stat = "поврежден!";
-            break;
-
-        case "normal":
-            $raid_stat = "восстановлен!";
-            break;
-
-        case "no_exist":
-        default:
+    function put($value)
+    {
+        @$content = file_get_contents($this->filename);
+        if (!$content) {
+            file_put_contents($this->filename, json_encode([$value]));
             return;
         }
 
-        $sms_text = sprintf("RAID1: %s", $raid_stat);
-        break;
-
-    case 'external_power':
-        switch ($args['mode']) {
-        case "on":
-            $sms_text = "Внешнее питание восстановлено";
-            break;
-
-        case "off":
-            $sms_text = "Отключено внешнее питание";
-            break;
+        @$list = json_decode($content, true);
+        if (!is_array($list)) {
+            file_put_contents($this->filename, json_encode([$value]));
+            return;
         }
-        break;
 
-    case 'alarm':
-        $sms_text = sprintf("Внимание!\nСработала %s, событие: %d",
-                            $args['zone'], $args['action_id']);
-        break;
+        if (count($list) >= $this->size)
+            unset($list[0]);
 
-    case 'guard_disable':
-        $sms_text = sprintf("Метод: %s, state_id: %s.",
-                            $args['method'], $args['state_id']);
-
-        if (isset($args['global_status']))
-            $sms_text .= $args['global_status'];
-        break;
-
-    case 'guard_enable':
-        $sms_text = sprintf("Метод: %s, state_id: %s.",
-                            $args['method'], $args['state_id']);
-
-        if (isset($args['global_status']))
-            $sms_text .= $args['global_status'];
-        break;
-
-    case 'inet_switch':
-        $sms_text = sprintf("Интернет переключен на модем %d",
-                            $args['modem_num']);
-        break;
-
-    default:
-        return -EINVAL;
+        $list[] = $value;
+        $list = array_values($list);
+        file_put_contents($this->filename, json_encode($list));
     }
 
-    $modem = new Modem3G(conf_modem()['ip_addr']);
+    function get_val()
+    {
+        @$content = file_get_contents($this->filename);
+        if (!$content)
+            return NULL;
 
-    // creating phones list
-    $list_phones = [];
-    if (isset($recepient['user_id']) && $recepient['user_id']) {
-        $user = user_get_by_id($recepient['user_id']);
-        $list_phones = $user['phones'];
-    }
+        @$list = json_decode($content, true);
+        if (!is_array($list))
+            return NULL;
 
-    // applying phones list by groups
-    if (isset($recepient['groups']))
-        foreach ($recepient['groups'] as $group) {
-            $group_phones = get_users_phones_by_access_type($group);
-            $list_phones = array_unique(array_merge($list_phones, $group_phones));
-        }
-
-    if (!count($list_phones))
-        return -EINVAL;
-
-    foreach ($list_phones as $phone) {
-        $ret = $modem->send_sms($phone, $sms_text);
-        if ($ret) {
-            msg_log(LOG_ERR, "Can't send SMS: " . $ret);
-            return -EBUSY;
-        }
+        sort($list);
+        return $list[ceil(count($list) / 2) - 1];
     }
 }
 
@@ -144,20 +148,17 @@ function telegram_get_admin_chat_id()
 
 function server_reboot($method, $user_id = NULL)
 {
+    global $log;
     if ($method == "SMS")
         sms_send('reboot',
                  ['user_id' => $user_id,
                   'groups' => ['sms_observer']],
                  $method);
 
-    if ($user_id) {
-        $user = user_get_by_id($args['user_id']);
-        $text = sprintf("%s отправил сервер на перезагрузку через %s",
-                        $user['name'], $method);
-    } else
-        $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $method);
+    $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $method);
+    $log->info("server_reboot(): server going to reboot");
 
-    telegram_send_msg_admin($text);
+    tn()->send_to_admin($text);
     if(DISABLE_HW)
         return;
     run_cmd('halt');
@@ -178,24 +179,32 @@ function get_day_night()
 
 function user_get_by_phone($phone)
 {
-    $query = "SELECT * FROM users " .
-                        "WHERE phones LIKE \"%" . $phone . "%\" AND enabled = 1";
-    $user = db()->query("%s", $query);
+    global $log;
+    $user = db()->query("SELECT * FROM users " .
+                        "WHERE phones LIKE \"%%%s%%\" AND enabled = 1", $phone);
 
-    if (!$user)
+    if (!$user) {
+        $log->err("user_get_by_phone(): can't Mysql query\n");
         return NULL;
+    }
 
     $user['phones'] = string_to_array($user['phones']);
     return $user;
 }
 
-function user_get_by_id($user_id)
+function user_by_id($user_id)
 {
-    $user = db()->query(sprintf("SELECT * FROM users " .
-                                "WHERE id = %d AND enabled = 1", $user_id));
-
-    if (!$user)
+    global $log;
+    if (!$user_id)
         return NULL;
+
+    $user = db()->query("SELECT * FROM users " .
+                        "WHERE id = %d AND enabled = 1", $user_id);
+
+    if (!$user) {
+        $log->err("user_by_id(): can't Mysql query\n");
+        return NULL;
+    }
 
     $user['phones'] = string_to_array($user['phones']);
     return $user;
@@ -203,77 +212,64 @@ function user_get_by_id($user_id)
 
 function user_get_by_telegram_id($telegram_user_id)
 {
-    $user = db()->query(sprintf("SELECT * FROM users " .
-                                "WHERE telegram_id = %d AND enabled = 1",
-                                $telegram_user_id));
+    global $log;
+    $user = db()->query("SELECT * FROM users " .
+                        "WHERE telegram_id = %d AND enabled = 1",
+                        $telegram_user_id);
 
-    if (!$user)
+    if (!$user) {
+        $log->err("user_get_by_telegram_id(): can't Mysql query\n");
         return NULL;
+    }
 
     $user['phones'] = string_to_array($user['phones']);
     return $user;
 }
 
 
-function get_users_phones_by_access_type($type)
+function users_for_alarm()
 {
-    $users = db()->query_list(sprintf('SELECT * FROM users '.
-                                      'WHERE %s = 1 AND enabled = 1', $type));
-    $list_phones = array();
-    foreach ($users as $user)
-        $list_phones[] = string_to_array($user['phones'])[0];
-
-    return $list_phones;
-}
-
-function get_all_users_phones_by_access_type($type)
-{
-    $users = db()->query_list(sprintf('SELECT * FROM users '.
-                                      'WHERE %s = 1 AND enabled = 1', $type));
-    $list_phones = array();
-    foreach ($users as $user) {
-        $phones = string_to_array($user['phones']);
-        foreach ($phones as $phone)
-            $list_phones[] = $phone;
+    global $log;
+    $users = db()->query_list('SELECT * FROM users '.
+                              'WHERE guard_alarm = 1 AND enabled = 1');
+    if (!$users) {
+        $log->err("users_for_alarm(): can't Mysql query\n");
+        return NULL;
     }
 
-    return $list_phones;
+    $list_phones = array();
+    foreach ($users as $user)
+        $users['phones'] = string_to_array($user['phones']);
+
+    return $users;
 }
 
 
-function get_global_status()
+function skynet_stat()
 {
-    $modem = new Modem3G(conf_modem()['ip_addr']);
-
-    $guard_stat = get_guard_state();
-    $balance = $modem->get_sim_balanse();
-    $modem_stat = $modem->get_status();
-    $lighting_stat = get_street_light_stat();
-    $padlocks_stat = get_padlocks_stat();
-    $termosensors = get_termosensors_stat();
-
     $ret = run_cmd('uptime');
     preg_match('/up (.+),/U', $ret['log'], $mathes);
     $uptime = $mathes[1];
 
-    return ['guard_stat' => $guard_stat,
-            'balance' => $balance,
-            'modem_stat' => $modem_stat,
+    return ['guard_stat' => guard()->stat(),
+            'balance' => modem3g()->sim_balanse(),
+            'modem_stat' => modem3g()->status(),
             'uptime' => $uptime,
-            'lighting_stat' => $lighting_stat,
-            'padlocks_stat' => $padlocks_stat,
-            'termo_sensors' => $termosensors,
-            'battery' => get_battery_info(),
-            'power_states' => get_power_states(),
-            'ups_state' => get_ups_state(),
-            'boiler_state' => boiler_stat(),
-            'gates_state' => gates_stat(),
+            'lighting_stat' => street_lights_stat(),
+            'padlocks_stat' => padlocks_stat(),
+            'termo_sensors' => termosensors(),
+            'battery' => battery_info(),
+            'power_state' => power_state(),
+            'ups_state' => ups_state(),
+            'boiler_state' => boiler()->stat(),
+            'gates_state' => gates()->stat(),
     ];
 }
 
 
-function format_global_status_for_sms($stat)
+function skynet_stat_sms()
 {
+    $stat = skynet_stat();
     $text = '';
     if (isset($stat['guard_stat'])) {
         $text_who = '';
@@ -286,21 +282,21 @@ function format_global_status_for_sms($stat)
             $mode = "вкл.";
             break;
         }
-        $text .= sprintf("Охрана: %s, ", $mode);
+        $text .= sprintf("Охрана:%s, ", $mode);
 
         if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнор: ");
             foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
-                $zone = zone_get_by_io_id($zone_id);
+                $zone = zone_get_by_id($zone_id);
                 $text .= sprintf("%s, ", $zone['name']);
             }
             $text .= '.';
         }
 
-        if (count($stat['guard_stat']['blocking_zones'])) {
-            $text .= sprintf("Заблокир: ");
-            foreach ($stat['guard_stat']['blocking_zones'] as $zone) {
-                $text .= sprintf("%s, ", $zone['name']);
+        if (count($stat['guard_stat']['locked_zones'])) {
+            $text .= sprintf("Заблокир:");
+            foreach ($stat['guard_stat']['locked_zones'] as $zone) {
+                $text .= sprintf("%s, ", $zone['desc']);
             }
             $text .= '.';
         }
@@ -321,7 +317,7 @@ function format_global_status_for_sms($stat)
                 $mode = "вкл.";
                 break;
             }
-            $text .= sprintf("Освещение '%s': %s, ", $row['name'], $mode);
+            $text .= sprintf("свет '%s':%s, ", $row['desc'], $mode);
         }
     }
     if (isset($stat['padlocks_stat'])) {
@@ -335,16 +331,16 @@ function format_global_status_for_sms($stat)
                 $mode = "откр.";
                 break;
             }
-            $text .= sprintf("Замок '%s': %s, ", $row['name'], $mode);
+            $text .= sprintf("замок '%s':%s, ", $row['desc'], $mode);
         }
     }
 
     if (isset($stat['uptime'])) {
-        $text .= sprintf("Uptime: %s, ", $stat['uptime']);
+        $text .= sprintf("Uptime:%s, ", $stat['uptime']);
     }
 
     if (isset($stat['balance'])) {
-        $text .= sprintf("Баланс: %s, ", $stat['balance']);
+        $text .= sprintf("Баланс:%s, ", $stat['balance']);
     }
 
     if (isset($stat['battery'])) {
@@ -356,10 +352,10 @@ function format_global_status_for_sms($stat)
                              $stat['battery']['current']);
     }
 
-    if (isset($stat['power_states'])) {
+    if (isset($stat['power_state'])) {
         $text .= sprintf("Внешн. пит:%d, пит.ИБП:%d, ",
-                         $stat['power_states']['input'],
-                         $stat['power_states']['ups']);
+                         $stat['power_state']['input'],
+                         $stat['power_state']['ups']);
     }
 
     if (isset($stat['ups_state'])) {
@@ -378,8 +374,9 @@ function format_global_status_for_sms($stat)
 }
 
 
-function format_global_status_for_telegram($stat)
+function skynet_stat_telegram()
 {
+    $stat = skynet_stat();
     $text = '';
     if (isset($stat['guard_stat'])) {
         $text_who = '';
@@ -399,15 +396,15 @@ function format_global_status_for_telegram($stat)
         if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнорированные зоны:\n");
             foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
-                $zone = zone_get_by_io_id($zone_id);
-                $text .= sprintf("               %s\n", $zone['name']);
+                $zone = zone_get_by_id($zone_id);
+                $text .= sprintf("               %s\n", $zone['desc']);
             }
         }
 
-        if (count($stat['guard_stat']['blocking_zones'])) {
+        if (count($stat['guard_stat']['locked_zones'])) {
             $text .= sprintf("Заблокированные зоны: ");
-            foreach ($stat['guard_stat']['blocking_zones'] as $zone)
-                $text .= sprintf("               %s\n", $zone['name']);
+            foreach ($stat['guard_stat']['locked_zones'] as $zone)
+                $text .= sprintf("               %s\n", $zone['desc']);
         }
 
         if (isset($stat['guard_stat']['user_name']) && $text_who)
@@ -428,7 +425,7 @@ function format_global_status_for_telegram($stat)
                 $mode = "включено";
                 break;
             }
-            $text .= sprintf("Освещение '%s': %s\n", $row['name'], $mode);
+            $text .= sprintf("Освещение '%s': %s\n", $row['desc'], $mode);
         }
     }
 
@@ -443,7 +440,7 @@ function format_global_status_for_telegram($stat)
                 $mode = "открыт";
                 break;
             }
-            $text .= sprintf("Замок '%s': %s\n", $row['name'], $mode);
+            $text .= sprintf("Замок '%s': %s\n", $row['desc'], $mode);
         }
     }
 
@@ -469,11 +466,11 @@ function format_global_status_for_telegram($stat)
                              $stat['battery']['current']);
     }
 
-    if (isset($stat['power_states'])) {
+    if (isset($stat['power_state'])) {
         $text .= sprintf("Питание на вводе: %s\n" .
                          "Питание на ИБП: %s\n" ,
-                         $stat['power_states']['input'] ? 'присутствует' : 'отсутствует',
-                         $stat['power_states']['ups'] ? 'присутствует' : 'отсутствует');
+                         $stat['power_state']['input'] ? 'присутствует' : 'отсутствует',
+                         $stat['power_state']['ups'] ? 'присутствует' : 'отсутствует');
     }
 
     if (isset($stat['ups_state'])) {
@@ -513,37 +510,7 @@ function format_global_status_for_telegram($stat)
 }
 
 
-function get_street_light_stat()
-{
-    $report = [];
-    foreach (conf_street_light() as $zone) {
-        $zone['state'] = httpio($zone['io'])->relay_get_state($zone['io_port']);
-        if ($zone['state'] < 0)
-            perror("Can't get relay state %d\n", $zone['io_port']);
-
-        $report[] = $zone;
-    }
-
-    return $report;
-}
-
-function get_padlocks_stat()
-{
-    $report = [];
-    foreach (conf_padlocks() as $zone) {
-        $zone['state'] = httpio($zone['io'])->relay_get_state($zone['io_port']);
-        if ($zone['state'] < 0)
-            perror("Can't get relay state %d\n", $zone['io_port']);
-
-        $report[] = $zone;
-    }
-
-    return $report;
-}
-
-define("TEMPERATURES_FILE", "/tmp/temperatures");
-define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
-function get_termosensors_stat()
+function termosensors()
 {
     @$content = file_get_contents(CURRENT_TEMPERATURES_FILE);
     if (!$content)
@@ -565,76 +532,46 @@ function get_termosensors_stat()
     return $list;
 }
 
-function get_stored_io_states()
-{
-    $query = 'SELECT io_output_actions.io_name, ' .
-                    'io_output_actions.port, ' .
-                    'io_output_actions.state ' .
-             'FROM io_output_actions ' .
-             'INNER JOIN ' .
-                '( SELECT io_name, port, max(id) as last_id ' .
-                 'FROM io_output_actions ' .
-                 'GROUP BY io_name, port ) as b '.
-             'ON io_output_actions.port = b.port AND ' .
-                'io_output_actions.io_name = b.io_name AND ' .
-                'io_output_actions.id = b.last_id ' .
-             'ORDER BY io_output_actions.io_name, io_output_actions.port';
-
-    $rows = db()->query_list($query);
-    if (!is_array($rows) || !count($rows))
-        return [];
-
-    return $rows;
-}
-
-
-define("UPS_BATT_VOLTAGE_FILE", "/tmp/ups_batt_voltage");
-define("UPS_BATT_CURRENT_FILE", "/tmp/ups_batt_current");
-define("CHARGER_STAGE_FILE", "/tmp/battery_charge_stage");
-
-function get_battery_info()
-{
-    @$voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
-    if ($voltage === FALSE)
-        return null;
-
-    @$current = trim(file_get_contents(UPS_BATT_CURRENT_FILE));
-    if ($current === FALSE)
-        return null;
-
-    return ['voltage' => $voltage,
-            'current' => $current];
-}
-
-
 function reboot_sbio($sbio_name)
 {
+    global $log;
     if (!isset(conf_io()[$sbio_name]))
         return;
     $io_conf = conf_io()[$sbio_name];
-    $content = file_get_contents(sprintf("http://%s:%d/reboot",
-                                 $io_conf['ip_addr'],
-                                 $io_conf['tcp_port']));
-    if (!$content)
+    $request = sprintf("http://%s:%d/reboot",
+                       $io_conf['ip_addr'],
+                       $io_conf['tcp_port']);
+    $content = file_get_contents($request);
+    if (!$content) {
+        $log->err("reboot_sbio(): can't HTTP request %s\n", $request);
         return ['status' => 'error',
                 'error_msg' => sprintf('Can`t response from %s', $sbio_name)];
+    }
 
     $ret_data = json_decode($content, true);
-    if (!$ret_data)
+    if (!$ret_data) {
+        $log->err("reboot_sbio(): can't decode JSON: %s\n", $content);
         return ['status' => 'error',
                 'error_msg' => sprintf('Can`t decoded response: %s', $content)];
+    }
 
-    if ($ret_data['status'] != 'ok')
+    if ($ret_data['status'] != 'ok') {
+        $log->err("reboot_sbio(): error response %s\n", $content);
         return -1;
+    }
     return 0;
 }
 
-define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
 
 function halt_all_systems()
 {
-    if (is_halt_all_systems())
+    global $log;
+    $log->info("halt_all_systems()\n", $content);
+
+    if (is_halt_all_systems()) {
+        $log->err("halt_all_systems(): is already halted\n");
         return;
+    }
 
     if (DISABLE_HW) {
         perror("FAKE: halt all systems, goodbuy. For undo - remove %s\n",
@@ -650,47 +587,201 @@ function is_halt_all_systems()
     return @file_get_contents(HALT_ALL_SYSTEMS_FILE);
 }
 
-function get_power_states()
-{
-    $power = [];
-    $external_input_power_port = httpio_port(conf_ups()['external_input_power_port']);
-    $external_ups_power_port = httpio_port(conf_ups()['external_ups_power_port']);
-    $input_state = $external_input_power_port->get();
-    $ups_state = $external_ups_power_port->get();
 
-    if ($input_state >= 0)
-        $power['input'] = $input_state;
+class Common_tg_events implements Tg_skynet_events {
+    function name()
+    {
+        return "common";
+    }
 
-    if ($ups_state >= 0)
-        $power['ups'] = $ups_state;
-    return $power;
+    function cmd_list() {
+        return [
+            ['cmd' => ['статус'],
+             'method' => 'status'],
+
+            ['cmd' => ['скажи'],
+             'method' => 'tell'],
+
+            ['cmd' => ['перезагрузись'],
+             'method' => 'reboot'],
+            ];
+    }
+
+    function status($chat_id, $msg_id, $user_id, $arg, $text)
+    {
+        tn()->send($chat_id, $msg_id, 'делаю...');
+        $stat_text = skynet_stat_telegram();
+        tn()->send($chat_id, $msg_id, $stat_text);
+        run_cmd(sprintf("./image_sender.php current %d", $chat_id));
+    }
+
+    function tell($chat_id, $msg_id, $user_id, $arg, $text)
+    {
+        run_cmd(sprintf("./text_spech.php '%s'", $arg));
+        tn()->send($chat_id, $msg_id,
+            "По громкоговорителю озвучивается сообщение: '%s'.\n" .
+            "Ожидайте пару минут видео-звукозапись сообщения и реакции окружающих.", $text);
+
+        run_cmd(sprintf("./video_sender.php by_timestamp %d 15 1,2 %d", time(), $chat_id));
+    }
+
+    function reboot($chat_id, $msg_id, $user_id, $arg, $text)
+    {
+        tn()->send($chat_id, $msg_id, 'Выполняю перезагрузку');
+        server_reboot('telegram', $user_id);
+    }
 }
 
-function get_ups_state()
-{
-    $stat = [];
-    $vdc_out_check_port = httpio_port(conf_ups()['vdc_out_check_port']);
-    $standby_check_port = httpio_port(conf_ups()['standby_check_port']);
 
-    $stat['vdc_out_state'] = $vdc_out_check_port->get();
-    $stat['standby_state'] = $standby_check_port->get();
-    @$stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
-    return $stat;
+class Common_sms_events implements Sms_events {
+    function name()
+    {
+        return "common";
+    }
+
+    function cmd_list() {
+        return [
+             ['cmd' => ['help'],
+             'method' => 'help'],
+
+            ['cmd' => ['reboot'],
+             'method' => 'reboot'],
+
+            ['cmd' => ['stat'],
+             'method' => 'status'],
+            ];
+    }
+
+    function help($phone, $user, $arg, $text)
+    {
+        $info = 'Команды: ';
+        $sep = '';
+        foreach (sms_handlers() as $handler)
+            foreach ($handler->cmd_list() as $row)
+                foreach ($row['cmd'] as $cmd) {
+                    $info .= sprintf("%s%s", $sep, $cmd);
+                    $sep = '|';
+                }
+        modem3g()->send_sms($phone, $info);
+    }
+
+    function reboot($phone, $user, $arg, $text)
+    {
+        tn()->send_to_admin('Выполняю перезагрузку');
+        modem3g()->send_sms($phone, 'Сервер ушел в перезагрузку');
+        server_reboot('sms', $user['id']);
+    }
+
+    function status($phone, $user, $arg, $text)
+    {
+        modem3g()->send_sms($phone, skynet_stat_sms());
+    }
+
 }
 
 
-/**
- * Get duration between UPS power loss and UPS power resume
- */
-function get_last_ups_duration()
-{
-    $last_ext_power_state = db()->query("SELECT UNIX_TIMESTAMP(created) as created, state " .
-                                        "FROM ext_power_log WHERE type='ups' " .
-                                        "ORDER BY id DESC LIMIT 1");
-    if (!is_array($last_ext_power_state) ||
-        $last_ext_power_state['state'] == 1)
-        return NULL;
+class Temperatures_cron_events implements Cron_events {
+    function name()
+    {
+        return "temparatures";
+    }
 
-    return time() - $last_ext_power_state['created'];
+    function interval()
+    {
+        return "hour";
+    }
+
+    function do()
+    {
+        $termo_sensors = termosensors();
+
+        $temperature_stat = [];
+        foreach ($termo_sensors as $sensor) {
+            $temperature_stat[$sensor['sensor_name']] = $sensor;
+
+            $query = sprintf("SELECT created, temperature " .
+                "FROM `termo_sensors_log` " .
+                "WHERE sensor_name = '%s' " .
+                "AND created > (now() - INTERVAL 1 DAY) " .
+                "ORDER BY temperature ASC LIMIT 1",
+                $sensor['sensor_name']);
+            $row = db()->query($query);
+            $temperature_stat[$sensor['sensor_name']]['min'] = $row;
+
+            $query = sprintf("SELECT created, temperature " .
+                "FROM `termo_sensors_log` " .
+                "WHERE sensor_name = '%s' " .
+                "AND created > (now() - INTERVAL 1 DAY) " .
+                "ORDER BY temperature DESC LIMIT 1",
+                $sensor['sensor_name']);
+            $row = db()->query($query);
+            $temperature_stat[$sensor['sensor_name']]['max'] = $row;
+
+            $query = sprintf("SELECT avg(temperature) as temperature " .
+                "FROM `termo_sensors_log` " .
+                "WHERE sensor_name = '%s' " .
+                "AND created > (now() - INTERVAL 1 DAY)",
+                $sensor['sensor_name']);
+            $row = db()->query($query);
+            $temperature_stat[$sensor['sensor_name']]['avg'] = $row['temperature'];
+        }
+
+        file_put_contents(TEMPERATURES_FILE, json_encode($temperature_stat));
+    }
 }
 
+
+class Cryptocurrancy_cron_events implements Cron_events {
+    function name()
+    {
+        return "cryptocurrancy";
+    }
+
+    function interval()
+    {
+        return "min";
+    }
+
+    function do()
+    {
+        $coins = ['ETC', 'BTC', 'BNB'];
+        foreach ($coins as $coin) {
+            $filename = sprintf(".crypto_currency_%s_max_threshold", strtolower($coin));
+            @$threshold = (float)(file_get_contents($filename));
+            if (!$threshold)
+                continue;
+
+            @$info = json_decode(file_get_contents(
+                                 sprintf("https://api.binance.com/api/v3/ticker/price?symbol=%sUSDT", $coin)), true);
+            if (!is_array($info))
+                continue;
+
+            if ($info['price'] < $threshold)
+                continue;
+
+            $msg = sprintf("Цена на %s %f USDT", $coin, $info['price']);
+            tn()->send_to_admin($msg);
+            file_put_contents($filename, "");
+        }
+
+
+        foreach ($coins as $coin) {
+            $filename = sprintf(".crypto_currency_%s_min_threshold", strtolower($coin));
+            @$threshold = (float)(file_get_contents($filename));
+            if (!$threshold)
+                continue;
+
+            @$info = json_decode(file_get_contents(
+                                 sprintf("https://api.binance.com/api/v3/ticker/price?symbol=%sUSDT", $coin)), true);
+            if (!is_array($info))
+                continue;
+
+            if ($info['price'] > $threshold)
+                continue;
+
+            $msg = sprintf("Цена на %s %f USDT", $coin, $info['price']);
+            tn()->send_to_admin($msg);
+            file_put_contents($filename, "");
+        }
+    }
+}

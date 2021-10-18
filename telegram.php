@@ -6,8 +6,7 @@ require_once '/usr/local/lib/php/database.php';
 require_once 'common_lib.php';
 
 require_once 'config.php';
-require_once 'telegram_api.php';
-define("MSG_LOG_LEVEL", LOG_NOTICE);
+require_once 'telegram_lib.php';
 
 function print_help()
 {
@@ -105,7 +104,7 @@ function main($argv)
         }
 
         $msg = trim($argv[2]);
-        telegram_send_msg($msg);
+        tn()->send_to_msg($msg);
         break;
 
     case 'msg_send_alarm':
@@ -115,7 +114,7 @@ function main($argv)
         }
 
         $msg = trim($argv[2]);
-        telegram_send_msg_alarm($msg);
+        tn()->send_to_alarm($msg);
         break;
 
     case 'msg_send_admin':
@@ -125,7 +124,7 @@ function main($argv)
         }
 
         $msg = trim($argv[2]);
-        telegram_send_msg_admin($msg);
+        tn()->send_to_admin($msg);
         break;
 
 

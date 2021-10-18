@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+// DEPRICATED
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
@@ -19,7 +20,7 @@ function print_help()
     	"\n\n";
 }
 
-
+// TODO: remove this file
 
 function main($argv)
 {
