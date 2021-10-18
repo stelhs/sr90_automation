@@ -31,9 +31,9 @@ class Ext_power_io_handler implements IO_handler {
                 'ups_250vdc' => 0];
     }
 
-    function event_handler($port, $state)
+    function event_handler($pname, $state)
     {
-        if ($port == 'ext_power') {
+        if ($pname == 'ext_power') {
             $row = db()->query('SELECT state FROM ext_power_log ' .
                                'WHERE type = "input" ' .
                                'ORDER BY id DESC LIMIT 1');
@@ -59,7 +59,7 @@ class Ext_power_io_handler implements IO_handler {
             return 0;
         }
 
-        if ($port == 'ups_220vac') {
+        if ($pname == 'ups_220vac') {
             $row = db()->query('SELECT state FROM ext_power_log ' .
                                'WHERE type = "ups" ' .
                                'ORDER BY id DESC LIMIT 1');
@@ -86,13 +86,13 @@ class Ext_power_io_handler implements IO_handler {
             return 0;
         }
 
-        if ($port == 'ups_250vdc') {
+        if ($pname == 'ups_250vdc') {
             $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
             tn()->send_to_admin($msg);
             return 0;
         }
 
-        if ($port == 'ups_14vdc') {
+        if ($pname == 'ups_14vdc') {
             $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 14vdc';
             tn()->send_to_admin($msg);
             return 0;

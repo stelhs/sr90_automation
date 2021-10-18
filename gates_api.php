@@ -12,12 +12,15 @@ define("GATES_REMOTE_BUTTON_REVERSE", "/tmp/gates_remote_butt_reverse");
 class Gates {
     function __construct()
     {
-        $this->log = new Plog('sr90:Boiler');
+        $this->log = new Plog('sr90:Gates');
     }
 
     function power_enable()
     {
         iop('gates_power')->up();
+        pnotice("gates power enabled but wait 5seconds to starting...");
+        sleep(5);
+        pnotice("success\n");
         return 0;
     }
 
@@ -171,6 +174,20 @@ class Gates_io_handler implements IO_handler {
             }
 
             if (gates()->is_closed()) {
+                $this->log->info("gates open for pedestration");
+                gates()->open_ped();
+                gates()->close_after(30);
+                return 0;
+            }
+            $this->log->info("gates closing");
+            gates()->close();
+            return 0;
+
+        case 'remote_guard_sleep':
+            if (guard()->state() == 'ready')
+                return;
+
+            if (gates()->is_closed()) {
                 tn()->send_to_admin("Ворота открываются");
                 @unlink(GATES_REMOTE_BUTTON_REVERSE);
                 $this->log->info("gates opening");
@@ -197,22 +214,6 @@ class Gates_io_handler implements IO_handler {
                 tn()->send_to_admin("Ворота не открылись, видимо нет питания");
             @unlink(GATES_REMOTE_BUTTON_REVERSE);
             return;
-
-        case 'remote_guard_sleep':
-            if (guard()->state() != 'sleep')
-                return;
-
-            if (gates()->is_closed()) {
-                $this->log->info("gates open for pedestration");
-                gates()->open_ped();
-                gates()->close_after(30);
-                return 0;
-            }
-            // TODO: add lamp indication
-
-            $this->log->info("gates closing");
-            gates()->close();
-            return 0;
         }
     }
 }

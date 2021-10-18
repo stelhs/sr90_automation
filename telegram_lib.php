@@ -277,8 +277,8 @@ class Telegram_periodically implements Periodically_events {
         if (!$words)
             return 0;
 
-        $arg1 = $words[0];
-        $arg2 = isset($words[1]) ? $words[1] : "";
+        $arg1 = strtolower($words[0]);
+        $arg2 = isset($words[1]) ? strtolower($words[1]) : "";
         if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
             return 0;
 

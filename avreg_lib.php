@@ -52,7 +52,7 @@ class Avreg {
                 foreach ($files as $file) {
                     $full_file_name = AVREG_VIDEO_DIR . $dir1 . '/' . $dir2 .
                                               '/' . $cam_name . '/' . $file;
-                    $file_stamp = get_video_file_timestamp($full_file_name);
+                    $file_stamp = $this->video_file_timestamp($full_file_name);
                     $video_list[$file_stamp] = $full_file_name;
                 }
             }

@@ -4,12 +4,12 @@
 # $3 - duration in seconds
 
 function start {
-    ./io.php relay_set sbio1 1 1
+    ./io.php voice_power up
     sleep 1
 }
 
 function stop {
-    ./io.php relay_set sbio1 1 0
+    ./io.php voice_power down
 }
 
 if [ $1 == "stop" ]

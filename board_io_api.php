@@ -33,7 +33,6 @@ class Board_io {
                                 $this->tcp_port,
                                 $cmd,
                                 $query);
-        dump($http_request);
         $content = file_get_contents($http_request);
         if (!$content) {
             $this->log->err("Null bytes received from addr: %s", $http_request);
@@ -62,9 +61,10 @@ class Board_io {
         if (!$row_id)
             $this->log->err("relay_set_state(): Can't insert into io_events");
 
+        $this->log->info("set %s/%s.out.%d -> %d\n",
+                         $pname, $this->name, $port, $state);
+
         if (DISABLE_HW) {
-            $this->log->info("set %s/%s.out.%d -> %d\n",
-                             $pname, $this->name, $port, $state);
             $ports = $this->read_fake_out_ports();
             $ports[$port] = $state;
             $this->write_fake_out_ports($ports);
@@ -94,8 +94,12 @@ class Board_io {
         }
 
         $ret = $this->send_cmd("relay_get", ['port' => $port]);
-        if ($ret['status'] == "ok")
-                return $ret['state'];
+        if ($ret['status'] == "ok") {
+            $s = $ret['state'];
+            $this->log->info("state %s/%s.out.%d -> %d\n",
+                 $pname, $this->name, $port, $s);
+            return $s;
+        }
 
         $err = sprintf("Can't relay_get_state(%s/%s.out.%d) for %s over HTTP. " .
                         "HTTP server return error: '%s'\n",
@@ -117,8 +121,12 @@ class Board_io {
         }
 
         $ret = $this->send_cmd("input_get", ['port' => $port]);
-        if ($ret['status'] == "ok")
-            return $ret['state'];
+        if ($ret['status'] == "ok") {
+            $s = $ret['state'];
+            $this->log->info("state %s/%s.in.%d -> %d\n",
+                             $pname, $this->name, $port, $s);
+            return $s;
+        }
 
         $err = sprintf("Can't input_get_state(%s/%s.in.%d) for %s over HTTP. " .
                        "HTTP server return error: '%s'\n",
@@ -433,20 +441,7 @@ class Boards_io_cron_events implements Cron_events {
             if ($response['uptime'] == '0 min' || $response['uptime'] == '1 min')
                 tn()->send_to_admin("Модуль ввода-вывода %s недавно перезагрузился", $io_name);
 
-            if (isset($response['termo_sensors'])) {
-                $sensors = $response['termo_sensors'];
-
-            foreach ($sensors as $sensor) {
-                    if ($sensor['temperature'] < -60 || $sensor['temperature'] > 100)
-                        continue;
-                    $row = ['io_name' => $io_name,
-                            'sensor_name' => $sensor['name'],
-                            'temperature' => $sensor['temperature']];
-                    db()->insert('termo_sensors_log', $row);
-                    $temperatures[] = $row;
-                }
-            }
-            if (count($response['trigger_log'])) {
+            if (isset($response['trigger_log']) && count($response['trigger_log'])) {
                 foreach ($response['trigger_log'] as $time => $msg) {
                     tn()->send_to_admin("Модуль ввода-вывода %s сообщил, " .
                                         "что не смог вовремя передать событие %s. " .
@@ -455,8 +450,8 @@ class Boards_io_cron_events implements Cron_events {
                 }
             }
         }
-        dump($temperatures);
 
         file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
     }
 }
+

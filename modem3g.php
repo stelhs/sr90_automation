@@ -140,7 +140,7 @@ class Modem3G {
             return 0;
         }
 
-        $data = $this->get_request('/api/ussd/get');
+        $data = $this->request('/api/ussd/get');
         if ($data < 0) {
             $this->log->err("new_ussd(): Can't make GET request");
             return $data;
@@ -148,7 +148,7 @@ class Modem3G {
 
         if (isset($data['error']['content']['code'][0]['content'])) {
             $err = $data['error']['content']['code'][0]['content'];
-            $this->log->err("new_ussd(): modem response error: %s", $err);
+            $this->log->err("modem response error: %s", $err);
             return $err;
         }
 
@@ -255,7 +255,7 @@ class Modem3G {
             return  $list;
         }
 
-        $rows = $this->get_sms_list(1);
+        $rows = $this->sms_list(1);
         if (!is_array($rows))
             return $rows;
 
@@ -292,7 +292,7 @@ class Modem3G {
             return $info;
         }
 
-        $data = $this->get_request('/api/monitoring/status');
+        $data = $this->request('/api/monitoring/status');
         if ($data < 0) {
             $this->log->err("Modem: Can`t check modem status: can`t make POST request\n");
             return $data;
@@ -331,7 +331,7 @@ class Modem3G {
             return $info;
         }
 
-        $data = $this->get_request('/api/monitoring/traffic-statistics');
+        $data = $this->request('/api/monitoring/traffic-statistics');
         if ($data < 0) {
             $this->log->err("traffic_statistics(): can`t make POST request\n");
             return $data;
@@ -397,7 +397,7 @@ class Modem3G {
             return $info;
         }
 
-        $data = $this->get_request('/api/sms/send-status');
+        $data = $this->request('/api/sms/send-status');
         if ($data < 0) {
             $this->log->err("check_sended_sms_status(): can`t make POST request\n");
             return $data;
@@ -433,7 +433,7 @@ class Modem3G {
 
         for ($i = 0; $i < 5; $i++) {
             sleep(1);
-            $response = $this->check_for_new_ussd();
+            $response = $this->new_ussd();
             if ($response < 0)
                 continue;
 

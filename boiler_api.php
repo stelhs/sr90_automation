@@ -178,6 +178,9 @@ class Boiler_tg_events implements Tg_skynet_events {
             ['cmd' => ['еду'],
              'method' => 'set_fixed_t'],
 
+            ['cmd' => ['установи температуру'],
+             'method' => 'set_t'],
+
             ['cmd' => ['включи котёл',
                        'запусти котёл'],
              'method' => 'start'],
@@ -192,6 +195,23 @@ class Boiler_tg_events implements Tg_skynet_events {
     function set_fixed_t($chat_id, $msg_id, $user_id, $arg, $text)
     {
         $t = 18;
+        $rc = boiler()->set_room_t($t);
+        if ($rc) {
+            tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в помещении');
+            return 0;
+        }
+        tn()->send($chat_id, $msg_id, 'Установлена температура %.1f градусов', $t);
+    }
+
+    function set_t($chat_id, $msg_id, $user_id, $arg, $text)
+    {
+        preg_match('/([\d.]+)/i', $text, $m);
+        if (!isset($m[1])) {
+            tn()->send($chat_id, $msg_id, 'Непоняла какую температуру нужно установить');
+            return 0;
+        }
+
+        $t = (float)$m[1];
         $rc = boiler()->set_room_t($t);
         if ($rc) {
             tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в помещении');

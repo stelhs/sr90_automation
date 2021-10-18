@@ -11,10 +11,10 @@ require_once 'telegram_lib.php';
 function main($argv) {
     iop('ups_break_power')->down();
     iop('battery_relay')->down();
+    tn()->send_to_admin('Сервер sr90 перезапущен');
 
     refresh_out_ports();
 
-    tn()->send_to_admin('Сервер sr90 перезапущен');
 }
 
 exit(main($argv));

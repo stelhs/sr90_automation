@@ -31,7 +31,7 @@ function print_help()
 function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "")
 {
     $server_files = [];
-    $video_files = get_video_files($start_time, $duration, $cam['name']);
+    $video_files = avreg()->video_files($start_time, $duration, $cam['name']);
     if (!$video_files || !count($video_files)) {
         $msg = sprintf("Неудалось получить видеофайлы для камеры %s",
             $cam['name']);

@@ -101,15 +101,13 @@ class Guard {
     {
         $list = [];
         foreach ($this->unlocked_zones() as $zone) {
-            $total_zones_cnt = 0;
-            $incorrect_zones_cnt = 0;
-            foreach ($zone['io_sensors'] as $sensor_name => $active_state) {
-                $total_zones_cnt++;
+            $incorrect_zone = false;
+            foreach ($zone['io_sensors'] as $sensor_name => $trig_state) {
                 $state = iop($sensor_name)->state();
-                if ($state != $active_state)
-                    $incorrect_zones_cnt++;
+                if ($state == $trig_state)
+                    $incorrect_zone = true;
             }
-            if ($incorrect_zones_cnt == $total_zones_cnt)
+            if ($incorrect_zone)
                 $list[] = $zone;
         }
         return $list;
@@ -155,6 +153,15 @@ class Guard {
     }
 
 
+    function zone_by_name($zname)
+    {
+        $zones = conf_guard()['zones'];
+        foreach ($zones as $zone) {
+            if ($zone['name'] == $zname)
+                return $zone;
+        }
+        return null;
+    }
 
     function make_alarm_photos($alarm_id)
     {
@@ -165,8 +172,8 @@ class Guard {
                            conf_guard()['alarm_snapshot_dir'], $alarm_id, $cam['id']);
             $ret = run_cmd($cmd);
             if ($ret['rc']) {
-                $this->log->err("Can't create screenshot for camera %d %s",
-                                $cam['id'], $cam['v4l_dev']);
+                $this->log->err("Can't create screenshot for camera %d %s: cmd='%s' response:, %s",
+                                $cam['id'], $cam['v4l_dev'], $cmd, $ret['log']);
             }
             $rc |= $ret['rc'];
         }
@@ -257,7 +264,7 @@ class Guard {
     function stat()
     {
         $data = db()->query("SELECT * FROM guard_states ORDER by created DESC LIMIT 1");
-        if (!$data) {
+        if ($data < 0) {
             $this->log->err("Can't getting last guard status");
             return $data;
         }
@@ -581,7 +588,7 @@ class Guard {
             $this->tg_info('Run sirena during %d seconds', $zone['alarm_time']);
 
         $this->tg_alarm("!!! Внимание, Тревога !!!\nСработала зона: '%s', событие: %d\n",
-                         $zone['name'], $action_id);
+                         $zone['desc'], $action_id);
 
         // send photos
         $this->send_alarm_photos_to_sr38($action_id);

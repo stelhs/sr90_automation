@@ -286,9 +286,9 @@ function skynet_stat_sms()
 
         if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнор: ");
-            foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
-                $zone = zone_get_by_id($zone_id);
-                $text .= sprintf("%s, ", $zone['name']);
+            foreach ($stat['guard_stat']['ignore_zones'] as $zname) {
+                $zone = guard()->zone_by_name($zname);
+                $text .= sprintf("%s, ", $zone['desc']);
             }
             $text .= '.';
         }
@@ -395,8 +395,8 @@ function skynet_stat_telegram()
 
         if (count($stat['guard_stat']['ignore_zones'])) {
             $text .= sprintf("Игнорированные зоны:\n");
-            foreach ($stat['guard_stat']['ignore_zones'] as $zone_id) {
-                $zone = zone_get_by_id($zone_id);
+            foreach ($stat['guard_stat']['ignore_zones'] as $zname) {
+                $zone = guard()->zone_by_name($zname);
                 $text .= sprintf("               %s\n", $zone['desc']);
             }
         }
@@ -617,12 +617,17 @@ class Common_tg_events implements Tg_skynet_events {
 
     function tell($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        run_cmd(sprintf("./text_spech.php '%s'", $arg));
+        $cmd = sprintf("./text_spech.php '%s'", $text);
+        run_cmd($cmd);
         tn()->send($chat_id, $msg_id,
             "По громкоговорителю озвучивается сообщение: '%s'.\n" .
             "Ожидайте пару минут видео-звукозапись сообщения и реакции окружающих.", $text);
 
-        run_cmd(sprintf("./video_sender.php by_timestamp %d 15 1,2 %d", time(), $chat_id));
+        $cmd = sprintf("./video_sender.php by_timestamp %d 15 1,2 %d", time(), $chat_id);
+        dump($cmd);
+        $ret = run_cmd($cmd);
+        if ($ret['rc'])
+            tn()->send_to_admin("Не удалось захватить видео: %s", $ret['log']);
     }
 
     function reboot($chat_id, $msg_id, $user_id, $arg, $text)
@@ -693,12 +698,61 @@ class Temperatures_cron_events implements Cron_events {
 
     function do()
     {
+        $temperatures = [];
+        foreach(conf_io() as $io_name => $io_data) {
+            if ($io_name == 'usio1')
+                continue;
+
+            @$content = file_get_contents(sprintf('http://%s:%d/stat',
+                                         $io_data['ip_addr'], $io_data['tcp_port']));
+            if ($content === FALSE) {
+                tn()->send_to_admin("Сбой связи с модулем %s", $io_name);
+                trig_io_board_for_curr_state($io_name);
+                continue;
+            }
+
+            $response = json_decode($content, true);
+            if ($response === NULL) {
+                tn()->send_to_admin("Модуль ввода вывода %s вернул не корректный ответ на запрос: %s",
+                                        $io_name, $content);
+                continue;
+            }
+
+            if ($response['status'] != 'ok') {
+                tn()->send_to_admin("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
+                                        $io_name, $response['error_msg']);
+                continue;
+            }
+
+            if (!isset($response['termo_sensors']))
+                continue;
+
+            $sensors = $response['termo_sensors'];
+            foreach ($sensors as $sensor) {
+                    if ($sensor['temperature'] < -60 || $sensor['temperature'] > 100)
+                        continue;
+                    $row = ['io_name' => $io_name,
+                            'sensor_name' => $sensor['name'],
+                            'temperature' => $sensor['temperature']];
+                    db()->insert('termo_sensors_log', $row);
+                    $temperatures[] = $row;
+            }
+        }
+
+        file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
+
+
+        pnotice("remove old temperatures data\n");
+        db()->query('delete from termo_sensors_log where ' .
+                    'created < (now() - interval 12 month)');
+
         $termo_sensors = termosensors();
 
         $temperature_stat = [];
         foreach ($termo_sensors as $sensor) {
             $temperature_stat[$sensor['sensor_name']] = $sensor;
 
+            pnotice("calculate minimum for %s\n", $sensor['sensor_name']);
             $query = sprintf("SELECT created, temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
@@ -708,6 +762,7 @@ class Temperatures_cron_events implements Cron_events {
             $row = db()->query($query);
             $temperature_stat[$sensor['sensor_name']]['min'] = $row;
 
+            pnotice("calculate maximum for %s\n", $sensor['sensor_name']);
             $query = sprintf("SELECT created, temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
@@ -717,6 +772,7 @@ class Temperatures_cron_events implements Cron_events {
             $row = db()->query($query);
             $temperature_stat[$sensor['sensor_name']]['max'] = $row;
 
+            pnotice("calculate average for %s\n", $sensor['sensor_name']);
             $query = sprintf("SELECT avg(temperature) as temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
