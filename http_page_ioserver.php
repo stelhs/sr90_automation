@@ -35,7 +35,7 @@ function main($argv)
         $state = strtolower(trim($data['state']));
     }
 
-    $pname = port_name($io_name, 'in', $port_num);
+    $pname = port_name_by_addr($io_name, 'in', $port_num);
 
     if (!$pname) {
         $log->err("port %s.in.%d is not registred\n", $io_name, $port_num);

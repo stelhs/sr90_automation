@@ -4,6 +4,10 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 require_once 'common_lib.php';
+require_once 'settings.php';
+
+$log = new Plog('sr90:board_io');
+
 
 class Board_io {
     public $ip_addr;
@@ -51,7 +55,7 @@ class Board_io {
 
     public function relay_set_state($port, $state)
     {
-        $pname = port_name($this->name, 'out', $port);
+        $pname = port_name_by_addr($this->name, 'out', $port);
         $row_id = db()->insert('io_events',
                                 ['mode' => 'out',
                                  'port_name' => $pname,
@@ -61,8 +65,9 @@ class Board_io {
         if (!$row_id)
             $this->log->err("relay_set_state(): Can't insert into io_events");
 
-        $this->log->info("set %s/%s.out.%d -> %d\n",
-                         $pname, $this->name, $port, $state);
+        $this->log->info("set %s -> %d\n",
+                         port_str($pname, $this->name,
+                                  'out', $port), $state);
 
         if (DISABLE_HW) {
             $ports = $this->read_fake_out_ports();
@@ -75,9 +80,9 @@ class Board_io {
         if ($ret['status'] == "ok")
             return 0;
 
-        $err = sprintf("Can't relay_set_state(%s/%s.out.%d: %d) for %s over HTTP. " .
+        $err = sprintf("Can't set %s: %d for %s over HTTP. " .
                         "HTTP server return error: '%s'\n",
-                        $pname, $this->name, $port, $state,
+                        port_str($pname, $this->name, 'out', $port), $state,
                         $this->ip_addr, $ret['reason']);
         $this->log->err($err);
         return $err;
@@ -85,52 +90,52 @@ class Board_io {
 
     public function relay_get_state($port)
     {
-        $pname = port_name($this->name, 'out', $port);
+        $pname = port_name_by_addr($this->name, 'out', $port);
         if (DISABLE_HW) {
             $s = $this->read_fake_out_ports()[$port];
-            $this->log->info("state %s/%s.out.%d -> %d\n",
-                             $pname, $this->name, $port, $s);
+            $this->log->info("state %s -> %d\n",
+                             port_str($pname, $this->name, 'out', $port), $s);
             return $s;
         }
 
         $ret = $this->send_cmd("relay_get", ['port' => $port]);
         if ($ret['status'] == "ok") {
             $s = $ret['state'];
-            $this->log->info("state %s/%s.out.%d -> %d\n",
-                 $pname, $this->name, $port, $s);
+            $this->log->info("state %s -> %d\n",
+                             port_str($pname, $this->name, 'out', $port), $s);
             return $s;
         }
 
-        $err = sprintf("Can't relay_get_state(%s/%s.out.%d) for %s over HTTP. " .
+        $err = sprintf("Can't get %s over HTTP. " .
                         "HTTP server return error: '%s'\n",
-                        $pname, $this->name, $port,
-                        $this->ip_addr, $ret['reason']);
+                        port_str($pname, $this->name, 'out', $port),
+                        $ret['reason']);
         $this->log->err($err);
         return $err;
     }
 
     public function input_get_state($port)
     {
-        $pname = port_name($this->name, 'in', $port);
+        $pname = port_name_by_addr($this->name, 'in', $port);
         if (DISABLE_HW) {
             $ports = $this->read_fake_in_ports();
             $s = $ports[$port];
-            $this->log->info("state %s/%s.in.%d -> %d\n",
-                             $pname, $this->name, $port, $s);
+            $this->log->info("state %s -> %d\n",
+                             port_str($pname, $this->name, 'in', $port), $s);
             return $s;
         }
 
         $ret = $this->send_cmd("input_get", ['port' => $port]);
         if ($ret['status'] == "ok") {
             $s = $ret['state'];
-            $this->log->info("state %s/%s.in.%d -> %d\n",
-                             $pname, $this->name, $port, $s);
+            $this->log->info("state %s -> %d\n",
+                             port_str($pname, $this->name, 'in', $port), $s);
             return $s;
         }
 
-        $err = sprintf("Can't input_get_state(%s/%s.in.%d) for %s over HTTP. " .
+        $err = sprintf("Can't get state %s for %s over HTTP. " .
                        "HTTP server return error: '%s'\n",
-                        $pname, $this->name, $port,
+                        port_str($pname, $this->name, 'in', $port),
                         $this->ip_addr, $ret['reason']);
 
         $this->log->err($err);
@@ -184,7 +189,6 @@ class Board_io {
     }
 }
 
-
 class Board_io_in {
     function __construct($bord_io, $port)
     {
@@ -200,19 +204,36 @@ class Board_io_in {
 
 
 class Board_io_out {
-    function __construct($bord_io, $port)
+    function __construct($bord_io, $port, $locked = false)
     {
         $this->bord_io = $bord_io;
         $this->port = $port;
+        $this->locked = $locked;
+    }
+
+    function check_for_lock()
+    {
+        global $log;
+        if (!$this->locked)
+            return false;
+        $pname = port_name_by_addr($this->bord_io->name,
+                                   'out', $this->port);
+        $info = port_info($pname);
+        $log->warn('%s is locked', $info['str']);
+        return true;
     }
 
     function up()
     {
+        if ($this->check_for_lock())
+            return 'port is locked';
         return $this->bord_io->relay_set_state($this->port, 1);
     }
 
     function down()
     {
+        if ($this->check_for_lock())
+            return 'port is locked';
         return $this->bord_io->relay_set_state($this->port, 0);
     }
 
@@ -222,29 +243,44 @@ class Board_io_out {
     }
 }
 
+function port_str($pname, $io_name, $mode, $pn) {
+    return sprintf("(%s/%s.%s.%s)", $pname, $io_name, $mode, $pn);
+}
 
-function port_info($name)
+function port_info($pname)
 {
+    $info = NULL;
     $conf_io = conf_io();
     foreach ($conf_io as $io_name => $io_info) {
         foreach ($io_info['in'] as $num => $port_name)
-            if ($port_name == $name)
-                return ['io_name' => $io_name,
-                        'info' => $io_info,
-                        'mode' => 'in',
-                        'port' => $num];
+            if ($port_name == $pname) {
+                $info = ['io_name' => $io_name,
+                         'info' => $io_info,
+                         'mode' => 'in',
+                         'pn' => $num];
+                break;
+            }
 
         foreach ($io_info['out'] as $num => $port_name)
-            if ($port_name == $name)
-                return ['io_name' => $io_name,
-                        'info' => $io_info,
-                        'mode' => 'out',
-                        'port' => $num];
+            if ($port_name == $pname) {
+                $info = ['io_name' => $io_name,
+                         'info' => $io_info,
+                         'mode' => 'out',
+                         'pn' => $num];
+                break;
+            }
     }
-    return NULL;
+
+    if (!isset($info['info']))
+        return NULL;
+
+    $info['pname'] = $pname;
+    $info['str'] = port_str($info['pname'], $info['io_name'],
+                            $info['mode'], $info['pn']);
+    return $info;
 }
 
-function port_name($io_name, $mode, $port_num)
+function port_name_by_addr($io_name, $mode, $port_num)
 {
     $conf = conf_io();
     if (!isset($conf[$io_name]))
@@ -258,6 +294,7 @@ function port_name($io_name, $mode, $port_num)
 
     return conf_io()[$io_name][$mode][$port_num];
 }
+
 
 function board_io($name, $ip_addr, $tcp_port)
 {
@@ -274,9 +311,9 @@ function board_io($name, $ip_addr, $tcp_port)
     return $board_io;
 }
 
-function iop($name)
+function iop($pname)
 {
-    $info = port_info($name);
+    $info = port_info($pname);
     if (!$info)
         return NULL; // TODO add logs
 
@@ -285,10 +322,11 @@ function iop($name)
                          $info['info']['tcp_port']);
 
     if ($info['mode'] == 'in')
-        return new Board_io_in($board_io, $info['port']);
+        return new Board_io_in($board_io, $info['pn']);
 
     if ($info['mode'] == 'out')
-        return new Board_io_out($board_io, $info['port']);
+        return new Board_io_out($board_io, $info['pn'],
+                                port_is_locked($pname));
 
     return NULL; // TODO add logs
 }
@@ -315,20 +353,34 @@ function io_handlers_by_event($pname, $state)
     return $list;
 }
 
+function port_is_locked($pname)
+{
+    foreach (settings_io()['locked_io'] as $p)
+        if ($p == $pname)
+            return true;
+    return false;
+}
+
 function trig_io_event($pname, $state)
 {
+    global $log;
+    $info = port_info($pname);
+    if (port_is_locked($pname)) {
+        $log->warn('%s is locked', $info['str']);
+        return 0;
+    }
+
     $handlers = io_handlers_by_event($pname, $state);
     if (!$handlers)
         return 0;
 
-    $info = port_info($pname);
     $list = [];
     foreach ($handlers as $handler) {
         pnotice("triggering %s\n", $handler->name());
         db()->insert('io_events', ['port_name' => $pname,
                                    'mode' => 'in',
                                    'io_name' => $info['io_name'],
-                                   'port' => $info['port'],
+                                   'port' => $info['pn'],
                                    'state' => $state]);
 
         $handler->event_handler($pname, $state);
@@ -363,7 +415,7 @@ function refresh_out_ports()
                                    'port_name = "%s" AND ' .
                                    'port = %d ' .
                                'ORDER BY id DESC LIMIT 1',
-                               $info['io_name'], $info['port']));
+                               $info['io_name'], $info['pn']));
             if (!is_array($row) || !isset($row['state']))
                 continue;
 

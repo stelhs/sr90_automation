@@ -34,9 +34,7 @@ function main($argv)
         printf("\t%s:\n", $handler->name());
         foreach ($handler->trigger_ports() as $port_name => $trig_state) {
             $info = port_info($port_name);
-            printf("\t\t%s/%s.%s.%d\n",
-                   $port_name, $info['io_name'],
-                   $info['mode'], $info['port']);
+            printf("\t\t%s\n", $info['str']);
         }
     }
 

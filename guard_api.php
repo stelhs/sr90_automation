@@ -1,6 +1,7 @@
 <?php
 
 require_once 'config.php';
+require_once 'settings.php';
 require_once 'common_lib.php';
 require_once 'modem3g.php';
 require_once 'padlock_api.php';
@@ -55,14 +56,10 @@ class Guard {
 
     function zone_is_locked($zname)
     {
-        $data = db()->query(sprintf("SELECT * FROM locked_zones " .
-                                    "WHERE zone = '%s' " .
-                                    "ORDER by created DESC LIMIT 1", $zname));
-        if ($data < 0) {
-            $this->log->err("Can't getting 'locked zone' info by zone %d", $zname);
-            return false;
-        }
-        return $data ? ($data['mode'] == 'lock') : false;
+        foreach (settings_guard()['locked_zones'] as $z)
+            if ($z == $zname)
+                return true;
+        return false;
     }
 
     function zone_is_ignored($zname)
@@ -831,7 +828,7 @@ class Guard_cron_events implements Cron_events {
                                            "WHERE io_name = '%s' ".
                                                "AND port = %d " .
                                            "ORDER BY id desc LIMIT 1",
-                                           $port_info['io_name'], $port_info['port']));
+                                           $port_info['io_name'], $port_info['pn']));
                 $prev_state = $row['state'];
                 if ($prev_state == $trig_state)
                     continue;
@@ -842,9 +839,9 @@ class Guard_cron_events implements Cron_events {
                 db()->insert('io_events', ['port_name' => $pname,
                                            'mode' => 'in',
                                            'io_name' => $port_info['io_name'],
-                                           'port' => $port_info['port'],
+                                           'port' => $port_info['pn'],
                                            'state' => $trig_state]);
-                printf("Fixed port %s.in.%d\n", $port_info['io_name'], $port_info['port']);
+                printf("Fixed port %s.in.%d\n", $port_info['io_name'], $port_info['pn']);
             }
         }
     }
