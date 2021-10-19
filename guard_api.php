@@ -7,7 +7,7 @@ require_once 'padlock_api.php';
 require_once 'lighters_api.php';
 require_once 'well_pump_api.php';
 require_once 'avreg_lib.php';
-
+require_once 'player_lib.php';
 
 class Guard {
     private $log;
