@@ -355,6 +355,9 @@ function io_handlers_by_event($pname, $state)
 
 function port_is_locked($pname)
 {
+    if (!count(settings_io()['locked_io']))
+        return false;
+
     foreach (settings_io()['locked_io'] as $p)
         if ($p == $pname)
             return true;

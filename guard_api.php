@@ -56,6 +56,9 @@ class Guard {
 
     function zone_is_locked($zname)
     {
+    if (!count(settings_guard()['locked_zones']))
+        return false;
+
         foreach (settings_guard()['locked_zones'] as $z)
             if ($z == $zname)
                 return true;
