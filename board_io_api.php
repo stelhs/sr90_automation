@@ -4,6 +4,8 @@ require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
 require_once 'common_lib.php';
+require_once 'config.php';
+require_once 'usio_lib.php';
 require_once 'settings.php';
 
 $log = new Plog('sr90:board_io');
