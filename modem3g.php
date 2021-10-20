@@ -72,7 +72,7 @@ class Modem3G {
         }
 
         // remove stored outgoing sms
-        $rows = $this->get_sms_list(2);
+        $rows = $this->sms_list(2);
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $sms_index = $row['content']['Index'][0]['content'];
