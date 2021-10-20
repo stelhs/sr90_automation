@@ -37,7 +37,7 @@ function main($argv)
 
     switch ($mode) {
     case 'alarm':
-        $alarm_id = $argv[2];pnot
+        $alarm_id = $argv[2];
         // copy images to sr38.org
         $ret = run_cmd(sprintf('scp %s/%d_*.jpeg stelhs@sr38.org:/storage/www/plato/alarm_img/',
                                conf_guard()['alarm_snapshot_dir'], $alarm_id));
