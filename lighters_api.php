@@ -197,7 +197,7 @@ class Lighting_cron_events implements Cron_events {
     {
         @$prev_mode = file_get_contents(DAY_NIGHT_MODE_FILE);
         $curr_mode = get_day_night();
-        printf("curr_mode = %s\n", $curr_mode);
+        pnotice("curr_mode = %s\n", $curr_mode);
 
         if ($curr_mode == $prev_mode)
             return 0;

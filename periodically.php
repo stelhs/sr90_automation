@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-
+chdir(dirname($argv[0]));
 
 require_once '/usr/local/lib/php/database.php';
 require_once '/usr/local/lib/php/common.php';
@@ -55,7 +55,7 @@ function task_by_name($tname)
 function run_task($tname)
 {
     $task = task_by_name($tname);
-    printf("run task: %s\n", $task->name());
+    pnotice("run task: %s\n", $task->name());
     $task->do();
 }
 
@@ -98,7 +98,7 @@ function main($argv)
                 run_cmd($cmd, true, '', false);
                 sleep(1);
                 $pid = pid_started_task($task->name());
-                printf("Task %s/%d started\n", $task->name(), $pid);
+                pnotice("Task %s/%d started\n", $task->name(), $pid);
             }
             return 0;
         }
@@ -106,7 +106,7 @@ function main($argv)
         $tname = $argv[2];
         $task = task_by_name($tname);
         if (!$task) {
-            printf("Task '%s' is not registred\n", $tname);
+            pnotice("Task '%s' is not registred\n", $tname);
             return -EINVAL;
         }
 
@@ -115,7 +115,7 @@ function main($argv)
         run_cmd($cmd, true, '', false);
         sleep(1);
         $pid = pid_started_task($tname);
-        printf("Task %s/%d started\n", $tname, $pid);
+        pnotice("Task %s/%d started\n", $tname, $pid);
         return 0;
 
     case 'stop':
@@ -123,12 +123,12 @@ function main($argv)
             foreach (periodically_list() as $task) {
                 $pid = pid_started_task($task->name());
                 if (!$pid) {
-                    printf("Task '%s' has already been stopped\n", $task->name());
+                    pnotice("Task '%s' has already been stopped\n", $task->name());
                     continue;
                 }
 
                 stop_daemon(pid_file_by_task_name($task->name()));
-                printf("Task %s/%d stopped\n", $task->name(), $pid);
+                pnotice("Task %s/%d stopped\n", $task->name(), $pid);
             }
             return 0;
         }
@@ -136,18 +136,18 @@ function main($argv)
         $tname = $argv[2];
         $task = task_by_name($tname);
         if (!$task) {
-            printf("Task '%s' has not registred\n", $tname);
+            pnotice("Task '%s' has not registred\n", $tname);
             return -EINVAL;
         }
 
         $pid = pid_started_task($tname);
         if (!$pid) {
-            printf("Task '%s' has not started\n", $tname);
+            pnotice("Task '%s' has not started\n", $tname);
             return -EINVAL;
         }
 
         stop_daemon(pid_file_by_task_name($tname));
-        printf("Task %s/%d stopped\n", $tname, $pid);
+        pnotice("Task %s/%d stopped\n", $tname, $pid);
         return 0;
 
     case 'pause':
@@ -155,11 +155,11 @@ function main($argv)
             foreach (periodically_list() as $task) {
                 $pid = pid_started_task($task->name());
                 if (!$pid) {
-                    printf("Task '%s' not started\n", $task->name());
+                    pnotice("Task '%s' not started\n", $task->name());
                     continue;
                 }
                 file_put_contents(pause_file_by_task_name($task->name()), '');
-                printf("Task %s/%d paused\n", $task->name(), $pid);
+                pnotice("Task %s/%d paused\n", $task->name(), $pid);
             }
             return 0;
         }
@@ -167,17 +167,17 @@ function main($argv)
         $tname = $argv[2];
         $task = task_by_name($tname);
         if (!$task) {
-            printf("Task '%s' has not registred\n", $tname);
+            pnotice("Task '%s' has not registred\n", $tname);
             return -EINVAL;
         }
 
         $pid = pid_started_task($tname);
         if (!$pid) {
-            printf("Task '%s' has not started\n", $tname);
+            pnotice("Task '%s' has not started\n", $tname);
             return 0;
         }
         file_put_contents(pause_file_by_task_name($tname), '');
-        printf("Task %s/%d paused\n", $task->name(), $pid);
+        pnotice("Task %s/%d paused\n", $task->name(), $pid);
         return 0;
 
     case 'resume':
@@ -185,11 +185,11 @@ function main($argv)
             foreach (periodically_list() as $task) {
                 $pid = pid_started_task($task->name());
                 if (!$pid) {
-                    printf("Task %s has not started\n", $task->name());
+                    pnotice("Task %s has not started\n", $task->name());
                     continue;
                 }
-                @unlink(pause_file_by_task_name($task->name()));
-                printf("Task %s/%d resumed\n", $task->name(), $pid);
+                unlink_safe(pause_file_by_task_name($task->name()));
+                pnotice("Task %s/%d resumed\n", $task->name(), $pid);
             }
             return 0;
         }
@@ -197,34 +197,34 @@ function main($argv)
         $tname = $argv[2];
         $task = task_by_name($tname);
         if (!$task) {
-            printf("Task '%s' has not registred\n", $tname);
+            pnotice("Task '%s' has not registred\n", $tname);
             return -EINVAL;
         }
 
         $pid = pid_started_task($tname);
         if (!$pid) {
-            printf("Task '%s' has not started\n", $tname);
+            pnotice("Task '%s' has not started\n", $tname);
             return 0;
         }
-        @unlink(pause_file_by_task_name($tname));
-        printf("Task %s/%d resumed\n", $task->name(), $pid);
+        unlink_safe(pause_file_by_task_name($tname));
+        pnotice("Task %s/%d resumed\n", $task->name(), $pid);
         return 0;
 
     case 'run':
         if (!isset($argv[2])) {
-            printf("Task name is absent\n");
+            pnotice("Task name is absent\n");
             return -EINVAL;
         }
 
 
         $tname = $argv[2];
         if (!task_by_name($tname)) {
-            printf("Task '%s' has not found\n", $tname);
+            pnotice("Task '%s' has not found\n", $tname);
             return -EINVAL;
         }
 
         if (task_is_paused($tname)) {
-            printf("task %s is paused\n", $tname);
+            pnotice("task %s is paused\n", $tname);
             return 0;
         }
 
@@ -232,14 +232,14 @@ function main($argv)
         return 0;
 
     case 'stat':
-        printf("Tasks list:\n");
+        pnotice("Tasks list:\n");
         foreach (periodically_list() as $task) {
             $pid = pid_started_task($task->name());
             if (!$pid) {
-                printf("\t%s: stopped\n", $task->name());
+                pnotice("\t%s: stopped\n", $task->name());
                 continue;
             }
-            printf("\t%s/%d: %s\n",
+            pnotice("\t%s/%d: %s\n",
                    $task->name(), $pid,
                    task_is_paused($task->name()) ? "paused" : "running");
         }

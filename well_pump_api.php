@@ -23,7 +23,7 @@ class Well_pump {
 
     function stop()
     {
-        @unlink(WELL_PUMP_TIME_FILE);
+        unlink_safe(WELL_PUMP_TIME_FILE);
         iop('water_pump')->down();
         $this->log->info("Well pump stoped");
     }

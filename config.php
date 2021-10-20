@@ -159,8 +159,8 @@ function conf_guard()
     return [
         'zones' => [
             ['name' => 'north_colitis',
-             'desc' => 'север колитка',
-             'diff_interval' => 15,
+             'desc' => 'север калитка',
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_12' => 0,
                               'guard_motion_sensor_13' => 0]
@@ -168,7 +168,7 @@ function conf_guard()
 
             ['name' => 'rp',
              'desc' => 'РП',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_1' => 0,
                               'guard_motion_sensor_2' => 0]
@@ -190,7 +190,7 @@ function conf_guard()
 
             ['name' => 'south_street',
              'desc' => 'Юг улица',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_3' => 0,
                               'guard_motion_sensor_4' => 0]
@@ -198,28 +198,28 @@ function conf_guard()
 
             ['name' => 'workshop_west',
              'desc' => 'Помещение-запад',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 300,
              'io_sensors' => ['guard_motion_sensor_7' => 0]
             ],
 
             ['name' => 'workshop_north',
              'desc' => 'Помещение-север',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 300,
              'io_sensors' => ['guard_motion_sensor_8' => 0]
             ],
 
             ['name' => 'workshop_east',
              'desc' => 'Помещение-восток',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 300,
              'io_sensors' => ['guard_motion_sensor_9' => 0]
             ],
 
             ['name' => 'road_east',
              'desc' => 'Дорога-восток',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_5' => 0,
                               'guard_motion_sensor_6' => 0]
@@ -227,7 +227,7 @@ function conf_guard()
 
             ['name' => 'west_street',
              'desc' => 'Запад улица',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_10' => 0,
                               'guard_motion_sensor_11' => 0]
@@ -235,7 +235,7 @@ function conf_guard()
 
             ['name' => 'workshop_street',
              'desc' => 'Площадка у мастерской',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'io_sensors' => ['guard_motion_sensor_16' => 0,
                               'guard_motion_sensor_17' => 0]
@@ -243,7 +243,7 @@ function conf_guard()
 
             ['name' => 'under_balcony',
              'desc' => 'Под балконом',
-             'diff_interval' => 15,
+             'diff_interval' => 10,
              'alarm_time' => 60,
              'run_lighter' => 1,
              'io_sensors' => ['guard_motion_sensor_14' => 0,

@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+chdir(dirname($argv[0]));
+
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
@@ -26,7 +28,7 @@ function main($argv) {
         if ($handler->interval() != $interval)
             continue;
 
-        printf("run work: %s\n", $handler->name());
+        pnotice("run work: %s\n", $handler->name());
         $handler->do();
     }
 }

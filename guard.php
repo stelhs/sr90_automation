@@ -11,14 +11,14 @@ function print_help()
 {
     global $argv;
     $utility_name = $argv[0];
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice("Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t run: start guard\n" .
                  "\t\t\texample: $utility_name start\n" .
                  "\t\t stop: stop guard\n" .
                  "\t\t\texample: $utility_name stop\n" .
                  "\t\t stat: Return status information about Guard system\n" .
-             "\n\n";
+             "\n\n");
 }
 
 

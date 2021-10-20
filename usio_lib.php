@@ -28,7 +28,6 @@ class Usio {
         return trim($result);
     }
 
-
     public function relay_set_state($port, $state)
     {
         if (DISABLE_HW) {

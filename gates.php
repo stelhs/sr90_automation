@@ -12,7 +12,7 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice("Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t enable: enable gates power.\n" .
                  "\t\t\texample: $utility_name enable\n" .
@@ -28,7 +28,7 @@ function print_help()
                  "\t\t\texample: $utility_name close-sync\n" .
                  "\t\t stat: return current gates status.\n" .
                  "\t\t\texample: $utility_name stat\n" .
-                 "\n\n";
+                 "\n\n");
 }
 
 function main($argv)
@@ -43,67 +43,67 @@ function main($argv)
     switch ($cmd) {
     case "enable":
         gates()->power_enable();
-        printf("Gates power enabled\n");
+        pnotice("Gates power enabled\n");
         return 0;
 
     case "disable":
         $rc = gates()->power_disable();
         if ($rc) {
-            printf("Error: Can't stop power: gates is not closed\n");
+            pnotice("Error: Can't stop power: gates is not closed\n");
             return $rc;
         }
-        printf("Gates power disabled\n");
+        pnotice("Gates power disabled\n");
         return 0;
 
     case "open":
         $rc = gates()->open();
         if ($rc) {
-            printf("Error: Gates power is disabled\n");
+            pnotice("Error: Gates power is disabled\n");
             return $rc;
         }
-        printf("Gates start to opening\n");
+        pnotice("Gates start to opening\n");
         return 0;
 
     case "open-ped":
         $rc = gates()->open_ped();
         if ($rc) {
-            printf("Error: Gates power is disabled\n");
+            pnotice("Error: Gates power is disabled\n");
             return $rc;
         }
-        printf("Gates start to opening for pedestrian\n");
+        pnotice("Gates start to opening for pedestrian\n");
         return 0;
 
     case "close":
         $rc = gates()->close();
         if ($rc) {
-            printf("Error: Gates power is disabled\n");
+            pnotice("Error: Gates power is disabled\n");
             return $rc;
         }
-        printf("Gates start to closing\n");
+        pnotice("Gates start to closing\n");
         return 0;
 
     case "close-sync":
-        printf("Gates start to closing\n");
+        pnotice("Gates start to closing\n");
         $rc = gates()->close_sync();
 
         if ($rc == -EBUSY) {
-            printf("Error: Gates power is disabled\n");
+            pnotice("Error: Gates power is disabled\n");
             return $rc;
         }
 
         if ($rc == -ECONNFAIL) {
-            printf("Error: Timeout was expired. Gates is not closed\n");
+            pnotice("Error: Timeout was expired. Gates is not closed\n");
             return $rc;
         }
 
-        printf("Gates successfully closed\n");
+        pnotice("Gates successfully closed\n");
         return 0;
 
     case "stat":
         $stat = gates()->stat();
         dump($stat);
-        printf("Gates power is %s\n", $stat['power']);
-        printf("Gates is %s\n", $stat['gates']);
+        pnotice("Gates power is %s\n", $stat['power']);
+        pnotice("Gates is %s\n", $stat['gates']);
         return 0;
 
     default:

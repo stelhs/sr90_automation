@@ -235,7 +235,7 @@ class Modem3G {
                     continue;
 
                 $words = string_to_words($row, " \t:;-=");
-                printf("fake sms row: %s\n", $row);
+                pnotice("fake sms row: %s\n", $row);
 
                 $mode = array_shift($words);
                 $phone = array_shift($words);

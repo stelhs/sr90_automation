@@ -14,7 +14,7 @@ function print_help()
 {
     global $argv;
     $utility_name = $argv[0];
-    echo "Hard reboot all devices\n\n";
+    pnotice("Hard reboot all devices\n\n");
 }
 
 

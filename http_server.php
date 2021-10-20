@@ -1,25 +1,33 @@
 #!/usr/bin/php
 <?php
+chdir(dirname($argv[0]));
+
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
+
+require_once 'config.php';
 require_once 'common_lib.php';
 
 
-$log_file = "/root/log.txt";
-$http_log = [];
+$log = new Plog('sr90:http_server');
+$php_errors = '';
 
 function printlog($data)
 {
-    global $log_file;
-    file_put_contents($log_file, print_r($data, 1) . "\n", FILE_APPEND);
+    file_put_contents("http_log.txt", print_r($data, 1) . "\n", FILE_APPEND);
 }
+
 
 function parse_http($http_content)
 {
+    global $log;
     $data_start = strpos($http_content, "\r\n\r\n");
-    if ($data_start === false)
-        return -1;
+    if ($data_start === false) {
+        $log->err('Http parsing error: Empty line has not found. content: %s',
+                    $http_content);
+        return NULL;
+    }
 
     $data_start += 4;
 
@@ -32,6 +40,12 @@ function parse_http($http_content)
     $cnt = 0;
     $http = array();
     $rows = explode("\r\n", $header_text);
+    if (!count($rows)) {
+        $log->err('Http header parsing error. Http header: %s',
+                  $header_text);
+        return NULL;
+    }
+
     foreach ($rows as $row) {
         $row = trim($row);
         if (!$row)
@@ -39,7 +53,7 @@ function parse_http($http_content)
 
         $cnt++;
         if ($cnt == 1) {
-            $http['_query'] = $row;
+            $http['query'] = $row;
             continue;
         }
 
@@ -49,7 +63,7 @@ function parse_http($http_content)
 
         $http[trim($tokens[0])] = trim($tokens[1]);
     }
-    $http['_data'] = $http_data;
+    $http['data'] = $http_data;
 
     return $http;
 }
@@ -82,105 +96,120 @@ function stdin_get_http_query()
     return $http_content;
 }
 
-function return_ok($data_text = "")
+function return_ok($d = "")
 {
-    global $http_log;
-    echo "HTTP/1.1 200 OK\n";
-    echo sprintf("Content-Type: text/plain\n");
-    echo sprintf("Content-Length: %s\n", strlen($data_text) + 1);
-    echo "\n\n";
-    echo $data_text;
-    $http_log['return'] = addslashes($data_text);
-    http_end();
+    $str = '';
+    $str .= "HTTP/1.1 200 OK\n";
+    $str .= sprintf("Content-Type: text/plain\n");
+    $str .= sprintf("Content-Length: %s\n", strlen($d) + 1);
+    $str .= "\n\n";
+    $str .= $d;
+    return $str;
 }
 
-function return_bad_request($data_text = "")
+function return_bad_request($d = "")
 {
-    global $http_log;
-    echo "HTTP/1.1 400 Bad Request\n";
-    echo sprintf("Content-Type: text/plain\n");
-    echo sprintf("Content-Length: %s\n", strlen($data_text) + 1);
-    echo "\n\n";
-    echo $data_text;
-    $http_log['return'] = "bad_request";
-    http_end();
+    $str = '';
+    $str .= "HTTP/1.1 400 Bad Request\n";
+    $str .= sprintf("Content-Type: text/plain\n");
+    $str .= sprintf("Content-Length: %s\n", strlen($d) + 1);
+    $str .= "\n\n";
+    $str .= $d;
+    return $str;
 }
 
 function return_404_request()
 {
-    global $http_log;
-    $content = "404 Page not found\n";
-    echo "HTTP/1.1 404 Page Not Found\n";
-    echo sprintf("Content-Type: text/plain\n");
-    echo sprintf("Content-Length: %s\n", strlen($content) + 1);
-    echo "\n\n";
-    echo $content;
-    $http_log['return'] = "404";
-    http_end();
+    $c = "404 Page not found\n";
+    $str = '';
+    $str .= "HTTP/1.1 404 Page Not Found\n";
+    $str .= sprintf("Content-Type: text/plain\n");
+    $str .= sprintf("Content-Length: %s\n", strlen($c) + 1);
+    $str .= "\n\n";
+    $str .= $c;
+    return $str;
 }
 
-function http_end()
+
+function do_handle_request($method, $query, $remote_host)
 {
-    global $http_log;
-    $rc = db()->insert("http_server_log", $http_log);
-    exit;
+    $url_parts = parse_url($query);
+    foreach (http_handlers() as $handler) {
+        foreach ($handler->requests() as $rp => $params) {
+            if ($rp != $url_parts['path'])
+                continue;
+
+            if (!isset($params['method']) or
+                $params['method'] != $method)
+                continue;
+
+            $args_list = [];
+            if (isset($url_parts['query'])) {
+                parse_str($url_parts['query'], $data);
+                foreach ($data as $key => $value)
+                    $args_list[strtolower($key)] = strtolower($value);
+            }
+
+            if (isset($params['required_args']) and
+                    count($params['required_args'])) {
+                $fail = false;
+                foreach ($params['required_args'] as $arg)
+                    if (!isset($args_list[$arg]))
+                        $fail = true;
+                if ($fail)
+                    continue;
+            }
+
+            $f = $params['handler'];
+            return $handler->$f($args_list, $remote_host, $query);
+        }
+    }
+    return NULL;
+}
+
+function err_handler($errno, $str, $file, $line) {
+    global $php_errors;
+    $php_errors .= sprintf("PHP %s: %s in %s:%s \n %s \n",
+            errno_to_str($errno), $str, $file, $line, backtrace_to_str(1));
+
 }
 
 function main($argv)
 {
-    global $http_log;
-    chdir(dirname($argv[0]));
+    global $log;
+    global $php_errors;
+
+    set_error_handler('err_handler');
+    error_reporting(0);
+    p_disable();
+
     $remote_host = getenv("REMOTE_HOST");
 
     $http_query_text = stdin_get_http_query();
     $http_data = parse_http($http_query_text);
+    if (!$http_data) {
+        $log->err("Can't parse http request");
+        return_404_request();
+        return 0;
+    }
 
-    $words = preg_split('/\s+/', $http_data['_query']);
+    $words = preg_split('/\s+/', $http_data['query']);
+    $method = $words[0];
     $query = $words[1];
 
-    $url_parts = parse_url($query);
-    $path = str_replace('/', '', $url_parts['path']);
-    $parts = string_to_array($url_parts['path'], '/');
+    $ret = do_handle_request($method, $query, $remote_host);
+    if (!$ret)
+        $stdout = return_404_request();
+    else
+        $stdout = return_ok($ret);
 
-    unset($parts[0]);
+    echo $stdout;
+    fclose(STDOUT);
 
-    $http_log['remote_host'] = $remote_host;
-    $http_log['query'] = $query;
-    if (!count($parts))
-        return_404_request();
-
-    $php_file = sprintf('http_page_%s.php', $parts[1]);
-    if (!file_exists($php_file))
-        return_404_request();
-    $http_data['script'] = $php_file;
-    $http_log['script'] = $php_file;
-
-    $query = '';
-    if (isset($url_parts['query']))
-        $query = $url_parts['query'];
-
-    $script = sprintf('./%s "%s"', $php_file, $query);
-    unset($parts[1]);
-    foreach ($parts as $part)
-        $script .= ' ' . $part;
-
-    $ret = run_cmd($script);
-    if ($ret['rc']) {
-        $reason = sprintf("HTTP Server: script %s return error: %s\n",
-                                 $script, $ret['log']);
-
-        return_ok(json_encode(['status' => $ret['rc'],
-                               'reason' => $reason]));
-
+    if ($php_errors) {
+        plog(LOG_ERR, 'sr90:http_server', $php_errors);
+        tn()->send_to_admin("sr90:http_server: %s", $php_errors);
     }
-    $ret_data = json_decode($ret['log'], true);
-    if (!is_array($ret_data)) {
-        return_ok(json_encode(['status' => 'ok',
-            'log' => $ret['log']], JSON_UNESCAPED_UNICODE));
-    }
-    if (!isset($ret_data['status']))
-        $ret_data['status'] = 'ok';
-        return_ok(json_encode($ret_data, JSON_UNESCAPED_UNICODE));
 }
 
 exit(main($argv));

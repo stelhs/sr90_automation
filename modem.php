@@ -13,7 +13,7 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice("Usage: $utility_name <command> <args>\n" .
     	     "\tcommands:\n" .
     		 "\tsms_send - Send SMS\n" .
              "\t\tExample:\n" .
@@ -27,7 +27,7 @@ function print_help()
     		 "\tussd_send - Send USSD\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name ussd_send *100#\n" .
-    "\n\n";
+    "\n\n");
 }
 
 

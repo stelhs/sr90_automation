@@ -47,6 +47,11 @@ interface Sms_events {
     function cmd_list();
 }
 
+interface Http_handler {
+    function name();
+    function requests();
+}
+
 
 function periodically_list()
 {
@@ -92,6 +97,12 @@ function telegram_handlers()
             ];
 }
 
+function http_handlers()
+{
+    return [new Http_io_handler,
+            new Stat_io_handler,
+            ];
+}
 
 
 class Queue_file {
@@ -588,9 +599,32 @@ function is_halt_all_systems()
 }
 
 
+function errno_to_str($errno)
+{
+    $level = '';
+    switch($errno) {
+    case E_COMPILE_ERROR:
+    case E_RECOVERABLE_ERROR:
+    case E_USER_ERROR:
+    case E_COMPILE_ERROR:
+    case E_CORE_ERROR:
+    case E_ERROR: $level = "Error"; break;
+    case E_USER_WARNING:
+    case E_COMPILE_WARNING:
+    case E_CORE_WARNING:
+    case E_WARNING: $level = "Warning"; break;
+    case E_USER_NOTICE:
+    case E_NOTICE: $level = "Notice"; break;
+    case E_PARSE: $level = "Parse error"; break;
+    case E_STRICT: $level = "Strict error"; break;
+    case E_DEPRECATED: $level = "Deprecated"; break;
+    }
+    return $level;
+}
+
+
 class Common_tg_events implements Tg_skynet_events {
-    function name()
-    {
+    function name() {
         return "common";
     }
 
@@ -639,8 +673,7 @@ class Common_tg_events implements Tg_skynet_events {
 
 
 class Common_sms_events implements Sms_events {
-    function name()
-    {
+    function name() {
         return "common";
     }
 
@@ -686,13 +719,11 @@ class Common_sms_events implements Sms_events {
 
 
 class Temperatures_cron_events implements Cron_events {
-    function name()
-    {
+    function name() {
         return "temparatures";
     }
 
-    function interval()
-    {
+    function interval() {
         return "hour";
     }
 
@@ -788,13 +819,11 @@ class Temperatures_cron_events implements Cron_events {
 
 
 class Cryptocurrancy_cron_events implements Cron_events {
-    function name()
-    {
+    function name() {
         return "cryptocurrancy";
     }
 
-    function interval()
-    {
+    function interval() {
         return "min";
     }
 
@@ -841,3 +870,35 @@ class Cryptocurrancy_cron_events implements Cron_events {
         }
     }
 }
+
+
+class Stat_io_handler implements Http_handler {
+    function name() {
+        return "stat";
+    }
+
+    function requests() {
+        return ['/stat' => ['method' => 'GET',
+                            'handler' => 'stat',
+                            ]];
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:Stat_io_handler');
+    }
+
+    function stat($args, $from, $request)
+    {
+        $stat = [];
+        @$content = file_get_contents(TEMPERATURES_FILE);
+        if ($content)
+            $stat['termo_sensors'] = json_decode($content, 1);
+
+        $stat['io_states'] = io_states();
+        $stat['batt_info'] = battery_info();
+        $stat['status'] = 'ok';
+        return json_encode($stat);
+    }
+}
+
+

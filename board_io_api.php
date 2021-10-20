@@ -76,14 +76,22 @@ class Board_io {
             return 0;
         }
 
-        $ret = $this->send_cmd("relay_set", ['port' => $port, 'state' => $state]);
-        if ($ret['status'] == "ok")
-            return 0;
+        if ($this->name == 'usio1') {
+            $ret = usio()->relay_set_state($port, $state);
+            if (!$ret)
+                return 0;
+            $reason = '';
+        } else {
+            $ret = $this->send_cmd("relay_set", ['port' => $port, 'state' => $state]);
+            if ($ret['status'] == "ok")
+                return 0;
+            $reason = $ret['reason'];
+        }
 
         $err = sprintf("Can't set %s: %d for %s over HTTP. " .
                         "HTTP server return error: '%s'\n",
                         port_str($pname, $this->name, 'out', $port), $state,
-                        $this->ip_addr, $ret['reason']);
+                        $this->ip_addr, $reason);
         $this->log->err($err);
         return $err;
     }
@@ -98,18 +106,29 @@ class Board_io {
             return $s;
         }
 
-        $ret = $this->send_cmd("relay_get", ['port' => $port]);
-        if ($ret['status'] == "ok") {
-            $s = $ret['state'];
-            $this->log->info("state %s -> %d\n",
-                             port_str($pname, $this->name, 'out', $port), $s);
-            return $s;
+        if ($this->name == 'usio1') {
+            $s = usio()->relay_get_state($port);
+            if ($s >= 0) {
+                $this->log->info("state %s -> %d\n",
+                                 port_str($pname, $this->name, 'out', $port), $s);
+                return $s;
+            }
+            $reason = '';
+        } else {
+            $ret = $this->send_cmd("relay_get", ['port' => $port]);
+            if ($ret['status'] == "ok") {
+                $s = $ret['state'];
+                $this->log->info("state %s -> %d\n",
+                                 port_str($pname, $this->name, 'out', $port), $s);
+                return $s;
+            }
+            $reason = $ret['reason'];
         }
 
         $err = sprintf("Can't get %s over HTTP. " .
                         "HTTP server return error: '%s'\n",
                         port_str($pname, $this->name, 'out', $port),
-                        $ret['reason']);
+                        $reason);
         $this->log->err($err);
         return $err;
     }
@@ -125,18 +144,29 @@ class Board_io {
             return $s;
         }
 
-        $ret = $this->send_cmd("input_get", ['port' => $port]);
-        if ($ret['status'] == "ok") {
-            $s = $ret['state'];
-            $this->log->info("state %s -> %d\n",
-                             port_str($pname, $this->name, 'in', $port), $s);
-            return $s;
+        if ($this->name == 'usio1') {
+            $s = usio()->input_get_state($port);
+            if ($s >= 0) {
+                $this->log->info("state %s -> %d\n",
+                                 port_str($pname, $this->name, 'in', $port), $s);
+                return $s;
+            }
+            $reason = '';
+        } else {
+            $ret = $this->send_cmd("input_get", ['port' => $port]);
+            if ($ret['status'] == "ok") {
+                $s = $ret['state'];
+                $this->log->info("state %s -> %d\n",
+                                 port_str($pname, $this->name, 'in', $port), $s);
+                return $s;
+            }
+            $reason = $ret['reason'];
         }
 
         $err = sprintf("Can't get state %s for %s over HTTP. " .
                        "HTTP server return error: '%s'\n",
                         port_str($pname, $this->name, 'in', $port),
-                        $this->ip_addr, $ret['reason']);
+                        $this->ip_addr, $reason);
 
         $this->log->err($err);
         return $err;
@@ -373,6 +403,15 @@ function trig_io_event($pname, $state)
         return 0;
     }
 
+    db()->query('delete from io_events where ' .
+                'created < (now() - interval 3 month)');
+
+    db()->insert('io_events', ['port_name' => $pname,
+                               'mode' => 'in',
+                               'io_name' => $info['io_name'],
+                               'port' => $info['pn'],
+                               'state' => $state]);
+
     $handlers = io_handlers_by_event($pname, $state);
     if (!$handlers)
         return 0;
@@ -380,12 +419,6 @@ function trig_io_event($pname, $state)
     $list = [];
     foreach ($handlers as $handler) {
         pnotice("triggering %s\n", $handler->name());
-        db()->insert('io_events', ['port_name' => $pname,
-                                   'mode' => 'in',
-                                   'io_name' => $info['io_name'],
-                                   'port' => $info['pn'],
-                                   'state' => $state]);
-
         $handler->event_handler($pname, $state);
         $list[] = $handler;
     }
@@ -455,13 +488,11 @@ function io_states()
 
 
 class Boards_io_cron_events implements Cron_events {
-    function name()
-    {
+    function name() {
         return "board_io";
     }
 
-    function interval()
-    {
+    function interval() {
         return "min";
     }
 
@@ -509,4 +540,53 @@ class Boards_io_cron_events implements Cron_events {
         file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
     }
 }
+
+
+class Http_io_handler implements Http_handler {
+    function name() {
+        return "board_io";
+    }
+
+    function requests() {
+        return ['/ioserver' => ['method' => 'GET',
+                               'required_args' => ['io',
+                                                   'port',
+                                                   'state'],
+                               'handler' => 'trig_io',
+                                                   ]
+        ];
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:Http_io_handler');
+    }
+
+    function trig_io($args, $from, $request)
+    {
+        $io_name = strtolower(trim($args['io']));
+        $port_num = strtolower(trim($args['port']));
+        $state = strtolower(trim($args['state']));
+
+        $pname = port_name_by_addr($io_name, 'in', $port_num);
+
+        if (!$pname) {
+            $err = sprintf("port %s is not registred\n",
+                           port_str($pname, $io_name, 'in', $port_num));
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        if ($state < 0 || $state > 1) {
+            $err = sprintf("Incorrect port state %d. Port state must be 0 or 1\n", $state);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        trig_io_event($pname, $state);
+        return json_encode(['status' => 'ok']);
+    }
+}
+
 

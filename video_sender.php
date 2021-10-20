@@ -14,7 +14,7 @@ function print_help()
 {
     global $argv;
     $utility_name = $argv[0];
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice("Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
 
              "\t$utility_name alarm <alarm_id> - Send all camera videos associated with alarm_id to sr38.org and send links to Telegram\n" .
@@ -25,7 +25,7 @@ function print_help()
              "\t\tExample:\n" .
              "\t\t\t $utility_name by_timestamp 1544390409 5 1,2 186579253\n" .
 
-    "\n\n";
+    "\n\n");
 }
 
 function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "")
@@ -48,7 +48,7 @@ function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "
         }
         dump($file);
         $server_filename = sprintf("%s_%d_%s", $prefix, $cam['id'], basename($file['file']));
-        printf("server_filename = %s\n", $server_filename);
+        pnotice("server_filename = %s\n", $server_filename);
 
         $cmd = sprintf('scp %s stelhs@sr38.org:/storage/www/plato/%s/%s',
                        $file['file'], $server_dir, $server_filename);
@@ -84,8 +84,8 @@ function main($argv)
                                    'WHERE id = %d', $alarm_id));
         $alarm_timestamp = $row['alarm_time'];
 
-        printf("alarm_id = %d\n", $alarm_id);
-        printf("alarm_timestamp = %d\n", $alarm_timestamp);
+        pnotice("alarm_id = %d\n", $alarm_id);
+        pnotice("alarm_timestamp = %d\n", $alarm_timestamp);
 
         $msg = sprintf("Загружаю видео файлы по событию %d, ожидайте...", $alarm_id);
         tn()->send_to_alarm($msg);
@@ -122,11 +122,11 @@ function main($argv)
         if ($cam_list_id_comma)
             $cam_list_id = split_string_by_separators($cam_list_id_comma, ',');
 
-        printf("timestamp = %d\n", $timestamp);
-        printf("duration = %d\n", $duration);
-        printf("cam_list_id = \n");
+        pnotice("timestamp = %d\n", $timestamp);
+        pnotice("duration = %d\n", $duration);
+        pnotice("cam_list_id = \n");
         dump($cam_list_id);
-        printf("chat_id = %d\n", $chat_id);
+        pnotice("chat_id = %d\n", $chat_id);
 
         foreach(conf_guard()['video_cameras'] as $cam) {
             if ($cam_list_id) {

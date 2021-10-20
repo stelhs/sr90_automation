@@ -9,6 +9,7 @@ require_once 'board_io_api.php';
 require_once 'telegram_lib.php';
 
 function main($argv) {
+    chdir(dirname($argv[0]));
     iop('ups_break_power')->down();
     iop('battery_relay')->down();
     tn()->send_to_admin('Сервер sr90 перезапущен');

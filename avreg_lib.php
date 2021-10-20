@@ -123,12 +123,12 @@ class Avreg {
         for ($i = $start_file_index; $i <= $end_file_index; $i++)
             $video_list[] = $all_video_list[$i];
 
-        printf("start file = %s\n", $all_video_list[$start_file_index]['file']);
-        printf("start interval time = %s\n", $start_time);
+        pnotice("start file = %s\n", $all_video_list[$start_file_index]['file']);
+        pnotice("start interval time = %s\n", $start_time);
         if ($end_file_index != -1)
-            printf("end file = %s\n", $all_video_list[$end_file_index]['file']);
+            pnotice("end file = %s\n", $all_video_list[$end_file_index]['file']);
         else
-            printf("end not found\n");
+            pnotice("end not found\n");
 
         return ['video_list' => $video_list, 'incomplete' => $list_incomplete];
     }
@@ -193,7 +193,7 @@ class Avreg {
             }
 
             if ($file == $last_file) {
-                printf("wait\r");
+                pnotice("wait\r");
                 sleep(1);
                 continue;
             }

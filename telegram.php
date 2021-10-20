@@ -12,7 +12,7 @@ function print_help()
 {
     global $argv;
     $utility_name = $argv[0];
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice( "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\tmsg_recv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
              "\t\tExample:\n" .
@@ -34,7 +34,7 @@ function print_help()
              "\t\tExample:\n" .
              "\t\t\t $utility_name msg_send_alarm 'hello world'\n" .
 
-             "\n\n";
+             "\n\n");
 }
 
 function main($argv)

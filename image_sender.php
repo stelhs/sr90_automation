@@ -14,7 +14,7 @@ function print_help()
 {
     global $argv;
     $utility_name = $argv[0];
-    echo "Usage: $utility_name <command> <args>\n" .
+    pnotice("Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
              "\t$utility_name alarm <alarm_id> - Send all cameras photos associated with alarm_id to sr38.org and send links to Telegram\n" .
              "\t\tExample:\n" .
@@ -22,7 +22,7 @@ function print_help()
              "\t$utility_name current [chat_id] - Request current camera photos and send links to Telegram. Messages send to all chats If chat_id is null\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name current\n" .
-    "\n\n";
+    "\n\n");
 }
 
 
@@ -37,7 +37,7 @@ function main($argv)
 
     switch ($mode) {
     case 'alarm':
-        $alarm_id = $argv[2];
+        $alarm_id = $argv[2];pnot
         // copy images to sr38.org
         $ret = run_cmd(sprintf('scp %s/%d_*.jpeg stelhs@sr38.org:/storage/www/plato/alarm_img/',
                                conf_guard()['alarm_snapshot_dir'], $alarm_id));

@@ -13,16 +13,9 @@ require_once 'player_lib.php';
 class Guard {
     private $log;
 
-    // Used for debugging alarm system
-    private $hide_telegram_msg;
-    private $hide_sound;
-    private $hide_sms;
-
     function __construct() {
         $this->log = new Plog("sr90:Guard");
-        $this->hide_telegram_msg = is_file("HIDE_TELEGRAM");
-        $this->hide_sound = is_file("HIDE_SOUND");
-        $this->hide_sms = is_file("HIDE_SMS");
+        $this->test_mode = is_file("GUARD_TESTING");
     }
 
     function tg_info()
@@ -31,7 +24,7 @@ class Guard {
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
 
-        if (!$this->hide_telegram_msg)
+        if (!$this->test_mode)
             tn()->send_to_msg($msg);
         else
             tn()->send_to_admin("INFO: %s", $msg);
@@ -43,7 +36,7 @@ class Guard {
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
 
-        if (!$this->hide_telegram_msg)
+        if (!$this->test_mode)
             tn()->send_to_alarm($msg);
         else
             tn()->send_to_admin("ALARM: %s", $msg);
@@ -146,7 +139,7 @@ class Guard {
     function zone_by_sensor_name($sname)
     {
         foreach ($this->zones() as $zone)
-            foreach ($zone['io_sensors'] as $sens_name => $active_state)
+            foreach ($zone['io_sensors'] as $sens_name => $trig_state)
                 if ($sens_name == $sname)
                     return $zone;
         return null;
@@ -324,7 +317,7 @@ class Guard {
             return 'already_stopped';
         }
 
-        if (!$this->hide_sound)
+        if (!$this->test_mode)
             player_start('sounds/unlock.wav');
         else
             $this->tg_info('Run sound sounds/unlock.wav');
@@ -365,7 +358,7 @@ class Guard {
             return 'ok';
         }
 
-        if ($with_sms && !$this->hide_sms) {
+        if ($with_sms && !$this->test_mode) {
             $text = sprintf("Охрана отключена: %s",
                             $method);
             modem3g()->send_sms_to_user($user_id, $text);
@@ -382,16 +375,18 @@ class Guard {
             return 'already_started';
         }
 
-        if (!$this->hide_sound)
+        if (!$this->test_mode)
             player_start('sounds/lock.wav', 55);
         else
             $this->tg_info('Run sound sounds/lock.wav');
 
         well_pump()->stop();
 
-        iop('sk_power')->down();
-        iop('RP_sockets')->down();
-        iop('workshop_power')->down();
+        if (!$this->test_mode) {
+            iop('sk_power')->down();
+            iop('RP_sockets')->down();
+            iop('workshop_power')->down();
+        }
         padlocks_close();
 
         $user = user_by_id($user_id);
@@ -402,7 +397,7 @@ class Guard {
         $tg_zone_report = '';
         $locked_zones = $this->locked_zones();
         if (count($locked_zones))
-            $tg_zone_report .= sprintf("Заблокированные зоны: %s\n",
+            $tg_zone_report .= sprintf("Заблокированные зоны: %s\n\n",
                                      $this->zones_list_to_text($locked_zones));
 
         $not_ready_zones = $this->not_ready_zones();
@@ -445,12 +440,61 @@ class Guard {
             return 'ok';
         }
 
-        if ($with_sms && !$this->hide_sms) {
+        if ($with_sms && !$this->test_mode) {
             $text = sprintf("Охрана включена: %s",
                             $method);
             modem3g()->send_sms_to_user($user_id, $text);
         }
         return 'ok';
+    }
+
+    function is_all_sensors_trig($zone, $sname)
+    {
+        if (count($zone['io_sensors']) == 1)
+            return True;
+
+        // check for activity any sensors in current zone
+        $total_cnt = $triggered_cnt = 0;
+        foreach ($zone['io_sensors'] as $sensor => $trig_state) {
+            // ignore initiated sensor
+            if ($sensor == $sname)
+                continue;
+
+            $total_cnt ++;
+            $ret = db()->query(sprintf('SELECT state, id FROM io_events ' .
+                                       'WHERE port_name = "%s" and ' .
+                                           'state = %d ' .
+                                       'ORDER BY id DESC LIMIT 1',
+                                       $sensor, $trig_state));
+            if ($ret < 0)
+                $this->log->err("sensor_handler(): Can't MySQL query\n");
+
+            if (!is_array($ret))
+                continue;
+
+            if ($ret['state'] != $trig_state) {
+                $triggered_cnt ++;
+                continue;
+            }
+
+            $state_id = $ret['id'];
+
+            // check when it triggered at last 'diff_interval' seconds
+            $ret = db()->query(sprintf('SELECT id FROM io_events ' .
+                                       'WHERE id = %d ' .
+                                       'AND (created + INTERVAL %d SECOND) > now()',
+                                       $state_id, $zone['diff_interval']));
+            if ($ret < 0)
+                $this->log->err("sensor_handler(): Can't MySQL query\n");
+
+            if (!is_array($ret))
+                continue;
+
+            if (isset($ret['id']))
+                $triggered_cnt ++;
+        }
+
+        return ($triggered_cnt == $total_cnt);
     }
 
     function sensor_handler($sname, $state)
@@ -487,62 +531,20 @@ class Guard {
             return 0;
         }
 
-        // check for activity any sensors in current zone
-        $total_cnt = $active_cnt = 0;
-        foreach ($zone['io_sensors'] as $sensor => $active_state) {
-
-            // ignore initiated sensor
-            if ($sensor == $sname)
-                continue;
-
-            $total_cnt ++;
-            $ret = db()->query(sprintf('SELECT state, id FROM io_events ' .
-                                       'WHERE port_name = "%s" ' .
-                                       'ORDER BY id DESC LIMIT 1',
-                                       $sname));
-            if ($ret < 0)
-                $this->log->err("sensor_handler(): Can't MySQL query\n");
-
-            if (!is_array($ret))
-                continue;
-
-            if ($ret['state'] != $active_state) {
-                $active_cnt ++;
-                continue;
-            }
-
-            $state_id = $ret['id'];
-
-            // check when it triggered at last 'diff_interval' seconds
-            $ret = db()->query(sprintf('SELECT id FROM io_events ' .
-                                       'WHERE id = %d ' .
-                                       'AND (created + INTERVAL %d SECOND) > now()',
-                                       $state_id, $zone['diff_interval']));
-            if ($ret < 0)
-                $this->log->err("sensor_handler(): Can't MySQL query\n");
-
-            if (!is_array($ret))
-                continue;
-
-            if (isset($ret['id']))
-                $active_cnt ++;
-        }
-
-        // if not all sensors was triggered
-        if ($active_cnt != $total_cnt) {
+        if (!$this->is_all_sensors_trig($zone, $sname)) {
             $this->log->info("not all sensors is active\n");
             $cmd = './text_spech.php "Уходи" 0';
-            if (!$this->hide_sound) {
+            if (!$this->test_mode) {
                 run_cmd($cmd);
                 player_start(['sounds/access_denyed.wav',
                               'sounds/text.wav'], 100);
             } else
                 $this->tg_info('run text spitch cmd: %s', $cmd);
 
-            $msg = sprintf("Срабатал датчик %s из группы \"%s\".\n" .
+            $msg = sprintf("Срабатал датчик '%s' из группы \"%s\".\n" .
                 "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
-                $pname, $zone['desc']);
-            $this->dg_info($msg);
+                $sname, $zone['desc']);
+            $this->tg_info($msg);
 
             run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id())); // TODO
             return;
@@ -556,10 +558,14 @@ class Guard {
 
         if ($ret && isset($ret['id'])) {
             $alarm_id = $ret['id'];
+            $alarm_time = $zone['alarm_time'];
+            if ($this->test_mode)
+                $alarm_time = 5;
+
             $ret = db()->query(sprintf("SELECT id FROM guard_alarms " .
                                        "WHERE id = %d " .
                                        "AND (created + interval %d second) > now() ",
-                                       $alarm_id, $zone['alarm_time']));
+                                       $alarm_id, $alarm_time));
             if ($ret < 0)
                 $this->log->err("sensor_handler(): Can't MySQL query\n");
 
@@ -579,10 +585,10 @@ class Guard {
         $this->log->info("Guard set in alarm state!");
 
         // make snapshots
-        $this->make_alarm_photos($action_id);
+        //$this->make_alarm_photos($action_id);
 
         // run sirena
-        if (!$this->hide_sound)
+        if (!$this->test_mode)
             player_start('sounds/siren.wav', 100, $zone['alarm_time']);
         else
             $this->tg_info('Run sirena during %d seconds', $zone['alarm_time']);
@@ -591,8 +597,8 @@ class Guard {
                          $zone['desc'], $action_id);
 
         // send photos
-        $this->send_alarm_photos_to_sr38($action_id);
-        $this->send_alarm_photos_to_telegram($action_id);
+        //$this->send_alarm_photos_to_sr38($action_id);
+        //$this->send_alarm_photos_to_telegram($action_id);
 
         // send videos
         $row = db()->query('SELECT UNIX_TIMESTAMP(created) as timestamp ' .
@@ -620,7 +626,7 @@ class Guard {
         }
         $this->tg_alarm("Процесс загрузки видео по событию %d завершен", $action_id);
 
-        if (!$this->hide_sms)
+        if (!$this->test_mode)
             modem3g()->send_sms_alarm("Сработала сигнализация! зона %s", $zone['desc']);
     }
 }
@@ -640,8 +646,8 @@ class Guard_io_handler implements IO_handler {
     function trigger_ports() {
         $list = [];
         foreach (guard()->unlocked_zones() as $zone)
-            foreach ($zone['io_sensors'] as $pname => $active_state)
-                $list[$pname] = $active_state;
+            foreach ($zone['io_sensors'] as $pname => $trig_state)
+                $list[$pname] = $trig_state;
         $list['remote_guard_sleep'] = 1;
         $list['remote_guard_ready'] = 1;
         return $list;
@@ -844,7 +850,7 @@ class Guard_cron_events implements Cron_events {
                                            'io_name' => $port_info['io_name'],
                                            'port' => $port_info['pn'],
                                            'state' => $trig_state]);
-                printf("Fixed port %s.in.%d\n", $port_info['io_name'], $port_info['pn']);
+                pnotice("Fixed port %s.in.%d\n", $port_info['io_name'], $port_info['pn']);
             }
         }
     }

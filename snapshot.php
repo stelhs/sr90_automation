@@ -11,13 +11,13 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <path_for_store> <prefix>\n" .
+    pnotice("Usage: $utility_name <path_for_store> <prefix>\n" .
              "\tMake cameras snapshots into <path_for_store>.\n" .
              "\tResult files name used prefix <prefix>\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name /var/spool/guard_system/images 12_\n" .
              "\t\tStored files into this directory with names: 12_cam1.jpg, 12_cam2.jpg,\n" .
-    	"\n\n";
+    	"\n\n");
 }
 
 // TODO: remove this file

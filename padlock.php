@@ -9,15 +9,15 @@ require_once 'padlock_api.php';
 function print_help()
 {
     global $app_name;
-    echo "\nUsage: $app_name <command> <args>\n" .
-             "\tcommands:\n" .
+    pnotice("\nUsage: $app_name <command> <args>\n" .
+            "\tcommands:\n" .
                  "\t\t open: open padlock. Args: [padlock_name] [...]\n" .
                  "\t\t\texample: $app_name open rp\n" .
                  "\t\t close: close padlock. Args: [padlock_name] [...]\n" .
                  "\t\t\texample: $app_name close sk\n" .
                  "\t\t stat: return current status.\n" .
                  "\t\t\texample: $app_name stat\n" .
-    "\n\n";
+    "\n\n");
 }
 
 

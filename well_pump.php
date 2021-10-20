@@ -13,7 +13,7 @@ require_once 'well_pump_api.php';
 function print_help()
 {
     global $app_name;
-    echo "\nUsage: $app_name <command> <args>\n" .
+    pnotice("\nUsage: $app_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t enable: run well pump.\n" .
                  "\t\t\texample: $app_name run\n" .
@@ -21,7 +21,7 @@ function print_help()
                  "\t\t\texample: $app_name stop\n" .
                  "\t\t stat: return current status.\n" .
                  "\t\t\texample: $app_name stat\n" .
-                 "\n\n";
+                 "\n\n");
 }
 
 

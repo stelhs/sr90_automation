@@ -11,11 +11,11 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <io_name> <port_num> <enable_time> <disable_time> ...\n" .
+    pnotice("Usage: $utility_name <io_name> <port_num> <enable_time> <disable_time> ...\n" .
              "\tStarting port state changer sequencer\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name charge_discharge 500 500 300 500\n" .
-    	"\n\n";
+    	"\n\n");
 }
 
 

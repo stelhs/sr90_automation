@@ -15,7 +15,7 @@ $utility_name = $argv[0];
 function print_help()
 {
     global $utility_name;
-    echo "Usage: $utility_name <args>\n" .
+    pnotice( "Usage: $utility_name <args>\n" .
              "\t Play voice broadcast message.\n" .
              "\t\t Args: <text_message> [volume] [voice_type] [speed]\n" .
              "\t\t <text_message> - Played text message string\n" .
@@ -26,7 +26,7 @@ function print_help()
              "\t\t\t\t 3 - Irina:\n" .
              "\t\t [speed] - Playback speed. 0 - normal speed. -0.9 minmal speed, 0.9 maximal speed:\n" .
              "\t\t example: $utility_name 'Привет страна' 100 1 -0.7\n" .
-    "\n\n";
+    "\n\n");
 }
 
 

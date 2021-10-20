@@ -73,7 +73,7 @@ class Gates {
 
     function close_after_cancel()
     {
-        @unlink(GATES_CLOSE_AFTER);
+        unlink_safe(GATES_CLOSE_AFTER);
     }
 
     function close_sync()
@@ -157,7 +157,7 @@ class Gates_io_handler implements IO_handler {
                         gates()->power_enable();
                         sleep(1);
                     }
-                    @unlink(GATES_REMOTE_BUTTON_REVERSE);
+                    unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
                     $this->log->info("gates closing synchronously");
                     $rc = gates()->close_sync();
                     gates()->power_disable();
@@ -189,7 +189,7 @@ class Gates_io_handler implements IO_handler {
 
             if (gates()->is_closed()) {
                 tn()->send_to_admin("Ворота открываются");
-                @unlink(GATES_REMOTE_BUTTON_REVERSE);
+                unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
                 $this->log->info("gates opening");
                 $rc = gates()->open();
                 if ($rc)
@@ -212,7 +212,7 @@ class Gates_io_handler implements IO_handler {
             $rc = gates()->open();
             if ($rc)
                 tn()->send_to_admin("Ворота не открылись, видимо нет питания");
-            @unlink(GATES_REMOTE_BUTTON_REVERSE);
+            unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             return;
         }
     }

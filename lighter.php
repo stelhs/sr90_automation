@@ -9,7 +9,7 @@ require_once 'lighters_api.php';
 function print_help()
 {
     global $app_name;
-    echo "\nUsage: $app_name <command> <args>\n" .
+    pnotice("\nUsage: $app_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t enable: enable lighter. Args: [lighter_name] [...]\n" .
                  "\t\t\texample: $app_name enable workshop\n" .
@@ -17,7 +17,7 @@ function print_help()
                  "\t\t\texample: $app_name disable workshop\n" .
                  "\t\t stat: return current status.\n" .
                  "\t\t\texample: $app_name stat\n" .
-    "\n\n";
+    "\n\n");
 }
 
 

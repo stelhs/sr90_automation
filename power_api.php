@@ -222,8 +222,8 @@ class Ups_batterry_periodically implements Periodically_events {
                 $msg = sprintf("Error: battery_info() return %s, sbio1 go to reboot",
                     $batt_info['error_msg']);
                 tn()->send_to_admin($msg);
-                @unlink(UPS_BATT_VOLTAGE_FILE);
-                @unlink(UPS_BATT_CURRENT_FILE);
+                unlink_safe(UPS_BATT_VOLTAGE_FILE);
+                unlink_safe(UPS_BATT_CURRENT_FILE);
                 reboot_sbio('sbio1');
             }
             tn()->send_to_admin("Ошибка АКБ");
@@ -398,8 +398,8 @@ class Ups_periodically implements Periodically_events {
 
     function restart_charger()
     {
-        @unlink(CHARGER_DISABLE_FILE);
-        @unlink(CHARGER_STAGE_FILE);
+        unlink_safe(CHARGER_DISABLE_FILE);
+        unlink_safe(CHARGER_STAGE_FILE);
     }
 
     function do() {
@@ -411,8 +411,8 @@ class Ups_periodically implements Periodically_events {
         $power_states = power_state();
         $ups_power_state = isset($power_states['ups']) ? $power_states['ups'] : -1;
         $input_power_state = isset($power_states['input']) ? $power_states['input'] : -1;
-        printf("current_ups_power_state = %d\n", $ups_power_state);
-        printf("current_input_power_state = %d\n", $input_power_state);
+        pnotice("current_ups_power_state = %d\n", $ups_power_state);
+        pnotice("current_input_power_state = %d\n", $input_power_state);
 
         if ($ups_power_state < 0 || $input_power_state < 0) {
             $this->log->err("incorrect ups_power_state or input_power_state\n");
@@ -455,15 +455,15 @@ class Ups_periodically implements Periodically_events {
         }
 
         $voltage = $batt_info['voltage'];
-        printf("voltage = %f\n", $voltage);
+        pnotice("voltage = %f\n", $voltage);
         $current = $batt_info['current'];
-        printf("current = %f\n", $current);
+        pnotice("current = %f\n", $current);
 
         if ($voltage <= 0)
             return -1;
 
         if ($voltage < 11.88) {
-            printf("voltage drop bellow 11.88v\n");
+            pnotice("voltage drop bellow 11.88v\n");
             @$notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
             if ((time() - $notified) > 300) {
                 $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
@@ -473,7 +473,7 @@ class Ups_periodically implements Periodically_events {
                 $this->restart_charger();
             }
         } else
-            @unlink(LOW_BATT_VOLTAGE_FILE);
+            unlink_safe(LOW_BATT_VOLTAGE_FILE);
 
         if (!$ups_power_state and $input_power_state) {
             $duration = last_ups_duration();
@@ -489,7 +489,7 @@ class Ups_periodically implements Periodically_events {
         // if external power is absent and voltage down below 11.9 volts
         // stop server and same systems
         if (!$ups_power_state && $voltage <= 12.0) {
-            printf("voltage drop bellow 12.0v\n");
+            pnotice("voltage drop bellow 12.0v\n");
 
             $msg = 'Напряжение на АКБ снизилось ниже 12.0v а внешнее питание так и не появилось. ';
             $msg .= sprintf("Система проработала от бесперебойника %d секунд. ",

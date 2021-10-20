@@ -102,22 +102,22 @@ function main($argv)
 
             if ($info['mode'] == 'in') {
                 $s = iop($pname)->state();
-                printf("%s return %d\n", $info['str'], $s);
+                pnotice("%s return %d\n", $info['str'], $s);
                 return 0;
             }
 
             switch ($op) {
             case 'up':
-                printf("%s set to 1\n", $info['str']);
+                pnotice("%s set to 1\n", $info['str']);
                 return iop($pname)->up();
 
             case 'down':
-                printf("%s set to 0\n", $info['str']);
+                pnotice("%s set to 0\n", $info['str']);
                 return iop($pname)->down();
 
             default:
                 $s = iop($pname)->state();
-                printf("%s return %d\n", $info['str'], $s);
+                pnotice("%s return %d\n", $info['str'], $s);
                 return 0;
             }
             return -EINVAL;
@@ -175,7 +175,7 @@ function main($argv)
                         return -EINVAL;
                     }
                     $s = $p->state();
-                    printf("%s.%s.%d return %d\n",
+                    pnotice("%s.%s.%d return %d\n",
                             $io_name, $mode, $pn, $s);
                 }
                 return 0;
@@ -184,14 +184,14 @@ function main($argv)
             foreach (conf_io()[$io_name]['in'] as $pn => $pname) {
                 $p = new Board_io_in($board_io, $pn);
                 $s = $p->state();
-                printf("%s.in.%d return %d\n",
+                pnotice("%s.in.%d return %d\n",
                         $io_name, $pn, $s);
             }
-            printf("\n");
+            pnotice("\n");
             foreach (conf_io()[$io_name]['out'] as $pn => $pname) {
                 $p = new Board_io_out($board_io, $pn);
                 $s = $p->state();
-                printf("%s.out.%d return %d\n",
+                pnotice("%s.out.%d return %d\n",
                         $io_name, $pn, $s);
             }
             return 0;
@@ -212,12 +212,12 @@ function main($argv)
             $p = new Board_io_out($board_io, $port);
             if ($op == 'up') {
                 $p->up();
-                printf("%s set to 1\n",
+                pnotice("%s set to 1\n",
                         port_str($pname, $io_name, 'out', $port));
                 return 0;
             }
             $p->down();
-                printf("%s set to 0\n",
+                pnotice("%s set to 0\n",
                         port_str($pname, $io_name, 'out', $port));
             return 0;
 
@@ -234,7 +234,7 @@ function main($argv)
                 return -EINVAL;
             }
             $s = $p->state();
-            printf("%s return %d\n",
+            pnotice("%s return %d\n",
                     port_str($pname, $io_name, $mode, $port), $s);
             return 0;
         }
