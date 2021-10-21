@@ -76,8 +76,7 @@ class Gates {
         return 0;
     }
 
-    function close_after($time)
-    {
+    function close_after($time) {
         file_put_contents(GATES_CLOSE_AFTER, time() + $time);
     }
 
@@ -105,15 +104,28 @@ class Gates {
         return $stat;
     }
 
-    function is_closed()
-    {
-        return iop('gates_closed')->state();
+    function is_closed() {
+        return iop('gates_closed')->state()[0];
     }
 
-    function is_power_enabled()
-    {
-        return iop('gates_power')->state();
+    function is_power_enabled() {
+        return iop('gates_power')->state()[0];
     }
+
+    function stat_text()
+    {
+        $tg = '';
+        $sms = '';
+
+        $s = $this->stat();
+        $tg .= sprintf("Питание ворот: %s\n" .
+                         "Ворота %s\n",
+                         ($s['power'] == "enabled") ? 'присутствует' : 'отсутствует',
+                         ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
+        $sms .= sprintf("ворота %s\n", ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
+        return [$tg, $sms];
+    }
+
 }
 
 function gates()
@@ -127,98 +139,95 @@ function gates()
 
 
 class Gates_io_handler implements IO_handler {
-    function __construct()
-    {
+    function __construct() {
         $this->log = new Plog('sr90:Gates_io_handler');
     }
 
-    function name()
-    {
+    function name() {
         return "gates";
     }
 
     function trigger_ports() {
-        return ['remote_gates_open_close' => 1,
-                'remote_guard_sleep' => 1,
-                'gates_closed' => 2,
-        ];
+        return ['open_close_ped' => ['remote_gates_open_close' => 1],
+                'open_close' => ['remote_guard_sleep' => 1],
+                'gates_closed' => ['gates_closed' => 2],
+                ];
     }
 
-    function event_handler($pname, $state)
+    function open_close_ped($pname, $state)
     {
-        switch ($pname) {
-        case 'remote_gates_open_close':
-            if (guard()->state() == 'ready') {
-                if (!gates()->is_closed()) {
-                    tn()->send_to_admin("Ворота закрываются");
-                    if (!gates()->is_power_enabled()) {
-                        gates()->power_enable();
-                        sleep(1);
-                    }
-                    unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
-                    gates()->close(true);
-                    return;
-                }
-                return;
-            }
-
-            if (gates()->is_closed()) {
-                $this->log->info("gates open for pedestration");
-                gates()->open_ped();
-                gates()->close_after(30);
-                return 0;
-            }
-            $this->log->info("gates closing");
-            gates()->close();
-            return 0;
-
-        case 'remote_guard_sleep':
-            if (guard()->state() == 'ready')
-                return;
-
-            if (gates()->is_closed()) {
-                tn()->send_to_admin("Ворота открываются");
-                unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
-                $this->log->info("gates opening");
-                $rc = gates()->open();
-                if ($rc)
-                    tn()->send_to_admin("Ворота не открылись, видимо нет питания");
-                return;
-            }
-
-            if (!file_exists(GATES_REMOTE_BUTTON_REVERSE)) {
+        if (guard()->state() == 'ready') {
+            if (!gates()->is_closed()) {
                 tn()->send_to_admin("Ворота закрываются");
-                $this->log->info("gates closing");
-                $rc = gates()->close();
-                if ($rc)
-                    tn()->send_to_admin("Ворота не закрылись, причина: %s", $rc);
-                file_put_contents(GATES_REMOTE_BUTTON_REVERSE, "");
+                if (!gates()->is_power_enabled()) {
+                    gates()->power_enable();
+                    sleep(1);
+                }
+                unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
+                gates()->close(true);
                 return;
             }
+            return;
+        }
 
+        if (gates()->is_closed()) {
+            $this->log->info("gates open for pedestration");
+            gates()->open_ped();
+            gates()->close_after(30);
+            return 0;
+        }
+        $this->log->info("gates closing");
+        gates()->close();
+    }
+
+    function open_close($pname, $state)
+    {
+        if (guard()->state() == 'ready')
+            return;
+
+        if (gates()->is_closed()) {
             tn()->send_to_admin("Ворота открываются");
+            unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             $this->log->info("gates opening");
             $rc = gates()->open();
             if ($rc)
                 tn()->send_to_admin("Ворота не открылись, видимо нет питания");
-            unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
-            return;
-
-        case 'gates_closed':
-            if ($state) {
-                $msg = "Ворота закрылись";
-                unlink_safe(GATES_WAIT_FOR_CLOSED);
-                if (file_exists(GATES_AUTO_POWER_DISABLE)) {
-                    gates()->power_disable();
-                    unlink_safe(GATES_AUTO_POWER_DISABLE);
-                    $msg .= ", питание ворот отключено";
-                }
-                tn()->send_to_msg($msg);
-            }
-            else
-                tn()->send_to_msg("Ворота открылись");
             return;
         }
+
+        if (!file_exists(GATES_REMOTE_BUTTON_REVERSE)) {
+            tn()->send_to_admin("Ворота закрываются");
+            $this->log->info("gates closing");
+            $rc = gates()->close();
+            if ($rc)
+                tn()->send_to_admin("Ворота не закрылись, причина: %s", $rc);
+            file_put_contents(GATES_REMOTE_BUTTON_REVERSE, "");
+            return;
+        }
+
+        tn()->send_to_admin("Ворота открываются");
+        $this->log->info("gates opening");
+        $rc = gates()->open();
+        if ($rc)
+            tn()->send_to_admin("Ворота не открылись, видимо нет питания");
+        unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
+        return;
+    }
+
+    function gates_closed($pname, $state)
+    {
+        if ($state) {
+            $msg = "Ворота закрылись";
+            unlink_safe(GATES_WAIT_FOR_CLOSED);
+            if (file_exists(GATES_AUTO_POWER_DISABLE)) {
+                gates()->power_disable();
+                unlink_safe(GATES_AUTO_POWER_DISABLE);
+                $msg .= ", питание ворот отключено";
+            }
+            tn()->send_to_msg($msg);
+            return;
+        }
+        tn()->send_to_msg("Ворота открылись");
     }
 }
 
@@ -284,8 +293,7 @@ class Gates_periodically implements Periodically_events {
 
 
 class Gates_tg_events implements Tg_skynet_events {
-    function name()
-    {
+    function name() {
         return "gates";
     }
 

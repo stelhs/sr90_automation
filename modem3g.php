@@ -472,6 +472,17 @@ class Modem3G {
                 modem3g()->send_sms($phone, $text);
     }
 
+    function stat_text()
+    {
+        $balance_tg = $balance_sms = $this->sim_balanse();
+        if ($balance_tg < 0) {
+            $balance_tg = sprintf('не удалось получить, код: %s', $balance_tg);
+            $balance_sms = 'неработет';
+        }
+        $tg = sprintf("Баланс счета SIM карты: %s\n", $balance_tg);
+        $sms = sprintf("Баланс:%s, ", $balance_sms);
+        return [$tg, $sms];
+    }
 }
 
 function modem3g()

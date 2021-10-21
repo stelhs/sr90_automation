@@ -29,7 +29,7 @@ class Lighter {
     }
 
     function state() {
-        return iop($this->port)->state();
+        return iop($this->port)->state()[0];
     }
 }
 
@@ -42,11 +42,11 @@ class Lighters {
     {
         foreach (conf_street_light()['lights'] as $lighter) {
             $rc = lighter($lighter['name'])->enable();
-            if ($rc) {
-                $this->log->err("Can't enable lighter '%s': %s",
-                                $lighter['desc'], $rc);
-                return sprintf("Can't enable lighter '%s': %s",
-                                $lighter['desc'], $rc);
+            if ($rc[0] < 0) {
+                $err = sprintf("Can't enable lighter '%s': %s",
+                               $lighter['desc'], $rc[1]);
+                $this->log->err($err);
+                return $err;
             }
         }
     }
@@ -55,11 +55,11 @@ class Lighters {
     {
         foreach (conf_street_light()['lights'] as $lighter) {
             $rc = lighter($lighter['name'])->disable();
-            if ($rc) {
-                $this->log->err("Can't disable lighter '%s': %s",
-                                $lighter['desc'], $rc);
-                return sprintf("Can't disable lighter '%s': %s",
-                               $lighter['desc'], $rc);
+            if ($rc[0] < 0) {
+                $err = sprintf("Can't disable lighter '%s': %s",
+                               $lighter['desc'], $rc[1]);
+                $this->log->err($err);
+                return $err;
             }
         }
     }
@@ -97,6 +97,27 @@ class Lighters {
             return true;
 
         return false;
+    }
+
+    function stat_text()
+    {
+        $tg = '';
+        $sms = '';
+        $stat = $this->stat();
+        foreach ($stat as $row) {
+            switch ($row['state'][0]) {
+            case 0:
+                $tg .= sprintf("Фонарь '%s': отключен\n", $row['desc']);
+                $sms .= sprintf("свет '%s':откл, ", $row['desc']);
+                break;
+
+            case 1:
+                $tg .= sprintf("Фонарь '%s': включен\n", $row['desc']);
+                $sms .= sprintf("свет '%s':вкл, ", $row['desc']);
+                break;
+            }
+        }
+        return [$tg, $sms];
     }
 }
 

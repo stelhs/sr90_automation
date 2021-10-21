@@ -40,7 +40,7 @@ function main($argv)
         return guard()->stop('cli');
 
     case 'stat':
-        $guard_state = guard()->stat();
+        $guard_state = guard()->stat_text()[0];
         dump($guard_state);
         $stat_text = skynet_stat_sms();
         pnotice("%s\n", $stat_text);

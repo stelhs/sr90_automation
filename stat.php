@@ -18,7 +18,7 @@ function print_help()
 
 function main($argv)
 {
-    dump(skynet_stat());
+    dump(skynet_stat_telegram());
 
     pnotice("List of periodicaly events:\n");
     foreach (periodically_list() as $handler)
@@ -31,9 +31,11 @@ function main($argv)
     pnotice("\nList of board IO events:\n");
     foreach (io_handlers() as $handler) {
         pnotice("\t%s:\n", $handler->name());
-        foreach ($handler->trigger_ports() as $port_name => $trig_state) {
-            $info = port_info($port_name);
-            pnotice("\t\t%s\n", $info['str']);
+        foreach ($handler->trigger_ports() as $f => $plist) {
+            foreach ($plist as $pname => $trig_state) {
+                $port = io()->port($pname);
+                pnotice("\t\t%s\n", $port->str());
+            }
         }
     }
 

@@ -5,9 +5,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once 'common_lib.php';
 
 class Boiler {
-
-    function __construct()
-    {
+    function __construct() {
         $this->log = new Plog('sr90:Boiler');
     }
 
@@ -154,6 +152,31 @@ class Boiler {
 
         return 0;
     }
+
+    function stat_text()
+    {
+        $tg = '';
+        $sms = '';
+
+        $s = $this->stat();
+        $tg .= sprintf("Состояние котла: %s\n" .
+                       "Установленная температура котла: %.1f - %.1f градусов\n" .
+                       "Установленная температура в мастерской: %.1f градусов\n" .
+                       "Текущая температура в мастерской: %.1f градусов\n" .
+                       "Средняя температура в мастерской: %.1f градусов\n" .
+                       "Средняя температура в радиаторах: %.1f градусов\n" .
+                       "Количество запусков котла за текущие сутки: %d\n" .
+                       "Время нагрева за текущие сутки: %s\n" .
+                       "Объём потраченного топлива за текущие сутки: %.1f л.\n",
+                         $s['state'], $s['target_boiler_t_min'], $s['target_boiler_t_max'],
+                         $s['target_room_t'], $s['current_room_t'],
+                         $s['overage_room_t'], $s['overage_return_water_t'],
+                         $s['ignition_counter'], $s['total_burning_time_text'],
+                         $s['total_fuel_consumption']);
+
+        return [$tg, $sms];
+    }
+
 }
 
 

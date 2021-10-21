@@ -39,7 +39,7 @@ function main($argv)
             padlock($name)->open();
             return 0;
         }
-        padlocks_open();
+        padlocks()->open();
         return 0;
 
     case "close":
@@ -48,11 +48,11 @@ function main($argv)
             padlock($name)->close();
             return 0;
         }
-        padlocks_close();
+        padlocks()->close();
         return 0;
 
     case "stat":
-        $padlocks = padlocks_stat();
+        $padlocks = padlocks()->stat();
         foreach ($padlocks as $padlock) {
             pnotice("\tpadlock %s '%s': %s\n",
                     $padlock['name'], $padlock['desc'],

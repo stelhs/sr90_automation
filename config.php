@@ -28,7 +28,8 @@ function conf_local_io()
 function conf_io()
 {
     return [
-        'usio1' => ['location' => 'RP',
+        'usio1' => ['type' => 'usio',
+                    'location' => 'RP',
                     'ip_addr' => 'localhost',
                     'tcp_port' => 400,
                     'in' => [
@@ -53,7 +54,8 @@ function conf_io()
                         7 => 'RP_exhaust_fan'
                     ]],
 
-        'sbio1' => ['location' => 'RP',
+        'sbio1' => ['type' => 'sbio',
+                    'location' => 'RP',
                     'ip_addr' => '192.168.10.3',
                     'tcp_port' => 400,
                     'in' => [
@@ -84,7 +86,8 @@ function conf_io()
                         11 => 'gates_close'
                     ]],
 
-        'sbio2' => ['location' => 'SK',
+        'sbio2' => ['type' => 'sbio',
+                    'location' => 'SK',
                     'ip_addr' => '192.168.10.4',
                     'tcp_port' => 400,
                     'in' => [
@@ -115,7 +118,8 @@ function conf_io()
                         11 => ''
                     ]],
 
-        'sbio3' => ['location' => 'Workshop',
+        'sbio3' => ['type' => 'sbio',
+                    'location' => 'Workshop',
                     'ip_addr' => '192.168.10.6',
                     'tcp_port' => 400,
                     'in' => [
@@ -146,10 +150,11 @@ function conf_io()
                         11 => ''
                     ]],
 
-        'boiler' => ['ip_addr' => '192.168.10.10',
-                    'tcp_port' => 8890,
-                    'in' => [],
-                    'out' => []],
+        'boiler' => ['type' => 'sbio',
+                     'ip_addr' => '192.168.10.10',
+                     'tcp_port' => 8890,
+                     'in' => [],
+                     'out' => []],
     ];
 }
 

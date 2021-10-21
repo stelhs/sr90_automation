@@ -14,7 +14,7 @@ function main($argv) {
     iop('battery_relay')->down();
     tn()->send_to_admin('Сервер sr90 перезапущен');
 
-    refresh_out_ports();
+    io()->refresh_out_ports();
 
 }
 

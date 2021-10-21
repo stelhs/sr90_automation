@@ -7,6 +7,7 @@ require_once 'common_lib.php';
 require_once 'config.php';
 require_once 'usio_lib.php';
 require_once 'board_io_api.php';
+require_once 'power_api.php';
 
 
 
@@ -20,10 +21,10 @@ function print_help()
 
 function main($argv)
 {
-    usio()->wdt_off();
+    io()->board('usio1')->wdt_off();
     iop('ups_break_power')->up();
     iop('battery_relay')->up();
-    halt_all_systems();
+    power()->halt_all_systems();
     return 0;
 }
 

@@ -11,7 +11,7 @@ class Padlock {
     private $log;
     function __construct($name, $desc, $port)
     {
-        $this->log = new Plog('sr90:Padlocks');
+        $this->log = new Plog('sr90:Padlock');
         $this->name = $name;
         $this->desc = $desc;
         $this->port = $port;
@@ -31,38 +31,68 @@ class Padlock {
 
     function state()
     {
-        return iop($this->port)->state();
+        return iop($this->port)->state()[0];
     }
 }
 
-function padlocks_open()
-{
-    foreach (conf_padlocks() as $padlock) {
-        $rc = padlock($padlock['name'])->open();
-        if ($rc)
-            return sprintf("Can't open padlock '%s': %s",
-                            $padlock['desc'], $rc);
+class Padlocks {
+    function __construct() {
+        $this->log = new Plog('sr90:Padlocks');
     }
-}
 
-function padlocks_close()
-{
-    foreach (conf_padlocks() as $padlock) {
-        $rc = padlock($padlock['name'])->close();
-        if ($rc)
-            return sprintf("Can't close padlock '%s': %s",
-                            $padlock['desc'], $rc);
+    function open()
+    {
+        foreach (conf_padlocks() as $padlock) {
+            $rc = padlock($padlock['name'])->open();
+            if ($rc[0])
+                return sprintf("Can't open padlock '%s': %s",
+                                $padlock['desc'], $rc[1]);
+        }
     }
-}
 
-function padlocks_stat()
-{
-    $report = [];
-    foreach (conf_padlocks() as $padlock) {
-        $padlock['state'] = padlock($padlock['name'])->state();
-        $report[] = $padlock;
+    function close()
+    {
+        foreach (conf_padlocks() as $padlock) {
+            $rc = padlock($padlock['name'])->close();
+            if ($rc[0])
+                return sprintf("Can't close padlock '%s': %s",
+                                $padlock['desc'], $rc[1]);
+        }
     }
-    return $report;
+
+    function stat()
+    {
+        $report = [];
+        foreach (conf_padlocks() as $padlock) {
+            $ret = padlock($padlock['name'])->state();
+            $padlock['state'] = $ret[0];
+            if ($ret[0] < 0)
+                $padlock['state'] = 0;
+            $report[] = $padlock;
+        }
+        return $report;
+    }
+
+    function stat_text()
+    {
+        $tg = '';
+        $sms = '';
+        $stat = $this->stat();
+        foreach ($stat as $row) {
+            switch ($row['state'][0]) {
+            case 0:
+                $tg .= sprintf("Замок '%s': закрыт\n", $row['desc']);
+                $sms .= sprintf("замок '%s':закр., ", $row['desc']);
+                break;
+
+            case 1:
+                $tg .= sprintf("Замок '%s': открыт\n", $row['desc']);
+                $sms .= sprintf("замок '%s':откр., ", $row['desc']);
+                break;
+            }
+        }
+        return [$tg, $sms];
+    }
 }
 
 
@@ -87,6 +117,16 @@ function padlock($name)
     $padlock = new Padlock($info['name'], $info['desc'], $info['port']);
     $padlocks[$name] = $padlock;
     return $padlock;
+}
+
+function padlocks()
+{
+    static $padlocks = NULL;
+
+    if (!$padlocks)
+        $padlocks = new Padlocks;
+
+    return $padlocks;
 }
 
 
@@ -127,7 +167,7 @@ class Padlock_tg_events implements Tg_skynet_events {
     function open($chat_id, $msg_id, $user_id, $arg, $text)
     {
         if (!$arg) {
-            $rc = padlocks_open();
+            $rc = padlocks()->open();
             if ($rc) {
                 tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc);
                 return;
@@ -138,8 +178,8 @@ class Padlock_tg_events implements Tg_skynet_events {
 
         $name = $arg;
         $rc = padlock($name)->open();
-        if ($rc) {
-            tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc);
+        if ($rc[0]) {
+            tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc[1]);
             return;
         }
         tn()->send($chat_id, $msg_id, 'открыла');
@@ -147,9 +187,9 @@ class Padlock_tg_events implements Tg_skynet_events {
 
     function close($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        $rc = padlocks_close();
-        if ($rc) {
-            tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc);
+        $rc = padlocks()->close();
+        if ($rc[0]) {
+            tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc[1]);
             return;
         }
         tn()->send($chat_id, $msg_id, 'всё замки закрыты');

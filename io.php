@@ -43,19 +43,19 @@ function main($argv)
 
     switch ($cmd) {
     case 'wdt_on':
-        $rc = usio()->wdt_on();
+        $rc = io()->board('usio1')->wdt_on();
         if ($rc < 0)
             perror("Can't enable WDT\n");
         return 0;
 
     case 'wdt_off':
-        $rc = usio()->wdt_off();
+        $rc = io()->board('usio1')->wdt_off();
         if ($rc < 0)
             perror("Can't disable WDT\n");
         return 0;
 
     case 'wdt_reset':
-        $rc = usio()->wdt_reset();
+        $rc = io()->board('usio1')->wdt_reset();
         return 0;
 
     case 'trig':
@@ -65,8 +65,9 @@ function main($argv)
         }
 
         $pname = $argv[2];
-        if (!port_info($pname)) {
-            perror("Port name '%s' has not registred\n", $pname);
+        $port = io()->port($pname);
+        if (!$port) {
+            perror("Port name '%s' has not registred\n", $port->name());
             return -EINVAL;
         }
 
@@ -76,11 +77,9 @@ function main($argv)
             return -EINVAL;
         }
 
-        $info = port_info($pname);
-
-        $handlers = trig_io_event($pname, $state);
+        $handlers = io()->trig_event($port, $state);
         if (!$handlers) {
-            pnotice("\n%s is not triggered\n", $info['str']);
+            pnotice("\n%s is not triggered\n", $port->str());
             return 0;
         }
 
@@ -89,35 +88,37 @@ function main($argv)
             $names[] = $handler->name();
 
         pnotice("\n%s has triggered for: \n\t%s\n",
-                $info['str'], array_to_string($names, ", "));
+                $port->str(), array_to_string($names, ", "));
         return 0;
 
     default:
         $pname = $cmd;
-        $info = port_info($pname);
-        if ($info) {
+        $port = io()->port($pname);
+        if ($port) {
             $op = '';
             if (isset($argv[2]))
                 $op = $argv[2];
 
-            if ($info['mode'] == 'in') {
-                $s = iop($pname)->state();
-                pnotice("%s return %d\n", $info['str'], $s);
-                return 0;
-            }
-
             switch ($op) {
             case 'up':
-                pnotice("%s set to 1\n", $info['str']);
-                return iop($pname)->up();
+                if ($port->mode() != 'out') {
+                    perror("port %s can't support method 'up'\n", $port->str());
+                    return;
+                }
+                pnotice("%s set to 1\n", $port->str());
+                return $port->up();
 
             case 'down':
-                pnotice("%s set to 0\n", $info['str']);
-                return iop($pname)->down();
+                if ($port->mode() != 'out') {
+                    perror("port %s can't support method 'down'\n", $port->str());
+                    return;
+                }
+                pnotice("%s set to 0\n", $port->str());
+                return $port->down();
 
             default:
-                $s = iop($pname)->state();
-                pnotice("%s return %d\n", $info['str'], $s);
+                $s = $port->state()[0];
+                pnotice("%s return %d\n", $port->str(), $s);
                 return 0;
             }
             return -EINVAL;
@@ -126,13 +127,13 @@ function main($argv)
         $id = $cmd;
         $io_name = NULL;
         $mode = NULL;
-        $port = NULL;
+        $pn = NULL;
 
         preg_match('/(\w+)\.(\w+).(\d+)/i', $id, $m);
         if (count($m) == 4) {
             $io_name = $m[1];
             $mode = $m[2];
-            $port = $m[3];
+            $pn = $m[3];
         } else {
             preg_match('/(\w+)\.(\w+)/i', $id, $m);
             if (count($m) == 3) {
@@ -147,15 +148,12 @@ function main($argv)
             return -EINVAL;
         }
 
-        $board_io = board_io($io_name,
-                             conf_io()[$io_name]['ip_addr'],
-                             conf_io()[$io_name]['tcp_port']);
-        if (!$board_io) {
+        if (!isset(conf_io()[$io_name])) {
             perror("Incorrect board name\n");
             return -EINVAL;
         }
 
-        if (!$port) {
+        if (!$pn) {
             if ($mode) {
                 if (!isset(conf_io()[$io_name][$mode])){
                     perror("Incorrect mode. Must be 'in' or 'out'\n");
@@ -163,36 +161,23 @@ function main($argv)
                 }
 
                 foreach (conf_io()[$io_name][$mode] as $pn => $pname) {
-                    switch ($mode) {
-                    case 'in':
-                        $p = new Board_io_in($board_io, $pn);
-                        break;
-                    case 'out':
-                        $p = new Board_io_out($board_io, $pn);
-                        break;
-                    default:
-                        perror("Incorrect IO mode '%s'\n", $mode);
-                        return -EINVAL;
-                    }
-                    $s = $p->state();
-                    pnotice("%s.%s.%d return %d\n",
-                            $io_name, $mode, $pn, $s);
+                    $port = io()->port_by_addr($io_name, $mode, $pn);
+                    $s = $port->state()[0];
+                    pnotice("%s return %d\n", $port->str(), $s);
                 }
                 return 0;
             }
 
             foreach (conf_io()[$io_name]['in'] as $pn => $pname) {
-                $p = new Board_io_in($board_io, $pn);
-                $s = $p->state();
-                pnotice("%s.in.%d return %d\n",
-                        $io_name, $pn, $s);
+                $port = io()->port_by_addr($io_name, 'in', $pn);
+                $s = $port->state()[0];
+                pnotice("%s return %d\n", $port->str(), $s);
             }
             pnotice("\n");
             foreach (conf_io()[$io_name]['out'] as $pn => $pname) {
-                $p = new Board_io_out($board_io, $pn);
-                $s = $p->state();
-                pnotice("%s.out.%d return %d\n",
-                        $io_name, $pn, $s);
+                $port = io()->port_by_addr($io_name, 'out', $pn);
+                $s = $port->state()[0];
+                pnotice("%s return %d\n", $port->str(), $s);
             }
             return 0;
         }
@@ -201,7 +186,7 @@ function main($argv)
         if (isset($argv[2]))
             $op = $argv[2];
 
-        $pname = conf_io()[$io_name][$mode][$port];
+        $port = io()->port_by_addr($io_name, $mode, $pn);
         switch ($op) {
         case 'up':
         case 'down':
@@ -209,37 +194,21 @@ function main($argv)
                 perror("Operation up/down compatibility only with 'out' ports\n");
                 return -EINVAL;
             }
-            $p = new Board_io_out($board_io, $port);
             if ($op == 'up') {
-                $p->up();
-                pnotice("%s set to 1\n",
-                        port_str($pname, $io_name, 'out', $port));
+                $port->up();
+                pnotice("%s set to 1\n", $port->str());
                 return 0;
             }
-            $p->down();
-                pnotice("%s set to 0\n",
-                        port_str($pname, $io_name, 'out', $port));
+            $port->down();
+                pnotice("%s set to 0\n", $port->str());
             return 0;
 
         default:
-            switch ($mode) {
-            case 'in':
-                $p = new Board_io_in($board_io, $port);
-                break;
-            case 'out':
-                $p = new Board_io_out($board_io, $port);
-                break;
-            default:
-                perror("Incorrect IO mode '%s'\n", $mode);
-                return -EINVAL;
-            }
-            $s = $p->state();
-            pnotice("%s return %d\n",
-                    port_str($pname, $io_name, $mode, $port), $s);
+            $s = $port->state()[0];
+            pnotice("%s return %d\n", $port->str(), $s);
             return 0;
         }
         return -EINVAL;
-
     }
 }
 

@@ -18,7 +18,7 @@ Debudding telegram commands:
     2) getting last telegram_update id
         cat ~/.telegram_last_rx_update_id
     3) set telegram_update id on the test machine:
-        cho 186089176 >  ~/.telegram_last_rx_update_id
+        echo 186089176 >  ~/.telegram_last_rx_update_id
     4) start telegram task on the test machine
         ./periodically.php start telegram
 

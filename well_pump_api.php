@@ -16,7 +16,7 @@ class Well_pump {
 
     function start()
     {
-        @file_put_contents(WELL_PUMP_TIME_FILE, time());
+        file_put_contents(WELL_PUMP_TIME_FILE, time());
         iop('water_pump')->up();
         $this->log->info("Well pump started");
     }
@@ -36,23 +36,22 @@ class Well_pump {
             if ($enable_time)
                 $duration = time() - $enable_time;
         }
-        return ['state' => iop('water_pump')->state(),
+        return ['state' => iop('water_pump')->state()[0],
                 'duration' => $duration];
     }
 }
 
 class Well_pump_io_handler implements IO_handler {
-    function name()
-    {
+    function name() {
         return "well_pump";
     }
 
     function trigger_ports() {
-        return ['RP_water_pump_button' => 1,
-                'workshop_water_pump_button' => 1];
+        return ['do_start_stop' => ['RP_water_pump_button' => 1,
+                                    'workshop_water_pump_button' => 1]];
     }
 
-    function event_handler($port, $state)
+    function do_start_stop($port, $state)
     {
         if (guard()->state() == 'ready') {
             run_cmd("./image_sender.php current", TRUE);

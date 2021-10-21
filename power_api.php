@@ -17,146 +17,249 @@ define("DISCHARGE_LASTTIME_FILE", "/tmp/battery_discharge_lasttime");
 define("LOW_BATT_VOLTAGE_FILE", "/tmp/battery_low_voltage");
 define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
 
+class Power {
+    function battery_info()
+    {
+        if (!file_exists(UPS_BATT_VOLTAGE_FILE))
+            return null;
+
+        if (!file_exists(UPS_BATT_CURRENT_FILE))
+            return null;
+
+        $voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
+        if ($voltage === FALSE)
+            return null;
+
+        @$current = trim(file_get_contents(UPS_BATT_CURRENT_FILE));
+        if ($current === FALSE)
+            return null;
+
+        return ['voltage' => $voltage,
+                'current' => $current];
+    }
+
+
+    function power_state()
+    {
+        $power['input'] = iop('ext_power')->state()[0];
+        $power['ups'] = iop('ups_220vac')->state()[0];
+        return $power;
+    }
+
+    function ups_state()
+    {
+        $stat = [];
+        $stat['vdc_out_state'] = iop('ups_250vdc')->state()[0];
+        $stat['standby_state'] = iop('ups_14vdc')->state()[0];
+        $stat['charger_state'] = 'charge_stage1';
+        if (file_exists(CHARGER_STAGE_FILE))
+            $stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
+        return $stat;
+    }
+
+
+    /**
+     * Get duration between UPS power loss and UPS power resume
+     */
+    function ups_duration()
+    {
+        $data = db()->query("SELECT UNIX_TIMESTAMP(created) as created, state " .
+                                            "FROM ext_power_log WHERE type='ups' " .
+                                            "ORDER BY id DESC LIMIT 1");
+        if (!is_array($data) ||
+            $data['state'] == 1)
+            return NULL;
+
+        $last_ext_power_state = $data['created'];
+        $now = time();
+        return $now - $last_ext_power_state;
+    }
+
+    function uptime()
+    {
+        $ret = run_cmd('uptime');
+        preg_match('/up (.+),/U', $ret['log'], $mathes);
+        return $mathes[1];
+    }
+
+    function server_reboot($method, $user_id = NULL)
+    {
+        global $log;
+        if ($method == "SMS")
+            sms_send('reboot',
+                     ['user_id' => $user_id,
+                      'groups' => ['sms_observer']],
+                     $method);
+
+        $text = sprintf("Сервер ушел на перезагрузку по запросу %s", $method);
+        $log->info("server_reboot(): server going to reboot");
+
+        tn()->send_to_admin($text);
+        if(DISABLE_HW)
+            return;
+        run_cmd('halt');
+        for(;;);
+    }
+
+    function halt_all_systems()
+    {
+        global $log;
+        $log->info("halt_all_systems()\n", $content);
+
+        if ($this->is_halt_all_systems()) {
+            $log->err("is already halted\n");
+            return;
+        }
+
+        if (DISABLE_HW) {
+            perror("FAKE: halt all systems, goodbuy. For undo - remove %s\n",
+                   FAKE_HALT_ALL_SYSTEMS_FILE);
+            file_put_contents(FAKE_HALT_ALL_SYSTEMS_FILE, '');
+            return;
+        }
+        run_cmd("halt");
+    }
+
+    function is_halt_all_systems() {
+        return file_exists(FAKE_HALT_ALL_SYSTEMS_FILE);
+    }
+
+    function stat_text()
+    {
+        $tg = '';
+        $sms = '';
+
+        $tg .= sprintf("Uptime: %s\n", $this->uptime());
+        $sms .= sprintf("Uptime:%s, ", $this->uptime());
+
+        $info = $this->battery_info();
+        if (!is_array($info)) {
+            $tg .= sprintf("ошибка АКБ\n");
+            $sms .= sprintf("ошибка АКБ, ");
+        } else {
+            $tg .= sprintf("АКБ: %.2fv, %.2fA\n",
+                             $info['voltage'],
+                             $info['current']);
+
+            $sms .= sprintf("АКБ: %.2fv,%.2fA, ",
+                             $info['voltage'],
+                             $info['current']);
+        }
+
+        $stat = $this->power_state();
+        $tg .= sprintf("Питание на вводе: %s\n" .
+                       "Питание на ИБП: %s\n" ,
+                         $stat['input'] ? 'присутствует' : 'отсутствует',
+                         $stat['ups'] ? 'присутствует' : 'отсутствует');
+        $sms .= sprintf("Внешн. пит:%d, пит.ИБП:%d, ",
+                         $stat['input'],
+                         $stat['ups']);
+
+        $stat = $this->ups_state();
+        $tg .= sprintf("Выходное питание ИБП: %s\n" .
+                       "Дежурное питание ИБП: %s\n" .
+                       "Состояние ИБП: %s\n",
+                         $stat['vdc_out_state'] ? 'присутствует' : 'отсутствует',
+                         $stat['standby_state'] ? 'присутствует' : 'отсутствует',
+                         $stat['charger_state']);
+
+        $sms .= sprintf("250VDC:%d, 14VDC:%d, ups_stat:%s",
+                         $stat['vdc_out_state'],
+                         $stat['standby_state'],
+                         $stat['charger_state']);
+
+        return [$tg, $sms];
+    }
+}
+
+
+function power()
+{
+    static $power = NULL;
+    if (!$power)
+        $power = new Power;
+
+    return $power;
+}
 
 class Ext_power_io_handler implements IO_handler {
-    function name()
-    {
+    function name() {
         return "power_monitor";
     }
 
     function trigger_ports() {
-        return ['ext_power' => 2,
-                'ups_220vac' => 2,
-                'ups_14vdc' => 0,
-                'ups_250vdc' => 0];
+        return ['ext_power' => ['ext_power' => 2],
+                'ups_220vac' => ['ups_220vac' => 2],
+                'ups_14vdc' => ['ups_14vdc' => 0],
+                'ups_250vdc' => ['ups_250vdc' => 0]];
     }
 
-    function event_handler($pname, $state)
+    function ext_power($pname, $state)
     {
-        if ($pname == 'ext_power') {
-            $row = db()->query('SELECT state FROM ext_power_log ' .
-                               'WHERE type = "input" ' .
-                               'ORDER BY id DESC LIMIT 1');
+        $row = db()->query('SELECT state FROM ext_power_log ' .
+                           'WHERE type = "input" ' .
+                           'ORDER BY id DESC LIMIT 1');
 
-            $prev_state = $row['state'];
-            if ($state == $prev_state)
-                return 0;
+        $prev_state = $row['state'];
+        if ($state == $prev_state)
+            return 0;
 
-            switch ($state) {
+        switch ($state) {
+        case 1:
+            $msg = 'Питание на вводе восстановлено';
+            break;
+        case 0:
+            $msg = 'Питание на вводе отключено';
+            break;
+        default:
+            return;
+        }
+        tn()->send_to_admin($msg);
+        db()->insert('ext_power_log',
+                     ['state' => $state,
+                      'type' => 'input']);
+    }
+
+    function ups_220vac($pname, $state)
+    {
+        $row = db()->query('SELECT state FROM ext_power_log ' .
+                           'WHERE type = "ups" ' .
+                           'ORDER BY id DESC LIMIT 1');
+
+        $prev_state = $row['state'];
+        if ($state == $prev_state)
+            return 0;
+
+        switch ($state) {
             case 1:
-                $msg = 'Питание на вводе восстановлено';
+                $msg = 'Питание ИБП восстановлено';
                 break;
             case 0:
-                $msg = 'Питание на вводе отключено';
+                $msg = 'Питание ИБП отключено';
                 break;
             default:
-                return 0;
-            }
-            tn()->send_to_admin($msg);
-            db()->insert('ext_power_log',
-                         ['state' => $state,
-                          'type' => 'input']);
-            return 0;
+                return ;
         }
 
-        if ($pname == 'ups_220vac') {
-            $row = db()->query('SELECT state FROM ext_power_log ' .
-                               'WHERE type = "ups" ' .
-                               'ORDER BY id DESC LIMIT 1');
+        tn()->send_to_admin($msg);
+        db()->insert('ext_power_log',
+                     ['state' => $state,
+                      'type' => 'ups']);
+    }
 
-            $prev_state = $row['state'];
-            if ($state == $prev_state)
-                return 0;
+    function ups_250vdc($pname, $state)
+    {
+        $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
+        tn()->send_to_admin($msg);
+    }
 
-            switch ($state) {
-                case 1:
-                    $msg = 'Питание ИБП восстановлено';
-                    break;
-                case 0:
-                    $msg = 'Питание ИБП отключено';
-                    break;
-                default:
-                    return 0;
-            }
-
-            tn()->send_to_admin($msg);
-            db()->insert('ext_power_log',
-                         ['state' => $state,
-                          'type' => 'ups']);
-            return 0;
-        }
-
-        if ($pname == 'ups_250vdc') {
-            $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
-            tn()->send_to_admin($msg);
-            return 0;
-        }
-
-        if ($pname == 'ups_14vdc') {
-            $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 14vdc';
-            tn()->send_to_admin($msg);
-            return 0;
-        }
-        return 0;
+    function ups_14vdc($pname, $state)
+    {
+        $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 14vdc';
+        tn()->send_to_admin($msg);
     }
 }
 
-function battery_info()
-{
-    if (!file_exists(UPS_BATT_VOLTAGE_FILE))
-        return null;
-
-    if (!file_exists(UPS_BATT_CURRENT_FILE))
-        return null;
-
-    $voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
-    if ($voltage === FALSE)
-        return null;
-
-    @$current = trim(file_get_contents(UPS_BATT_CURRENT_FILE));
-    if ($current === FALSE)
-        return null;
-
-    return ['voltage' => $voltage,
-            'current' => $current];
-}
-
-
-function power_state()
-{
-    $power['input'] = iop('ext_power')->state();
-    $power['ups'] = iop('ups_220vac')->state();
-    return $power;
-}
-
-function ups_state()
-{
-    $stat = [];
-    $stat['vdc_out_state'] = iop('ups_250vdc')->state();
-    $stat['standby_state'] = iop('ups_14vdc')->state();
-    $stat['charger_state'] = 'charge_stage1';
-    if (file_exists(CHARGER_STAGE_FILE))
-        $stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
-    return $stat;
-}
-
-
-/**
- * Get duration between UPS power loss and UPS power resume
- */
-function last_ups_duration()
-{
-    $data = db()->query("SELECT UNIX_TIMESTAMP(created) as created, state " .
-                                        "FROM ext_power_log WHERE type='ups' " .
-                                        "ORDER BY id DESC LIMIT 1");
-    if (!is_array($data) ||
-        $data['state'] == 1)
-        return NULL;
-
-    $last_ext_power_state = $data['created'];
-    $now = time();
-    return $now - $last_ext_power_state;
-}
 
 
 class Ups_batterry_periodically implements Periodically_events {
@@ -230,7 +333,7 @@ class Ups_batterry_periodically implements Periodically_events {
                 tn()->send_to_admin($msg);
                 unlink_safe(UPS_BATT_VOLTAGE_FILE);
                 unlink_safe(UPS_BATT_CURRENT_FILE);
-                reboot_sbio('sbio1');
+                io()->board('sbio1')->reboot();
             }
             tn()->send_to_admin("Ошибка АКБ");
             return -1;
@@ -317,7 +420,7 @@ class Ups_periodically implements Periodically_events {
 
     function disable_charge()
     {
-        if (iop('charger_en')->state())
+        if (iop('charger_en')->state()[0])
             $this->switch_to_charge();
         $this->set_low_current_charge();
         iop('charger_en')->down();
@@ -416,12 +519,12 @@ class Ups_periodically implements Periodically_events {
     }
 
     function do() {
-        if (is_halt_all_systems()) {
+        if (power()->is_halt_all_systems()) {
             perror("systems is halted\n");
             return 0;
         }
 
-        $power_states = power_state();
+        $power_states = power()->power_state();
         $ups_power_state = isset($power_states['ups']) ? $power_states['ups'] : -1;
         $input_power_state = isset($power_states['input']) ? $power_states['input'] : -1;
         pnotice("current_ups_power_state = %d\n", $ups_power_state);
@@ -442,7 +545,7 @@ class Ups_periodically implements Periodically_events {
             $this->log->info("external power changed to %d\n", $ups_power_state);
             file_put_contents(EXT_POWER_STATE_FILE, $ups_power_state);
             if (!$ups_power_state) {
-                if (iop('ups_break_power')->state())
+                if (iop('ups_break_power')->state()[0])
                     $reason = "external UPS power is off forcibly";
                 else
                     $reason = "external power is absent";
@@ -457,7 +560,7 @@ class Ups_periodically implements Periodically_events {
             $this->restart_charger();
         }
 
-        $batt_info = battery_info();
+        $batt_info = power()->battery_info();
         if (!is_array($batt_info)) {
             $this->log->err("can't get baterry info\n");
             $this->stop_charger();
@@ -490,7 +593,7 @@ class Ups_periodically implements Periodically_events {
             unlink_safe(LOW_BATT_VOLTAGE_FILE);
 
         if (!$ups_power_state and $input_power_state) {
-            $duration = last_ups_duration();
+            $duration = power()->ups_duration();
             iop('ups_break_power')->down();
             $this->log->info("UPS test is success finished. Duration %d seconds\n", $duration);
             $msg = sprintf("Испытание ИБП завершено.\n" .
@@ -660,8 +763,7 @@ class Ups_periodically implements Periodically_events {
 
 
 class Ups_tg_events implements Tg_skynet_events {
-    function name()
-    {
+    function name() {
         return "ups";
     }
 
@@ -685,11 +787,11 @@ class Ups_tg_events implements Tg_skynet_events {
 
     function stop_test($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        if (iop('ups_break_power')->state() == 0) {
+        if (iop('ups_break_power')->state()[0] == 0) {
             tn()->send($chat_id, $msg_id, 'Тест не был запущен');
             return;
         }
-        $duration = last_ups_duration();
+        $duration = power()->ups_duration();
         iop('ups_break_power')->down();
         $msg = "Тестирование ИБП остановленно. ";
         $msg .= sprintf("Время работы от ИБП составило %d секунд", $duration);

@@ -42,8 +42,7 @@ class Guard {
             tn()->send_to_admin("ALARM: %s", $msg);
     }
 
-    function zones()
-    {
+    function zones() {
         return conf_guard()['zones'];
     }
 
@@ -96,7 +95,7 @@ class Guard {
         foreach ($this->unlocked_zones() as $zone) {
             $incorrect_zone = false;
             foreach ($zone['io_sensors'] as $sensor_name => $trig_state) {
-                $state = iop($sensor_name)->state();
+                $state = iop($sensor_name)->state()[0];
                 if ($state == $trig_state)
                     $incorrect_zone = true;
             }
@@ -131,6 +130,17 @@ class Guard {
         $sep = '';
         foreach ($zones as $zone) {
             $text .= sprintf("%s%s", $sep, $zone['desc']);
+            $sep = ', ';
+        }
+        return $text;
+    }
+
+    function zones_list_to_text_db($zones)
+    {
+        $text = "";
+        $sep = '';
+        foreach ($zones as $zone) {
+            $text .= sprintf("%s%s", $sep, $zone['name']);
             $sep = ', ';
         }
         return $text;
@@ -253,33 +263,68 @@ class Guard {
         return $server_files;
     }
 
-
-    function stat()
+    function stat_text()
     {
-        $data = db()->query("SELECT * FROM guard_states ORDER by created DESC LIMIT 1");
-        if ($data < 0) {
-            $this->log->err("Can't getting last guard status");
-            return $data;
+        $tg = '';
+        $sms = '';
+        $info = db()->query("SELECT * FROM guard_states " .
+                            "ORDER by created DESC LIMIT 1");
+        if (!$info) {
+            $yhis->log->err("Can't getting guart_state from DB");
+            return NULL;
         }
 
-        if (!is_array($data) || !isset($data['state'])) {
-        	$data = array();
-            $data['state'] = 'sleep';
+        switch ($info['state']) {
+        case 'sleep':
+            $tg .= "Охрана отключена";
+            $user = user_by_id($info['user_id']);
+
+            if ($user and isset($user['name']))
+                $tg .= sprintf(", отключил %s через %s %s",
+                             $user['name'],
+                             $info['method'],
+                             $info['created']);
+
+            $sms .= "Охрана откл.\n";
+            break;
+
+        case 'ready':
+            $tg .= "Охрана включена";
+
+            $user = user_by_id($info['user_id']);
+            if ($user and isset($user['name']))
+                $tg .= sprintf(", включил %s через %s %s",
+                             $user['name'],
+                             $info['method'],
+                             $info['created']);
+
+            $sms .= "Охрана вкл.\n";
+            break;
+        }
+        $tg .= "\n";
+
+        if ($info['ignore_zones']) {
+            $list = string_to_array($info['ignore_zones']);
+            $tg .= sprintf("Игнорированные зоны:\n");
+            $sms .= sprintf("Игнор: ");
+            foreach ($list as $zname) {
+                $zone = guard()->zone_by_name($zname);
+                $tg .= sprintf("    %s\n", $zone['desc']);
+                $sms .= sprintf("%s, ", $zone['desc']);
+            }
         }
 
-        if (isset($data['user_id']))
-            $data['user_name'] = user_by_id($data['user_id'])['name'];
+        $zones = $this->locked_zones();
+        if (count($zones)) {
+            $tg .= sprintf("Заблокированные зоны:\n");
+            $sms .= sprintf("Заблокир:");
+            foreach ($zones as $zone)
+                $tg .= sprintf("    %s\n", $zone['desc']);
+                $sms .= sprintf("%s, ", $zone['desc']);
+        }
 
-        if (isset($data['ignore_zones']) && $data['ignore_zones'])
-            $data['ignore_zones'] = string_to_array($data['ignore_zones']);
-        else
-            $data['ignore_zones'] = [];
-
-        $data['locked_zones'] = $this->locked_zones();
-        return $data;
+        return [$tg, $sms];
     }
-
-
 
     function state()
     {
@@ -330,7 +375,7 @@ class Guard {
         iop('sk_power')->up();
         iop('RP_sockets')->up();
         iop('workshop_power')->up();
-        padlocks_open();
+        padlocks()->open();
 
         $state_id = db()->insert('guard_states', ['state' => 'sleep',
                                                   'user_id' => $user_id,
@@ -382,7 +427,7 @@ class Guard {
         else
             $this->tg_info('Run sound sounds/lock.wav');
 
-        padlocks_close();
+        padlocks()->close();
         boiler()->set_room_t(5);
         well_pump()->stop();
 
@@ -416,7 +461,7 @@ class Guard {
                                  ['state' => 'ready',
                                   'method' => $method,
                                   'user_id' => $user_id,
-                                  'ignore_zones' => $this->zones_list_to_text($not_ready_zones)]);
+                                  'ignore_zones' => $this->zones_list_to_text_db($not_ready_zones)]);
         if (!$state_id) {
             $this->log->err("Can't start guard: can't insert to database");
             return 'db_error';
@@ -460,7 +505,7 @@ class Guard {
                                        'ORDER BY id DESC LIMIT 1',
                                        $sensor, $trig_state));
             if ($ret < 0)
-                $this->log->err("sensor_handler(): Can't MySQL query\n");
+                $this->log->err("Can't MySQL query\n");
 
             if (!is_array($ret))
                 continue;
@@ -478,7 +523,7 @@ class Guard {
                                        'AND (created + INTERVAL %d SECOND) > now()',
                                        $state_id, $zone['diff_interval']));
             if ($ret < 0)
-                $this->log->err("sensor_handler(): Can't MySQL query\n");
+                $this->log->err("Can't MySQL query\n");
 
             if (!is_array($ret))
                 continue;
@@ -490,25 +535,25 @@ class Guard {
         return ($triggered_cnt == $total_cnt);
     }
 
-    function sensor_handler($sname, $state)
+    function sensor_handler($port, $state)
     {
         // ignore sensors if guard stopped
         if ($this->state() == 'sleep')
             return;
 
-        $zone = $this->zone_by_sensor_name($sname);
+        $zone = $this->zone_by_sensor_name($port->name());
         if (!$zone) {
-            $this->log->err("Can't find zone for sensor: %s!", $sname);
+            $this->log->err("Can't find zone for sensor: %s!", $port->name());
             return 0;
         }
 
         if ($this->zone_is_locked($zone['name'])) {
-            $this->log->info("sensor_handler(): zone %d is locked\n", $zone['name']);
+            $this->log->info("zone %d is locked\n", $zone['name']);
             return 0;
         }
 
         if ($this->zone_is_ignored($zone['name'])) {
-            $this->log->info("sensor_handler(): zone %d is ignored\n", $zone['name']);
+            $this->log->info("zone %d is ignored\n", $zone['name']);
             return 0;
         }
 
@@ -519,14 +564,14 @@ class Guard {
                                    "ORDER BY created DESC LIMIT 1",
                                     conf_guard()['ready_set_interval']));
         if ($ret < 0)
-            $this->log->err("sensor_handler(): Can't MySQL query\n");
+            $this->log->err("Can't MySQL query\n");
 
         if (isset($ret['id'])) {
             $this->log->info("Alarm was ignored because ready state a little time ago\n");
             return 0;
         }
 
-        if (!$this->is_all_sensors_trig($zone, $sname)) {
+        if (!$this->is_all_sensors_trig($zone, $port->name())) {
             $this->log->info("not all sensors is active\n");
             $cmd = './text_spech.php "Уходи" 0';
             if (!$this->test_mode) {
@@ -538,7 +583,7 @@ class Guard {
 
             $msg = sprintf("Срабатал датчик '%s' из группы \"%s\".\n" .
                 "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
-                $sname, $zone['desc']);
+                $port->name(), $zone['desc']);
             $this->tg_info($msg);
 
             run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id())); // TODO
@@ -549,7 +594,7 @@ class Guard {
         $ret = db()->query("SELECT id, zone FROM guard_alarms " .
                            "ORDER BY created DESC LIMIT 1");
         if ($ret < 0)
-            $this->log->err("sensor_handler(): Can't MySQL query\n");
+            $this->log->err("Can't MySQL query\n");
 
         if ($ret && isset($ret['id'])) {
             $alarm_id = $ret['id'];
@@ -562,7 +607,7 @@ class Guard {
                                        "AND (created + interval %d second) > now() ",
                                        $alarm_id, $alarm_time));
             if ($ret < 0)
-                $this->log->err("sensor_handler(): Can't MySQL query\n");
+                $this->log->err("Can't MySQL query\n");
 
             if (isset($ret['id'])) {
                 $this->log->info("Alarm was ignored because system already in alarm state\n");
@@ -575,10 +620,10 @@ class Guard {
                                  ['zone' => $zone['name'],
                                   'state_id' => $this->state_id()]);
         if ($action_id < 0)
-            $this->log->err("sensor_handler(): Can't insert into guard_alarms\n");
+            $this->log->err("Can't insert into guard_alarms\n");
 
         $this->log->info("Guard set in alarm state! zone: %s, sensor: %s",
-                        $zone['name'], $sname);
+                        $zone['name'], $port->name());
 
         // make snapshots
         //$this->make_alarm_photos($action_id);
@@ -601,7 +646,7 @@ class Guard {
         $row = db()->query('SELECT UNIX_TIMESTAMP(created) as timestamp ' .
                            'FROM guard_alarms WHERE id = ' . $action_id);
         if ($row < 0)
-            $this->log->err("sensor_handler(): Can't MySQL query\n");
+            $this->log->err("Can't MySQL query\n");
 
         $alarm_timestamp = $row['timestamp'];
 
@@ -645,35 +690,32 @@ class Guard_io_handler implements IO_handler {
         $list = [];
         foreach (guard()->unlocked_zones() as $zone)
             foreach ($zone['io_sensors'] as $pname => $trig_state)
-                $list[$pname] = $trig_state;
-        $list['remote_guard_sleep'] = 1;
-        $list['remote_guard_ready'] = 1;
+                $list['process_sensors'][$pname] = $trig_state;
+        $list['guard_stop']['remote_guard_sleep'] = 1;
+        $list['guard_start']['remote_guard_ready'] = 1;
         return $list;
     }
 
-    function event_handler($pname, $state)
+    function guard_stop($port, $state)
     {
-        switch ($pname) {
-        case 'remote_guard_sleep':
-            if (guard()->state() == 'sleep')
-                return;
+        if (guard()->state() == 'sleep')
+            return;
 
-            $this->log->info("guard stopped by remote");
-            guard()->stop('remote');
-            return 0;
+        $this->log->info("guard stopped by remote");
+        guard()->stop('remote');
+    }
 
-        case 'remote_guard_ready':
-            if (guard()->state() == 'ready')
-                return;
+    function guard_start($port, $state)
+    {
+        if (guard()->state() == 'ready')
+            return;
 
-            $this->log->info("guard ready by remote");
-            guard()->start('remote');
-            return 0;
+        $this->log->info("guard ready by remote");
+        guard()->start('remote');
+    }
 
-        default:
-            guard()->sensor_handler($pname, $state);
-        }
-        return 0;
+    function process_sensors($port, $state) {
+        guard()->sensor_handler($port, $state);
     }
 }
 
@@ -830,25 +872,25 @@ class Guard_cron_events implements Cron_events {
         // actualize current quard sensor state
         foreach(conf_guard()['zones'] as $zone) {
             foreach($zone['io_sensors'] as $pname => $trig_state) {
-                $port_info = port_info($pname);
+                $port = io()->port($pname);
                 $row = db()->query(sprintf("SELECT state FROM io_events " .
                                            "WHERE io_name = '%s' ".
                                                "AND port = %d " .
                                            "ORDER BY id desc LIMIT 1",
-                                           $port_info['io_name'], $port_info['pn']));
+                                           $port->board()->name(), $port->pn()));
                 $prev_state = $row['state'];
                 if ($prev_state == $trig_state)
                     continue;
 
-                if (iop($pname)->state() != $trig_state)
+                if ($port->state()[0] != $trig_state)
                     continue;
 
-                db()->insert('io_events', ['port_name' => $pname,
+                db()->insert('io_events', ['port_name' => $port->name(),
                                            'mode' => 'in',
-                                           'io_name' => $port_info['io_name'],
-                                           'port' => $port_info['pn'],
+                                           'io_name' => $port->board()->name(),
+                                           'port' => $port->pn(),
                                            'state' => $trig_state]);
-                pnotice("Fixed port %s.in.%d\n", $port_info['io_name'], $port_info['pn']);
+                pnotice("Fixed port %s\n", $port->str());
             }
         }
     }
