@@ -217,18 +217,17 @@ class Io {
 
     function stat_text()
     {
-        $tg = 'Заблокированные порты: ';
+        $tg = "Заблокированные порты:\n";
         $sms = 'locked_ports:';
         $sep = '';
 
         $ports = $this->locked_ports();
         if ($ports) {
             foreach ($ports as $port) {
-                $tg .= sprintf("%s%s", $sep, $port->name());
+                $tg .= sprintf("    %s\n", $port->name());
                 $sms .= sprintf("%s%s", $sep, $port->name());
                 $sep = ',';
             }
-            $tg .= "\n";
         }
 
         $tlist = $this->termosensors();
