@@ -338,10 +338,30 @@ function conf_padlocks()
 
 function conf_street_light()
 {
-    return [
-        ['name' => 'lighting_pole', 'desc' => 'Столб', 'port' => 'lighting_pole'],
-        ['name' => 'workshop', 'desc' => 'Мастерская', 'port' => 'workshop_lighter'],
-    ];
+    return ['lights' => [
+                         ['name' => 'lighting_pole',
+                          'desc' => 'Столб',
+                          'port' => 'lighting_pole'],
+
+                         ['name' => 'workshop',
+                          'desc' => 'Мастерская',
+                          'port' => 'workshop_lighter'],
+                         ],
+
+            'light_calendar' => [1 =>  ['16:00', '9:30'],
+                                 2 =>  ['17:00', '8:30'],
+                                 3 =>  ['18:30', '7:00'],
+                                 4 =>  ['19:30', '6:00'],
+                                 5 =>  ['20:30', '5:00'],
+                                 6 =>  ['22:30', '5:00'],
+                                 7 =>  ['22:30', '5:00'],
+                                 8 =>  ['21:00', '5:30'],
+                                 9 =>  ['20:00', '6:30'],
+                                 10 => ['18:30', '7:30'],
+                                 11 => ['17:00', '8:30'],
+                                 12 => ['16:30', '9:00'],
+                                ]
+           ];
 }
 
 function conf_boiler()

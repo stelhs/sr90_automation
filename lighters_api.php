@@ -7,65 +7,98 @@ require_once 'board_io_api.php';
 require_once 'config.php';
 require_once 'board_io_api.php';
 
-define("DAY_NIGHT_MODE_FILE", "/tmp/day_night_mode");
+define("NIGHT_LIGHTERS_ENABLED", "/tmp/night_lighters_enabled");
 
 
 class Lighter {
     private $log;
     function __construct($name, $desc, $port)
     {
-        $this->log = new Plog('sr90:Lighter_class');
+        $this->log = new Plog('sr90:Lighter');
         $this->name = $name;
         $this->desc = $desc;
         $this->port = $port;
     }
 
-    function enable()
-    {
+    function enable() {
         return iop($this->port)->up();
     }
 
-    function disable()
-    {
+    function disable() {
         return iop($this->port)->down();
     }
 
-    function state()
-    {
+    function state() {
         return iop($this->port)->state();
     }
 }
 
-function street_lights_enable()
-{
-    foreach (conf_street_light() as $lighter) {
-        $rc = lighter($lighter['name'])->enable();
-        if ($rc)
-            return sprintf("Can't enable lighter '%s': %s",
-                            $lighter['desc'], $rc);
+class Lighters {
+    function __construct() {
+        $this->log = new Plog('sr90:Lighters');
+    }
+
+    function enable()
+    {
+        foreach (conf_street_light()['lights'] as $lighter) {
+            $rc = lighter($lighter['name'])->enable();
+            if ($rc) {
+                $this->log->err("Can't enable lighter '%s': %s",
+                                $lighter['desc'], $rc);
+                return sprintf("Can't enable lighter '%s': %s",
+                                $lighter['desc'], $rc);
+            }
+        }
+    }
+
+    function disable()
+    {
+        foreach (conf_street_light()['lights'] as $lighter) {
+            $rc = lighter($lighter['name'])->disable();
+            if ($rc) {
+                $this->log->err("Can't disable lighter '%s': %s",
+                                $lighter['desc'], $rc);
+                return sprintf("Can't disable lighter '%s': %s",
+                               $lighter['desc'], $rc);
+            }
+        }
+    }
+
+    function stat()
+    {
+        $report = [];
+        foreach (conf_street_light()['lights'] as $lighter) {
+            $lighter['state'] = lighter($lighter['name'])->state();
+            $report[] = $lighter;
+        }
+        return $report;
+    }
+
+    function is_night()
+    {
+        $month = date('m');
+        $hour = date('H');
+        $minute = date('i');
+
+        $light_interval = conf_street_light()['light_calendar'][$month];
+        list($start_hour, $start_min) = string_to_words($light_interval[0]);
+        list($end_hour, $end_min) = string_to_words($light_interval[1]);
+
+        if ($hour == $start_hour and $min > $end_min)
+            return true;
+
+        if ($hour >= $start_hour)
+            return true;
+
+        if ($hour == $end_hour and $min <= $end_min)
+            return true;
+
+        if ($hour <= $end_hour)
+            return true;
+
+        return false;
     }
 }
-
-function street_lights_disable()
-{
-    foreach (conf_street_light() as $lighter) {
-        $rc = lighter($lighter['name'])->disable();
-        if ($rc)
-            return sprintf("Can't disable lighter '%s': %s",
-                           $lighter['desc'], $rc);
-    }
-}
-
-function street_lights_stat()
-{
-    $report = [];
-    foreach (conf_street_light() as $lighter) {
-        $lighter['state'] = lighter($lighter['name'])->state();
-        $report[] = $lighter;
-    }
-    return $report;
-}
-
 
 function lighter($name)
 {
@@ -75,7 +108,7 @@ function lighter($name)
         return $lighters[$name];
 
     $found = false;
-    foreach (conf_street_light() as $info) {
+    foreach (conf_street_light()['lights'] as $info) {
         if ($info['name'] == $name) {
             $found = true;
             break;
@@ -83,16 +116,25 @@ function lighter($name)
     }
 
     if (!$found)
-        return NULL; // TODO add logs
+        return NULL;
 
     $lighter = new Lighter($info['name'], $info['desc'], $info['port']);
     $lighters[$name] = $lighter;
     return $lighter;
 }
 
+function lighters()
+{
+    static $lighter = NULL;
+
+    if (!$lighter)
+        $lighter = new Lighters;
+
+    return $lighter;
+}
+
 class Lighters_tg_events implements Tg_skynet_events {
-    function name()
-    {
+    function name() {
         return "lighters";
     }
 
@@ -112,7 +154,7 @@ class Lighters_tg_events implements Tg_skynet_events {
 
     function enable($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        $rc = street_lights_enable();
+        $rc = lighters()->enable();
         dump($rc);
         if ($rc) {
             tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc);
@@ -123,7 +165,7 @@ class Lighters_tg_events implements Tg_skynet_events {
 
     function disable($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        $rc = street_lights_disable();
+        $rc = lighters()->disable();
         if ($rc) {
             tn()->send($chat_id, $msg_id, 'Неполучилось. Причина: %s', $rc);
             return;
@@ -134,8 +176,7 @@ class Lighters_tg_events implements Tg_skynet_events {
 
 
 class Lighter_sms_events implements Sms_events {
-    function name()
-    {
+    function name() {
         return "lighters";
     }
 
@@ -152,7 +193,7 @@ class Lighter_sms_events implements Sms_events {
     function enable($phone, $user, $arg, $text)
     {
         tn()->send_to_admin('%s отправил SMS с командой включить освещение', $user['name']);
-        $rc = street_lights_enable();
+        $rc = lighters()->enable();
         if ($rc) {
             tn()->send_to_admin('Неполучилось. Причина: %s', $rc);
             modem3g()->send_sms($phone, 'Неполучилось включить освещение');
@@ -165,7 +206,7 @@ class Lighter_sms_events implements Sms_events {
     function disable($phone, $user, $arg, $text)
     {
         tn()->send_to_admin('%s отправил SMS с командой отключить освещение', $user['name']);
-        $rc = street_lights_disable();
+        $rc = lighters()->disable();
         if ($rc) {
             tn()->send_to_admin('Неполучилось. Причина: %s', $rc);
             modem3g()->send_sms($phone, 'Неполучилось отключить освещение');
@@ -178,50 +219,40 @@ class Lighter_sms_events implements Sms_events {
 
 
 class Lighting_cron_events implements Cron_events {
-    function __construct()
-    {
-        $this->log = new Plog('sr90:Lighter_cron');
-    }
-
-    function name()
-    {
+    function name() {
         return "lighting";
     }
 
-    function interval()
-    {
+    function interval() {
         return "min";
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:Lighting_cron');
     }
 
     function do()
     {
-        if (!file_exists(DAY_NIGHT_MODE_FILE)) {
-            file_put_contents(DAY_NIGHT_MODE_FILE, get_day_night());
-            return;
-        }
+        $enabled = file_exists(NIGHT_LIGHTERS_ENABLED);
+        $is_night = lighters()->is_night();
 
-        $prev_mode = file_get_contents(DAY_NIGHT_MODE_FILE);
-        $curr_mode = get_day_night();
-        pnotice("curr_mode = %s\n", $curr_mode);
-
-        if ($curr_mode == $prev_mode)
-            return 0;
-        file_put_contents(DAY_NIGHT_MODE_FILE, $curr_mode);
-
-        if ($curr_mode == 'day') {
-            $rc = street_lights_disable();
+        if ($is_night and !$enabled) {
+            file_put_contents(NIGHT_LIGHTERS_ENABLED, '');
+            $rc = lighters()->enable();
             if ($rc) {
-                $this->log->err("Can't disable street_light: %s\n", $rc);
+                $this->log->err("Can't enable lights: %s\n", $rc);
                 return;
             }
             return;
         }
 
-        $rc = street_lights_enable();
-        if ($rc) {
-            $this->log->err("Can't enable street_light: %s\n", $rc);
-            return $rc;
+        if (!$is_night and $enabled) {
+            unlink_safe(NIGHT_LIGHTERS_ENABLED);
+            $rc = lighters()->disable();
+            if ($rc) {
+                $this->log->err("Can't enable street_light: %s\n", $rc);
+                return $rc;
+            }
         }
     }
-
 }

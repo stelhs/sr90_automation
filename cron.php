@@ -24,6 +24,9 @@ function main($argv) {
         return;
 
     $interval = $argv[1];
+    $handler_name = NULL;
+    if (isset($argv[2]))
+        $handler_name = $argv[2];
 
     switch ($interval) {
     case "min":
@@ -35,10 +38,13 @@ function main($argv) {
     }
 
     foreach (cron_handlers() as $handler) {
+        if ($handler_name and $handler->name() != $handler_name)
+            continue;
+
         if ($handler->interval() != $interval)
             continue;
 
-        pnotice("run work: %s\n", $handler->name());
+        pnotice("run handler: %s\n", $handler->name());
         $handler->do();
     }
 }

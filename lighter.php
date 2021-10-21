@@ -39,7 +39,7 @@ function main($argv)
             lighter($name)->enable();
             return 0;
         }
-        street_lights_enable();
+        lighters()->enable();
         return 0;
 
     case "disable":
@@ -48,11 +48,11 @@ function main($argv)
             lighter($name)->disable();
             return 0;
         }
-        street_lights_disable();
+        lighters()->disable();
         return 0;
 
     case "stat":
-        $lighters = street_lights_stat();
+        $lighters = lighters()->stat();
         foreach ($lighters as $lighter) {
             pnotice("\tlighter %s '%s': %s\n",
                     $lighter['name'], $lighter['desc'],

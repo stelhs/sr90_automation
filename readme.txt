@@ -33,6 +33,10 @@ Cron settings:
     every day:
         ./cron.php day
 
+    It is possible to run cron.php with specific handler_name for debug:
+        ./cron.php min lighters
+
+
 Generate IO action:
 ./io.php trig <port_name> <state>
     Example: ./io.php trig remote_guard_sleep 1

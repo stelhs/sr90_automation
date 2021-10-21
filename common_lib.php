@@ -184,18 +184,6 @@ function server_reboot($method, $user_id = NULL)
     for(;;);
 }
 
-function get_day_night()
-{
-    $curr_time = time();
-    $sun_info = date_sun_info($curr_time, 54.014634, 28.013484);
-
-    if ($curr_time > ($sun_info['nautical_twilight_begin']) &&
-        $curr_time < ($sun_info['nautical_twilight_end'] + 3600))
-        return 'day';
-
-    return 'night';
-}
-
 function user_get_by_phone($phone)
 {
     global $log;
@@ -274,7 +262,7 @@ function skynet_stat()
             'balance' => modem3g()->sim_balanse(),
             'modem_stat' => modem3g()->status(),
             'uptime' => $uptime,
-            'lighting_stat' => street_lights_stat(),
+            'lighting_stat' => lighters()->stat(),
             'padlocks_stat' => padlocks_stat(),
             'termo_sensors' => termosensors(),
             'battery' => battery_info(),
