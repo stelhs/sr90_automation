@@ -44,7 +44,7 @@ class Telegram_api {
 
     function recv_messages($from_update_id)
     {
-        $resp = $this->post_request('getUpdates', ['offset' => $from_update_id + 1,
+        $resp = $this->post_request('getUpdates', ['offset' => (int)$from_update_id + 1,
                                                    'limit' => 10,
                                                    'timeout' => 30]);
         if (!is_array($resp)) {
