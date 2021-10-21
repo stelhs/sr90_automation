@@ -73,7 +73,7 @@ function pid_started_task($tname) {
     $fname = pid_file_by_task_name($tname);
     if (!file_exists($fname))
         return 0;
-    $pid = file_get_contents();
+    $pid = file_get_contents($fname);
     return $pid;
 }
 
