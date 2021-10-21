@@ -63,7 +63,7 @@ class Gates {
         if (!$this->is_power_enabled())
             return "can`t close. power is disabled";
 
-        if (!$this->is_closed())
+        if ($this->is_closed())
             return "already closed";
 
         iop('gates_close')->up();

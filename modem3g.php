@@ -543,7 +543,7 @@ class Modem3g_periodically implements Periodically_events {
     function do() {
         $list = modem3g()->new_sms();
         if (!is_array($list)) {
-            $this->log->err("Can't check for new sms: \n", $ret);
+            $this->log->err("Can't check for new sms: %s\n", $list);
             $rc = -EBUSY;
             return;
         }
