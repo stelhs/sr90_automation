@@ -23,6 +23,7 @@ class Boiler {
                     'overage_room_t' => 15.0,
                     'overage_return_water_t' => 18.2,
                     'ignition_counter' => 4,
+                    'total_burning_time' => 60 * 60,
                     'total_burning_time_text' => '1h',
                     'total_fuel_consumption' => 4.5];
         }
@@ -264,7 +265,12 @@ class Boiler_cron_events implements Cron_events {
         $row = db()->query('select avg(`temperature`) as t from termo_sensors_log '.
                            'where sensor_name = "28-00000a882264" and ' .
                                'created > (now() - interval 1 day)');
-        $outside_t = $row['t'];
+        $outside_t = 0;
+        if ($row)
+            $this->log->err("Can't get from DB average street temperature\n");
+
+        if (isset($row['t']))
+            $outside_t = $row['t'];
 
         $row_id = db()->insert('boiler_statistics',
                               ['burning_time' => $stat['total_burning_time'],

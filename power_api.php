@@ -103,7 +103,13 @@ class Ext_power_io_handler implements IO_handler {
 
 function battery_info()
 {
-    @$voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
+    if (!file_exists(UPS_BATT_VOLTAGE_FILE))
+        return null;
+
+    if (!file_exists(UPS_BATT_CURRENT_FILE))
+        return null;
+
+    $voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
     if ($voltage === FALSE)
         return null;
 
@@ -128,7 +134,9 @@ function ups_state()
     $stat = [];
     $stat['vdc_out_state'] = iop('ups_250vdc')->state();
     $stat['standby_state'] = iop('ups_14vdc')->state();
-    @$stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
+    $stat['charger_state'] = 'charge_stage1';
+    if (file_exists(CHARGER_STAGE_FILE))
+        $stat['charger_state'] = file_get_contents(CHARGER_STAGE_FILE);
     return $stat;
 }
 
@@ -152,13 +160,11 @@ function last_ups_duration()
 
 
 class Ups_batterry_periodically implements Periodically_events {
-    function name()
-    {
+    function name() {
         return "ups_battery";
     }
 
-    function interval()
-    {
+    function interval() {
         return 1;
     }
 
@@ -238,8 +244,13 @@ class Ups_batterry_periodically implements Periodically_events {
         $filtred_voltage = $voltage_queue->get_val();
         $filtred_current = $current_queue->get_val();
 
-        @$prev_voltage = file_get_contents(UPS_BATT_VOLTAGE_FILE);
-        @$prev_current = file_get_contents(UPS_BATT_CURRENT_FILE);
+        $prev_voltage = $prev_current = 0;
+        if (file_exists(UPS_BATT_VOLTAGE_FILE))
+            $prev_voltage = file_get_contents(UPS_BATT_VOLTAGE_FILE);
+
+        if (file_exists(UPS_BATT_CURRENT_FILE))
+            $prev_current = file_get_contents(UPS_BATT_CURRENT_FILE);
+
         if ($filtred_voltage == $prev_voltage &&
                 $this->is_around($filtred_current, $prev_current, 0.03))
             return;
@@ -254,19 +265,16 @@ class Ups_batterry_periodically implements Periodically_events {
 
 
 class Ups_periodically implements Periodically_events {
-    function __construct()
-    {
-        $this->log = new Plog('sr90:ups');
-    }
-
-    function name()
-    {
+    function name() {
         return "ups";
     }
 
-    function interval()
-    {
+    function interval() {
         return 1;
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:ups');
     }
 
     function switch_to_discharge() {
@@ -317,8 +325,13 @@ class Ups_periodically implements Periodically_events {
 
     function micro_cycling_state()
     {
-        @$charge_lasttime = file_get_contents(CHARGE_LASTTIME_FILE);
-        @$discharge_lasttime = file_get_contents(DISCHARGE_LASTTIME_FILE);
+        $charge_lasttime = $discharge_lasttime = 0;
+        if (file_exists(CHARGE_LASTTIME_FILE))
+            $charge_lasttime = file_get_contents(CHARGE_LASTTIME_FILE);
+
+        if (file_exists(DISCHARGE_LASTTIME_FILE))
+            $discharge_lasttime = file_get_contents(DISCHARGE_LASTTIME_FILE);
+
         if ($charge_lasttime > $discharge_lasttime) {
             $switch_interval = time() - $charge_lasttime;
             $mode = 'charge';
@@ -414,13 +427,11 @@ class Ups_periodically implements Periodically_events {
         pnotice("current_ups_power_state = %d\n", $ups_power_state);
         pnotice("current_input_power_state = %d\n", $input_power_state);
 
-        if ($ups_power_state < 0 || $input_power_state < 0) {
-            $this->log->err("incorrect ups_power_state or input_power_state\n");
-            return -1;
-        }
-
         // check for external power is absent
-        @$prev_state = file_get_contents(EXT_POWER_STATE_FILE);
+        $prev_state = FALSE;
+        if (file_exists(EXT_POWER_STATE_FILE))
+            $prev_state = file_get_contents(EXT_POWER_STATE_FILE);
+
         if ($prev_state === FALSE) {
             file_put_contents(EXT_POWER_STATE_FILE, $ups_power_state);
             $this->log->err("prev_state unknown\n");
@@ -464,7 +475,10 @@ class Ups_periodically implements Periodically_events {
 
         if ($voltage < 11.88) {
             pnotice("voltage drop bellow 11.88v\n");
-            @$notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
+            $notified = 0;
+            if (file_exists(LOW_BATT_VOLTAGE_FILE))
+                $notified = file_get_contents(LOW_BATT_VOLTAGE_FILE);
+
             if ((time() - $notified) > 300) {
                 $msg = sprintf('Низкий заряд АКБ. Напряжение на АКБ %.2fv',
                     $voltage);
@@ -507,22 +521,24 @@ class Ups_periodically implements Periodically_events {
             return 0;
         }
 
-        @$stage = trim(file_get_contents(CHARGER_STAGE_FILE));
+        $stage = 'charge_stage1';
+        if (file_exists(CHARGER_STAGE_FILE))
+            $stage = trim(file_get_contents(CHARGER_STAGE_FILE));
+
         if (!$stage) {
             $this->log->info("stage is not defined, run stage 1\n");
             $this->switch_mode_to_stage1($batt_info, "start charge after reboot");
             return 0;
         }
 
-        $this->log->info("current stage %s\n", $stage);
-
         $cycling_state = $this->micro_cycling_state();
         $mode = $cycling_state['mode'];
         $switch_interval = $cycling_state['interval'];
-        $this->log->info("switch_interval %d\n", $switch_interval);
 
         switch($stage) {
         case 'charge_stage1':
+            $this->log->info("current stage %s\n", $stage);
+            $this->log->info("switch_interval %d\n", $switch_interval);
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 2.2) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 2.5A. Текущий ток: %f", $current);
@@ -548,6 +564,8 @@ class Ups_periodically implements Periodically_events {
             return 0;
 
         case 'charge_stage2':
+            $this->log->info("current stage %s\n", $stage);
+            $this->log->info("switch_interval %d\n", $switch_interval);
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 0.9) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 1.3A. Текущий ток: %f", $current);
@@ -572,6 +590,8 @@ class Ups_periodically implements Periodically_events {
             return 0;
 
         case 'charge_stage3':
+            $this->log->info("current stage %s\n", $stage);
+            $this->log->info("switch_interval %d\n", $switch_interval);
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 0.3) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
@@ -603,6 +623,8 @@ class Ups_periodically implements Periodically_events {
             return 0;
 
         case 'charge_stage4':
+            $this->log->info("current stage %s\n", $stage);
+            $this->log->info("switch_interval %d\n", $switch_interval);
             if ($switch_interval > 10 && $switch_interval < 13) {
                 if ($mode == 'charge' && $current < 0.3) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);

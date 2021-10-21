@@ -257,6 +257,13 @@ function conf_guard()
              'run_lighter' => 1,
              'io_sensors' => ['gates_motor_door' => 0]
             ],
+
+            ['name' => 'gates_closed',
+             'desc' => 'Откатные ворота',
+             'alarm_time' => 300,
+             'run_lighter' => 1,
+             'io_sensors' => ['gates_closed' => 0]
+            ],
         ],
 
         'ready_set_interval' => 30, /* in seconds */

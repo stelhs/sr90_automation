@@ -331,7 +331,6 @@ class Guard {
         iop('RP_sockets')->up();
         iop('workshop_power')->up();
         padlocks_open();
-        gates()->power_enable();
 
         $state_id = db()->insert('guard_states', ['state' => 'sleep',
                                                   'user_id' => $user_id,
@@ -341,6 +340,7 @@ class Guard {
             return 'db_error';
         }
 
+        gates()->power_enable();
         gates()->open();
         gates()->close_after(60);
 
@@ -375,11 +375,15 @@ class Guard {
             return 'already_started';
         }
 
+        gates()->close(true);
+
         if (!$this->test_mode)
             player_start('sounds/lock.wav', 55);
         else
             $this->tg_info('Run sound sounds/lock.wav');
 
+        padlocks_close();
+        boiler()->set_room_t(5);
         well_pump()->stop();
 
         if (!$this->test_mode) {
@@ -387,7 +391,6 @@ class Guard {
             iop('RP_sockets')->down();
             iop('workshop_power')->down();
         }
-        padlocks_close();
 
         $user = user_by_id($user_id);
         $user_name = 'кто-то';
@@ -425,16 +428,6 @@ class Guard {
         $this->tg_info("Охрана включена, включил %s с помощью %s.",
                         $user_name, $method);
         $this->send_current_photos_to_telegram();
-
-        boiler()->set_room_t(5);
-
-        $rc = gates()->close_sync();
-        if ($rc)
-            $this->tg_info("Возникла неполадка: ворота не закрылись: %d", $rc);
-        else
-            $this->tg_info("Ворота закрылись");
-        gates()->power_disable();
-
         if ($method == 'cli') {
             pnotice("stat: %s\n", $stat_text);
             return 'ok';
@@ -504,8 +497,10 @@ class Guard {
             return;
 
         $zone = $this->zone_by_sensor_name($sname);
-        if (!$zone)
+        if (!$zone) {
+            $this->log->err("Can't find zone for sensor: %s!", $sname);
             return 0;
+        }
 
         if ($this->zone_is_locked($zone['name'])) {
             $this->log->info("sensor_handler(): zone %d is locked\n", $zone['name']);
@@ -560,7 +555,7 @@ class Guard {
             $alarm_id = $ret['id'];
             $alarm_time = $zone['alarm_time'];
             if ($this->test_mode)
-                $alarm_time = 5;
+                $alarm_time = 10;
 
             $ret = db()->query(sprintf("SELECT id FROM guard_alarms " .
                                        "WHERE id = %d " .
@@ -582,7 +577,8 @@ class Guard {
         if ($action_id < 0)
             $this->log->err("sensor_handler(): Can't insert into guard_alarms\n");
 
-        $this->log->info("Guard set in alarm state!");
+        $this->log->info("Guard set in alarm state! zone: %s, sensor: %s",
+                        $zone['name'], $sname);
 
         // make snapshots
         //$this->make_alarm_photos($action_id);
@@ -597,6 +593,7 @@ class Guard {
                          $zone['desc'], $action_id);
 
         // send photos
+        run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id())); // TODO
         //$this->send_alarm_photos_to_sr38($action_id);
         //$this->send_alarm_photos_to_telegram($action_id);
 
@@ -608,23 +605,24 @@ class Guard {
 
         $alarm_timestamp = $row['timestamp'];
 
-        $this->tg_alarm("Загружаю видео файлы по событию %d, ожидайте...", $action_id);
+        if (!DISABLE_HW) {
+            $this->tg_alarm("Загружаю видео файлы по событию %d, ожидайте...", $action_id);
+            foreach(conf_guard()['video_cameras'] as $cam) {
+                $server_video_urls = $this->upload_cam_video($cam, 'alarm_video',
+                                                             $alarm_timestamp - 10, 20,
+                                                             $action_id);
+                if (!is_array($server_video_urls))
+                    continue;
+                $msg = "";
+                foreach($server_video_urls as $url)
+                    $msg .= sprintf("Видео запись события %d: Камера %d:\n %s\n",
+                                    $action_id, $cam['id'], $url);
 
-        foreach(conf_guard()['video_cameras'] as $cam) {
-            $server_video_urls = $this->upload_cam_video($cam, 'alarm_video',
-                                                         $alarm_timestamp - 10, 20,
-                                                         $action_id);
-            if (!is_array($server_video_urls))
-                continue;
-            $msg = "";
-            foreach($server_video_urls as $url)
-                $msg .= sprintf("Видео запись события %d: Камера %d:\n %s\n",
-                                $action_id, $cam['id'], $url);
-
-            if ($msg)
-                $this->tg_alarm($msg);
+                if ($msg)
+                    $this->tg_alarm($msg);
+            }
+            $this->tg_alarm("Процесс загрузки видео по событию %d завершен", $action_id);
         }
-        $this->tg_alarm("Процесс загрузки видео по событию %d завершен", $action_id);
 
         if (!$this->test_mode)
             modem3g()->send_sms_alarm("Сработала сигнализация! зона %s", $zone['desc']);

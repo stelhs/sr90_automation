@@ -167,7 +167,7 @@ function do_handle_request($method, $query, $remote_host)
     return NULL;
 }
 
-function err_handler($errno, $str, $file, $line) {
+function php_err_handler($errno, $str, $file, $line) {
     global $php_errors;
     $php_errors .= sprintf("PHP %s: %s in %s:%s \n %s \n",
             errno_to_str($errno), $str, $file, $line, backtrace_to_str(1));
@@ -179,7 +179,7 @@ function main($argv)
     global $log;
     global $php_errors;
 
-    set_error_handler('err_handler');
+    set_error_handler('php_err_handler');
     error_reporting(0);
     p_disable();
 

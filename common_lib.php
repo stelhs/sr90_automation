@@ -16,7 +16,7 @@ define("PID_DIR", '/tmp/');
 
 define("TEMPERATURES_FILE", "/tmp/temperatures");
 define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
-define("HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
+define("FAKE_HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
 
 $log = new Plog('sr90:common');
 
@@ -114,7 +114,12 @@ class Queue_file {
 
     function put($value)
     {
-        @$content = file_get_contents($this->filename);
+        if (!file_exists($this->filename)) {
+            file_put_contents($this->filename, json_encode([$value]));
+            return;
+        }
+
+        $content = file_get_contents($this->filename);
         if (!$content) {
             file_put_contents($this->filename, json_encode([$value]));
             return;
@@ -136,7 +141,10 @@ class Queue_file {
 
     function get_val()
     {
-        @$content = file_get_contents($this->filename);
+        if (!file_exists($this->filename))
+            return NULL;
+
+        $content = file_get_contents($this->filename);
         if (!$content)
             return NULL;
 
@@ -523,7 +531,10 @@ function skynet_stat_telegram()
 
 function termosensors()
 {
-    @$content = file_get_contents(CURRENT_TEMPERATURES_FILE);
+    if (!file_exists(CURRENT_TEMPERATURES_FILE))
+        return [];
+
+    $content = file_get_contents(CURRENT_TEMPERATURES_FILE);
     if (!$content)
         return [];
 
@@ -586,8 +597,8 @@ function halt_all_systems()
 
     if (DISABLE_HW) {
         perror("FAKE: halt all systems, goodbuy. For undo - remove %s\n",
-               HALT_ALL_SYSTEMS_FILE);
-        file_put_contents(HALT_ALL_SYSTEMS_FILE, 1);
+               FAKE_HALT_ALL_SYSTEMS_FILE);
+        file_put_contents(FAKE_HALT_ALL_SYSTEMS_FILE, '');
         return;
     }
     run_cmd("halt");
@@ -595,7 +606,7 @@ function halt_all_systems()
 
 function is_halt_all_systems()
 {
-    return @file_get_contents(HALT_ALL_SYSTEMS_FILE);
+    return file_exists(FAKE_HALT_ALL_SYSTEMS_FILE);
 }
 
 
@@ -729,6 +740,9 @@ class Temperatures_cron_events implements Cron_events {
 
     function do()
     {
+        if (DISABLE_HW)
+            return;
+
         $temperatures = [];
         foreach(conf_io() as $io_name => $io_data) {
             if ($io_name == 'usio1')
@@ -832,6 +846,9 @@ class Cryptocurrancy_cron_events implements Cron_events {
         $coins = ['ETC', 'BTC', 'BNB'];
         foreach ($coins as $coin) {
             $filename = sprintf(".crypto_currency_%s_max_threshold", strtolower($coin));
+            if (!file_exists($filename))
+                continue;
+
             @$threshold = (float)(file_get_contents($filename));
             if (!$threshold)
                 continue;
@@ -852,6 +869,9 @@ class Cryptocurrancy_cron_events implements Cron_events {
 
         foreach ($coins as $coin) {
             $filename = sprintf(".crypto_currency_%s_min_threshold", strtolower($coin));
+            if (!file_exists($filename))
+                continue;
+
             @$threshold = (float)(file_get_contents($filename));
             if (!$threshold)
                 continue;
@@ -890,9 +910,11 @@ class Stat_io_handler implements Http_handler {
     function stat($args, $from, $request)
     {
         $stat = [];
-        @$content = file_get_contents(TEMPERATURES_FILE);
-        if ($content)
-            $stat['termo_sensors'] = json_decode($content, 1);
+        if (file_exists(TEMPERATURES_FILE)) {
+            $content = file_get_contents(TEMPERATURES_FILE);
+            if ($content)
+                $stat['termo_sensors'] = json_decode($content, 1);
+        }
 
         $stat['io_states'] = io_states();
         $stat['batt_info'] = battery_info();

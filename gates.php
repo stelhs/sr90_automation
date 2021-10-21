@@ -24,8 +24,8 @@ function print_help()
                  "\t\t\texample: $utility_name open-ped\n" .
                  "\t\t close: close gates.\n" .
                  "\t\t\texample: $utility_name close\n" .
-                 "\t\t close-sync: close gates and wait finish.\n" .
-                 "\t\t\texample: $utility_name close-sync\n" .
+                 "\t\t close-auto-power-disable: close gates and power disable.\n" .
+                 "\t\t\texample: $utility_name close-auto-power-disable\n" .
                  "\t\t stat: return current gates status.\n" .
                  "\t\t\texample: $utility_name stat\n" .
                  "\n\n");
@@ -76,27 +76,19 @@ function main($argv)
     case "close":
         $rc = gates()->close();
         if ($rc) {
-            pnotice("Error: Gates power is disabled\n");
+            pnotice("Error: %s\n", $rc);
             return $rc;
         }
         pnotice("Gates start to closing\n");
         return 0;
 
-    case "close-sync":
-        pnotice("Gates start to closing\n");
-        $rc = gates()->close_sync();
-
-        if ($rc == -EBUSY) {
-            pnotice("Error: Gates power is disabled\n");
+    case "close-auto-power-disable":
+        $rc = gates()->close(true);
+        if ($rc) {
+            pnotice("Error: %s\n", $rc);
             return $rc;
         }
-
-        if ($rc == -ECONNFAIL) {
-            pnotice("Error: Timeout was expired. Gates is not closed\n");
-            return $rc;
-        }
-
-        pnotice("Gates successfully closed\n");
+        pnotice("Gates start to closing with auto power disable\n");
         return 0;
 
     case "stat":

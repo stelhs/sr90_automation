@@ -31,9 +31,11 @@ class Well_pump {
     function stat()
     {
         $duration = 0;
-        @$enable_time = file_get_contents(WELL_PUMP_TIME_FILE);
-        if ($enable_time)
-            $duration = time() - $enable_time;
+        if (file_exists(WELL_PUMP_TIME_FILE)) {
+            $enable_time = file_get_contents(WELL_PUMP_TIME_FILE);
+            if ($enable_time)
+                $duration = time() - $enable_time;
+        }
         return ['state' => iop('water_pump')->state(),
                 'duration' => $duration];
     }

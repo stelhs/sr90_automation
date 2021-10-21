@@ -23,6 +23,31 @@ class Board_io {
         $this->tcp_port = conf_io()[$name]['tcp_port'];
         $this->name = $name;
         $this->log = new Plog('sr90:Board_io');
+
+        if (DISABLE_HW) {
+            $this->fake_in_file = 'fake_in_ports';
+            $this->fake_out_file = 'fake_out_ports';
+
+            if (!file_exists($this->fake_in_file)) {
+                $str = '';
+                foreach (conf_io() as $io_name => $io_info)
+                    foreach ($io_info['in'] as $pn => $pname) {
+                        if ($pname)
+                            $str .= sprintf("0: %s\n", $pname);
+                    }
+                file_put_contents($this->fake_in_file, $str);
+            }
+
+            if (!file_exists($this->fake_out_file)) {
+                $str = '';
+                foreach (conf_io() as $io_name => $io_info)
+                    foreach ($io_info['out'] as $pn => $pname) {
+                        if ($pname)
+                            $str .= sprintf("0: %s\n", $pname);
+                    }
+                file_put_contents($this->fake_out_file, $str);
+            }
+        }
     }
 
     private function send_cmd($cmd, $args)
@@ -72,9 +97,15 @@ class Board_io {
                                   'out', $port), $state);
 
         if (DISABLE_HW) {
-            $ports = $this->read_fake_out_ports();
-            $ports[$port] = $state;
-            $this->write_fake_out_ports($ports);
+            $ports = $this->parse_fake_file($this->fake_out_file);
+            $ports[$pname] = $state;
+            $str = '';
+            foreach (conf_io() as $io_name => $io_info)
+                foreach ($io_info['out'] as $pn => $pname) {
+                    if ($pname)
+                        $str .= sprintf("%d: %s\n", $ports[$pname], $pname);
+                }
+            file_put_contents($this->fake_out_file, $str);
             return 0;
         }
 
@@ -102,7 +133,8 @@ class Board_io {
     {
         $pname = port_name_by_addr($this->name, 'out', $port);
         if (DISABLE_HW) {
-            $s = $this->read_fake_out_ports()[$port];
+            $ports = $this->parse_fake_file($this->fake_out_file);
+            $s = $ports[$pname];
             $this->log->info("state %s -> %d\n",
                              port_str($pname, $this->name, 'out', $port), $s);
             return $s;
@@ -139,8 +171,8 @@ class Board_io {
     {
         $pname = port_name_by_addr($this->name, 'in', $port);
         if (DISABLE_HW) {
-            $ports = $this->read_fake_in_ports();
-            $s = $ports[$port];
+            $ports = $this->parse_fake_file($this->fake_in_file);
+            $s = $ports[$pname];
             $this->log->info("state %s -> %d\n",
                              port_str($pname, $this->name, 'in', $port), $s);
             return $s;
@@ -174,50 +206,16 @@ class Board_io {
         return $err;
     }
 
-    private function read_fake_in_ports()
+    private function parse_fake_file($file)
     {
-        $io_name = $this->name;
-        $ports = [];
-        for ($i = 1; $i <= count(conf_io()[$io_name]['in']); $i++)
-            $ports[$i] = 0;
-
-        @$str = file_get_contents(sprintf('fake_%s_in.txt', $io_name));
-        if (!$str)
-            return $ports;
-
-        $rows = string_to_array($str, "\n");
-        for ($i = 1; $i <= count(conf_io()[$io_name]['in']); $i++)
-            @$ports[$i] = $rows[$i - 1];
-
-        return $ports;
-    }
-
-    private function read_fake_out_ports()
-    {
-        $io_name = $this->name;
-        $ports = [];
-        for ($i = 1; $i <= count(conf_io()[$io_name]['out']); $i++)
-            $ports[$i] = 0;
-
-        @$str = file_get_contents(sprintf('fake_%s_out.txt', $io_name));
-        if (!$str)
-            return $ports;
-
-        $rows = string_to_array($str, "\n");
-        for ($i = 1; $i <= count(conf_io()[$io_name]['out']); $i++)
-            @$ports[$i] = $rows[$i - 1];
-
-        return $ports;
-    }
-
-    private function write_fake_out_ports($ports)
-    {
-        $io_name = $this->name;
-        foreach ($ports as $num => $value)
-            $ports[$num] = $value ? '1' : '0';
-
-        $str = array_to_string($ports, "\n");
-        file_put_contents(sprintf('fake_%s_out.txt', $io_name), $str);
+        $list = [];
+        $c = file_get_contents($file);
+        $rows = string_to_rows($c);
+        foreach ($rows as $row) {
+            $words = string_to_words($row, ':');
+            $list[$words[1]] = $words[0];
+        }
+        return $list;
     }
 }
 
@@ -500,6 +498,9 @@ class Boards_io_cron_events implements Cron_events {
 
     function do()
     {
+        if (DISABLE_HW)
+            return;
+
         $temperatures = [];
         foreach(conf_io() as $io_name => $io_data) {
             if ($io_name == 'usio1')

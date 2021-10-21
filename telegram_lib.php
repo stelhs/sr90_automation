@@ -133,6 +133,7 @@ class Telegram_notifier {
         $this->log = new Plog('sr90:telegram_notifier');
         $this->last_rx_update_id = NULL;
         $this->last_rx_update_file = getenv("HOME") . '/.telegram_last_rx_update_id';
+        $this->hide = file_exists('HIDE_TELEGRAM');
     }
 
     function chats($type = NULL)
@@ -143,6 +144,39 @@ class Telegram_notifier {
         return $list;
     }
 
+    function buffering_msg($chat_id, $msg)
+    {
+        $last_msg_file = sprintf("/tmp/telegram_last_msg_%d", $chat_id);
+        $last_msg_cnt_file = sprintf("/tmp/telegram_last_msg_cnt_%d", $chat_id);
+
+        if (!file_exists($last_msg_file)) {
+            file_put_contents($last_msg_file, $msg);
+            file_put_contents($last_msg_cnt_file, 1);
+            return $msg;
+        }
+
+        $last_msg = file_get_contents($last_msg_file);
+        $cnt = file_get_contents($last_msg_cnt_file);
+
+        if (strcmp($msg, $last_msg) and $cnt == 1) {
+            file_put_contents($last_msg_file, $msg);
+            return $msg;
+        }
+
+        if (strcmp($msg, $last_msg) == 0) {
+            file_put_contents($last_msg_cnt_file, ++ $cnt);
+            return NULL;
+        }
+
+        $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s\n\n" .
+                           "Новое сообщение:\n%s",
+                            $cnt, $last_msg, $msg);
+
+        file_put_contents($last_msg_file, $msg);
+        file_put_contents($last_msg_cnt_file, 1);
+        return $ret_msg;
+    }
+
     function send_to_admin()
     {
         $argv = func_get_args();
@@ -150,8 +184,11 @@ class Telegram_notifier {
         $msg = vsprintf($format, $argv);
 
         $chat_list = $this->chats('admin');
-        foreach ($chat_list as $chat)
-            telegram()->send_message($chat['chat_id'], $msg);
+        foreach ($chat_list as $chat) {
+            $ret_msg = $this->buffering_msg($chat['chat_id'], $msg);
+            if ($ret_msg)
+                telegram()->send_message($chat['chat_id'], $ret_msg);
+        }
     }
 
     function send_to_alarm()
@@ -160,9 +197,17 @@ class Telegram_notifier {
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
 
+        if ($this->hide) {
+            $this->send_to_admin($msg);
+            return;
+        }
+
         $chat_list = $this->chats('alarm');
-        foreach ($chat_list as $chat)
-            telegram()->send_message($chat['chat_id'], $msg);
+        foreach ($chat_list as $chat) {
+            $ret_msg = $this->buffering_msg($chat['chat_id'], $msg);
+            if ($ret_msg)
+                telegram()->send_message($chat['chat_id'], $ret_msg);
+        }
     }
 
     function send_to_msg()
@@ -171,9 +216,17 @@ class Telegram_notifier {
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
 
+        if ($this->hide) {
+            $this->send_to_admin($msg);
+            return;
+        }
+
         $chat_list = $this->chats('messages');
-        foreach ($chat_list as $chat)
-            telegram()->send_message($chat['chat_id'], $msg);
+        foreach ($chat_list as $chat) {
+            $ret_msg = $this->buffering_msg($chat['chat_id'], $msg);
+            if ($ret_msg)
+                telegram()->send_message($chat['chat_id'], $ret_msg);
+        }
     }
 
     function send($chat_id, $msg_id)

@@ -70,7 +70,10 @@ function pause_file_by_task_name($tname)
 }
 
 function pid_started_task($tname) {
-    @$pid = file_get_contents(pid_file_by_task_name($tname));
+    $fname = pid_file_by_task_name($tname);
+    if (!file_exists($fname))
+        return 0;
+    $pid = file_get_contents();
     return $pid;
 }
 
@@ -79,9 +82,18 @@ function task_is_paused($tname)
     return file_exists(pause_file_by_task_name($tname));
 }
 
+function php_err_handler($errno, $str, $file, $line) {
+    $text .= sprintf("PHP %s: %s in %s:%s \n %s \n",
+                     errno_to_str($errno), $str, $file, $line,
+                     backtrace_to_str(1));
+    plog(LOG_ERR, 'sr90:periodically', $text);
+    tn()->send_to_admin("sr90:periodically: %s", $text);
+}
 
 function main($argv)
 {
+    set_error_handler('php_err_handler');
+
     if (!isset($argv[1])) {
         print_help();
         return -EINVAL;
