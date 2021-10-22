@@ -89,10 +89,12 @@ class Guard {
         return $list;
     }
 
-    function not_ready_zones()
+    function find_ignore_zones()
     {
         $list = [];
         foreach ($this->unlocked_zones() as $zone) {
+            if (isset($zone['skip_ignore']) and $zone['skip_ignore'])
+                continue;
             $incorrect_zone = false;
             foreach ($zone['io_sensors'] as $sensor_name => $trig_state) {
                 $state = iop($sensor_name)->state()[0];
@@ -460,7 +462,7 @@ class Guard {
             $tg_zone_report .= sprintf("Заблокированные зоны: %s\n\n",
                                      $this->zones_list_to_text($locked_zones));
 
-        $not_ready_zones = $this->not_ready_zones();
+        $not_ready_zones = $this->find_ignore_zones();
         if (count($not_ready_zones))
             $tg_zone_report .= sprintf("Не готовые к охране зоны: %s\n",
                               $this->zones_list_to_text($not_ready_zones));

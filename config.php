@@ -250,7 +250,6 @@ function conf_guard()
              'desc' => 'Под балконом',
              'diff_interval' => 10,
              'alarm_time' => 60,
-             'run_lighter' => 1,
              'io_sensors' => ['guard_motion_sensor_14' => 0,
                               'guard_motion_sensor_15' => 0]
             ],
@@ -259,14 +258,13 @@ function conf_guard()
              'desc' => 'Дверца откатных ворот',
              'diff_interval' => 4,
              'alarm_time' => 300,
-             'run_lighter' => 1,
              'io_sensors' => ['gates_motor_door' => 0]
             ],
 
             ['name' => 'gates_closed',
              'desc' => 'Откатные ворота',
              'alarm_time' => 300,
-             'run_lighter' => 1,
+             'skip_ignore' => true,
              'io_sensors' => ['gates_closed' => 0]
             ],
         ],
