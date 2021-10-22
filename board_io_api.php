@@ -517,7 +517,7 @@ class Usio extends Board_io{
         if (DISABLE_HW)
             return $this->fake_relay_state($port);
 
-        $ret = $this->send_cmd(sprintf("relay_get %d\n", $port));
+        $ret = $this->send_cmd(sprintf("relay_get %d\n", $port->pn()));
         if ($ret == "0" || $ret == "1") {
             $s = $ret;
             $this->log->info("state %s -> %d\n", $port->str(), $s);
@@ -536,7 +536,7 @@ class Usio extends Board_io{
         if (DISABLE_HW)
             return $this->fake_input_state($port);
 
-        $ret = $this->send_cmd(sprintf("input_get %d\n", $port));
+        $ret = $this->send_cmd(sprintf("input_get %d\n", $port->pn()));
         if ($ret == "0" || $ret == "1") {
             $s = $ret;
             $this->log->info("state %s -> %d\n", $port->str(), $s);

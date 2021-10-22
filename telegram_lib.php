@@ -104,12 +104,12 @@ class Telegram_api {
 
         $resp = $this->post_request('sendMessage', $params);
         if (!is_array($resp)) {
-            $this->log->err("send_message(): Can't make POST request for send %s\n", $resp);
+            $this->log->err("Can't make POST request for send %s\n", $resp);
             return $resp;
         }
 
         if ($resp['ok'] != 1) {
-            $this->log->err("send_message(): error POST request for send, ok=%s\n", $resp['ok']);
+            $this->log->err("error POST request for send, ok=%s\n", $resp['ok']);
             return -EBUSY;
         }
 
@@ -286,13 +286,11 @@ function tn()
 
 
 class Telegram_periodically implements Periodically_events {
-    function name()
-    {
+    function name() {
         return "telegram";
     }
 
-    function interval()
-    {
+    function interval() {
         return 1;
     }
 

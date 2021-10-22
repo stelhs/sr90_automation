@@ -78,7 +78,7 @@ class Lighters {
     {
         $month = date('m');
         $hour = date('H');
-        $minute = date('i');
+        $min = date('i');
 
         $light_interval = conf_street_light()['light_calendar'][$month];
         list($start_hour, $start_min) = string_to_words($light_interval[0]);
