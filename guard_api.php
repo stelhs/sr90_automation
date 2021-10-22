@@ -263,6 +263,18 @@ class Guard {
         return $server_files;
     }
 
+    function stoped_timestamp()
+    {
+        $row = db()->query("SELECT UNIX_TIMESTAMP(created) as timestamp " .
+                            "FROM guard_states " .
+                                "WHERE state = 'sleep' " .
+                            "ORDER by created DESC LIMIT 1");
+        if ($row < 0)
+            $this->log->err("Can't MySQL query\n");
+
+        return $row['timestamp'];
+    }
+
     function stat_text()
     {
         $tg = '';

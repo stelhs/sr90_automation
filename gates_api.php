@@ -182,8 +182,11 @@ class Gates_io_handler implements IO_handler {
 
     function open_close($pname, $state)
     {
-        if (guard()->state() == 'ready')
+        if (guard()->state() == 'ready' and
+                (time() - guard()->stoped_timestamp()) < 5) {
+            unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             return;
+        }
 
         if (gates()->is_closed()) {
             tn()->send_to_admin("Ворота открываются");
