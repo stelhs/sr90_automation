@@ -65,10 +65,10 @@ class Io {
         return NULL;
     }
 
-    function ports() {
+    function ports($mode = NULL) {
         $list = [];
         foreach ($this->boards as $board)
-            $list = array_merge($list, $board->ports());
+            $list = array_merge($list, $board->ports($mode));
         return $list;
     }
 
@@ -268,11 +268,19 @@ class Board_io {
         }
     }
 
-    function ports() {
+    function ports($mode = NULL) {
         $list = [];
         foreach ($this->ports as $port) {
-            if ($port->name())
-                $list[] = $port;
+            if (!$port->name())
+                continue;
+
+            if ($mode) {
+                if ($port->mode() == $mode)
+                    $list[] = $port;
+                continue;
+            }
+
+            $list[] = $port;
         }
         return $list;
     }

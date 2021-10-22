@@ -20,6 +20,11 @@ function print_help()
                  "\t\t\texample: $app_name sbio2.out \n" .
                  "\t\t\texample: $app_name sbio3 \n" .
 
+                 "\t\t list: listing all IO ports\n" .
+
+                 "\t\t trig <in_port_name> <state>: emulate triggering in port\n" .
+                 "\t\t\texample: $app_name trig vru_door 0\n" .
+
                  "\t\t wdt_on: enable hardware watchdog\n" .
                  "\t\t wdt_off: disable hardware watchdog\n" .
                  "\t\t wdt_reset: reset hardware watchdog\n" .
@@ -56,6 +61,16 @@ function main($argv)
 
     case 'wdt_reset':
         $rc = io()->board('usio1')->wdt_reset();
+        return 0;
+
+    case 'list':
+        pnotice("List in ports:\n");
+        foreach (io()->ports('in') as $port)
+            pnotice("\t%s\n", $port->str());
+
+        pnotice("\nList out ports:\n");
+        foreach (io()->ports('out') as $port)
+            pnotice("\t%s\n", $port->str());
         return 0;
 
     case 'trig':
