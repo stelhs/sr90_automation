@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+chdir(dirname($argv[0]));
+
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
@@ -12,10 +14,8 @@ function main($argv) {
     chdir(dirname($argv[0]));
     iop('ups_break_power')->down();
     iop('battery_relay')->down();
-    tn()->send_to_admin('Сервер sr90 перезапущен');
 
     io()->refresh_out_ports();
-
 }
 
 exit(main($argv));

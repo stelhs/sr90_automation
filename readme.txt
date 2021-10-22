@@ -49,3 +49,35 @@ Settings:
 
 Run script as daemon:
     nohup ./script.sh &>/dev/null &
+
+
+Start points:
+    console:
+        cron.php
+        gates.php
+        guard.php
+        hard_reboot.php
+        init.php
+        io.php
+        lighter.php
+        modem.php
+        padlock.php
+        periodically.php
+        sequencer.php
+        stat.php
+        telegram.php
+        text_spech.php
+        well_pump.php
+
+    init:
+        init.php
+
+    cron:
+        cron.php
+
+    periodically:
+        periodically.php
+
+    http_server:
+        http_server.php
+

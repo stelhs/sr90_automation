@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+chdir(dirname($argv[0]));
+
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
