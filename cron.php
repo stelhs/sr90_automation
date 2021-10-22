@@ -33,6 +33,15 @@ function main($argv) {
     case "hour":
     case "day":
         break;
+    case "stat":
+        pnotice("list tasks:\n");
+        foreach (cron_handlers() as $handler) {
+            if ($handler_name and $handler->name() != $handler_name)
+                continue;
+
+            pnotice("handler: %s\n", $handler->name());
+        }
+        return -EINVAL;
     default:
         return -EINVAL;
     }
