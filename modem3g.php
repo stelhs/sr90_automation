@@ -4,16 +4,6 @@ require_once '/usr/local/lib/php/xml.php';
 
 require_once 'common_lib.php';
 
-function sms_handlers()
-{
-    return [new Guard_sms_events,
-            new Inet_sms_events,
-            new Lighter_sms_events,
-            new Common_sms_events,
-            ];
-}
-
-
 class Modem3G {
     private $ip_addr;
 

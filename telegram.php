@@ -14,25 +14,33 @@ function print_help()
     $utility_name = $argv[0];
     pnotice( "Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
-             "\tmsg_recv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
+             "\trecv <action_script> - Attempt to receive messages and run <action_script> for each\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_recv ./make_telegram_actions.php\n" .
+             "\t\t\t $utility_name recv ./make_telegram_actions.php\n" .
 
-             "\tmsg_send <chat_id> <message_text> - Send message\n" .
+             "\tsend <chat_id> <message_text> - Send message\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_send 186579253 'hello world'\n" .
+             "\t\t\t $utility_name send 186579253 'hello world'\n" .
 
-             "\tmsg_send_msg <message_text> - Send message in 'message' chats\n" .
+             "\tsend_msg <message_text> - Send message in 'message' chats\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_send_msg 'hello world'\n" .
+             "\t\t\t $utility_name send_msg 'hello world'\n" .
 
-             "\tmsg_send_admin <message_text> - Send message in 'admin' chats\n" .
+             "\tsend_admin <message_text> - Send message in 'admin' chats\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_send_admin 'hello world'\n" .
+             "\t\t\t $utility_name send_admin 'hello world'\n" .
 
-             "\tmsg_send_admin <message_text> - Send message in 'alarm' chats\n" .
+             "\tsend_admin <message_text> - Send message in 'alarm' chats\n" .
              "\t\tExample:\n" .
-             "\t\t\t $utility_name msg_send_alarm 'hello world'\n" .
+             "\t\t\t $utility_name send_alarm 'hello world'\n" .
+
+             "\tlist - List of telegram event handlers\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name list\n" .
+
+             "\trun <handler_name> <cmd_name> [text] - Run telegram command\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name run common tell привет\n" .
 
              "\n\n");
 }
@@ -40,12 +48,14 @@ function print_help()
 function main($argv)
 {
     $rc = 0;
-    if (!isset($argv[1]))
+    if (!isset($argv[1])) {
+        print_help();
         return -EINVAL;
+    }
 
     $cmd = strtolower(trim($argv[1]));
     switch ($cmd) {
-    case 'msg_recv':
+    case 'recv':
         set_time_limit(90); // set timeout 90 seconds
         $list_msg = telegram()->get_new_messages();
 
@@ -85,7 +95,7 @@ function main($argv)
         }
         break;
 
-    case 'msg_send':
+    case 'send':
         if ((!isset($argv[2])) || (!isset($argv[3]))) {
             perror("incorrect params");
             return -EINVAL;
@@ -97,7 +107,7 @@ function main($argv)
         telegram()->send_message($chat_id, $msg);
         break;
 
-    case 'msg_send_msg':
+    case 'send_msg':
         if (!isset($argv[2])) {
             perror("incorrect params");
             return -EINVAL;
@@ -107,7 +117,7 @@ function main($argv)
         tn()->send_to_msg($msg);
         break;
 
-    case 'msg_send_alarm':
+    case 'send_alarm':
         if (!isset($argv[2])) {
             perror("incorrect params");
             return -EINVAL;
@@ -117,7 +127,7 @@ function main($argv)
         tn()->send_to_alarm($msg);
         break;
 
-    case 'msg_send_admin':
+    case 'send_admin':
         if (!isset($argv[2])) {
             perror("incorrect params");
             return -EINVAL;
@@ -127,6 +137,56 @@ function main($argv)
         tn()->send_to_admin($msg);
         break;
 
+    case 'list':
+        pnotice("List of handlers:\n");
+        foreach (telegram_handlers() as $handler) {
+            $class = get_class($handler);
+            $info = new ReflectionClass($class);
+            pnotice("\t%s : %s +%d\n", $handler->name(),
+                $info->getFileName(), $info->getStartLine());
+            foreach ($handler->cmd_list() as $cmd)
+                pnotice("\t\t%s - %s\n", $cmd['method'], $cmd['cmd'][0]);
+            pnotice("\n");
+        }
+        break;
+
+    case 'run':
+        if ((!isset($argv[2])) || (!isset($argv[3]))) {
+            perror("Not enought params\n");
+            return -EINVAL;
+        }
+        $hname = $argv[2];
+        $method = $argv[3];
+
+        $handler = NULL;
+        foreach (telegram_handlers() as $h)
+            if ($h->name() == $hname) {
+                $handler = $h;
+                break;
+            }
+
+        if (!$handler) {
+            perror("Handler '%s' has not found\n", $hname);
+            return -EINVAL;
+        }
+
+        $found = false;
+        foreach ($handler->cmd_list() as $cmd)
+            if ($cmd['method'] == $method)
+                $found = true;
+
+        if (!$found) {
+            perror("Method '%s' has not found\n", $method);
+            return -EINVAL;
+        }
+
+        $text = NULL;
+        if (isset($argv[4]))
+            $text = $argv[4];
+
+        pnotice("run handler %s:%s\n", $hname, $method);
+        $handler->$method(tg_admin_chat_id(), 0, 0, NULL, $text);
+        break;
 
     default:
         perror("incorrect command");
@@ -136,8 +196,5 @@ function main($argv)
     return $rc;
 }
 
-$rc = main($argv);
-if ($rc) {
-    print_help();
-    exit($rc);
-}
+exit(main($argv));
+

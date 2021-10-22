@@ -27,7 +27,15 @@ function print_help()
     		 "\tussd_send - Send USSD\n" .
              "\t\tExample:\n" .
              "\t\t\t $utility_name ussd_send *100#\n" .
-    "\n\n");
+
+             "\tlist - List of SMS event handlers\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name list\n" .
+
+             "\trun <handler_name> <cmd_name> [text] - Run sms command\n" .
+             "\t\tExample:\n" .
+             "\t\t\t $utility_name run common status\n" .
+             "\n\n");
 }
 
 
@@ -129,8 +137,60 @@ function main($argv)
         goto out;
 
     case 'stat':
-        dump($modem->get_status());
+        dump($modem->status());
         break;
+
+    case "list":
+        pnotice("List of handlers:\n");
+        foreach (sms_handlers() as $handler) {
+            $class = get_class($handler);
+            $info = new ReflectionClass($class);
+            pnotice("\t%s : %s +%d\n", $handler->name(),
+                $info->getFileName(), $info->getStartLine());
+            foreach ($handler->cmd_list() as $cmd)
+                pnotice("\t\t%s - %s\n", $cmd['method'], $cmd['cmd'][0]);
+            pnotice("\n");
+        }
+        goto out;
+
+
+    case 'run':
+        if ((!isset($argv[2])) || (!isset($argv[3]))) {
+            perror("Not enought params\n");
+            return -EINVAL;
+        }
+        $hname = $argv[2];
+        $method = $argv[3];
+
+        $handler = NULL;
+        foreach (sms_handlers() as $h)
+            if ($h->name() == $hname) {
+                $handler = $h;
+                break;
+            }
+
+        if (!$handler) {
+            perror("Handler '%s' has not found\n", $hname);
+            return -EINVAL;
+        }
+
+        $found = false;
+        foreach ($handler->cmd_list() as $cmd)
+            if ($cmd['method'] == $method)
+                $found = true;
+
+        if (!$found) {
+            perror("Method '%s' has not found\n", $method);
+            return -EINVAL;
+        }
+
+        $text = NULL;
+        if (isset($argv[4]))
+            $text = $argv[4];
+
+        pnotice("run handler %s:%s\n", $hname, $method);
+        $handler->$method('+000 00 0000000', NULL, NULL, NULL);
+        goto out;
 
     default:
         $rc = -EINVAL;

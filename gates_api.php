@@ -271,7 +271,7 @@ class Gates_periodically implements Periodically_events {
                 tn()->send_to_admin('Ворота закрылись, но событие от платы ввода-вывода не пришло');
                 $msg = 'Ворота закрылись';
                 if (file_exists(GATES_AUTO_POWER_DISABLE)) {
-                    gates()->disable();
+                    gates()->power_disable();
                     unlink_safe(GATES_AUTO_POWER_DISABLE);
                     $msg .= ', питание ворот отключено';
                 }

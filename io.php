@@ -20,7 +20,7 @@ function print_help()
                  "\t\t\texample: $app_name sbio2.out \n" .
                  "\t\t\texample: $app_name sbio3 \n" .
 
-                 "\t\t list: listing all IO ports\n" .
+                 "\t\t list: listing all IO ports and handlers\n" .
 
                  "\t\t trig <in_port_name> <state>: emulate triggering in port\n" .
                  "\t\t\texample: $app_name trig vru_door 0\n" .
@@ -71,6 +71,20 @@ function main($argv)
         pnotice("\nList out ports:\n");
         foreach (io()->ports('out') as $port)
             pnotice("\t%s\n", $port->str());
+
+        pnotice("\nList IO handlers:\n");
+        foreach (io_handlers() as $handler) {
+            $class = get_class($handler);
+            $info = new ReflectionClass($class);
+            pnotice("\t%s : %s +%d\n", $handler->name(),
+                $info->getFileName(), $info->getStartLine());
+            foreach ($handler->trigger_ports() as $method => $plist) {
+                pnotice("\t\t%s:\n", $method);
+                foreach ($plist as $pname => $trig_val)
+                    pnotice("\t\t\t%s: %d\n", $pname, $trig_val);
+            }
+            pnotice("\n");
+        }
         return 0;
 
     case 'trig':

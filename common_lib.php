@@ -102,9 +102,17 @@ function http_handlers()
             ];
 }
 
+function sms_handlers()
+{
+    return [new Guard_sms_events,
+            new Inet_sms_events,
+            new Lighter_sms_events,
+            new Common_sms_events,
+            ];
+}
 
 
-function telegram_get_admin_chat_id() //TODO
+function tg_admin_chat_id() //TODO
 {
     $chat = db()->query("SELECT chat_id FROM telegram_chats " .
                         "WHERE type = 'admin'");
@@ -250,7 +258,6 @@ function errno_to_str($errno)
     }
     return $level;
 }
-
 
 class Queue_file {
     function __construct($filename, $size)

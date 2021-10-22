@@ -35,6 +35,9 @@ function print_help()
                  "\t\t\texample resume all: $app_name resume\n" .
                  "\t\t\texample resume specific: $app_name resume gates\n" .
 
+                 "\t\t list - Display list tasks\n" .
+                 "\t\t\texample: $app_name list\n" .
+
                  "\t\t run <task_name> - Run specific task synchronously\n" .
                  "\t\t\texample: $app_name run gates\n" .
 
@@ -256,6 +259,18 @@ function main($argv)
                    task_is_paused($task->name()) ? "paused" : "running");
         }
         return 0;
+
+    case 'list':
+        pnotice("\nList tasks:\n");
+        foreach (periodically_list() as $task) {
+            $class = get_class($task);
+            $info = new ReflectionClass($class);
+            pnotice("\t%s : %s +%d\n", $task->name(),
+                    $info->getFileName(), $info->getStartLine());
+        }
+        pnotice("\n");
+        return 0;
+
 
     default:
         perror("Incorrect command\n");

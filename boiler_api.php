@@ -266,18 +266,15 @@ class Boiler_tg_events implements Tg_skynet_events {
 }
 
 class Boiler_cron_events implements Cron_events {
-    function __construct()
-    {
+    function __construct() {
         $this->log = new Plog('sr90:Boiler_cron');
     }
 
-    function name()
-    {
+    function name() {
         return "boiler";
     }
 
-    function interval()
-    {
+    function interval() {
         return "day";
     }
 

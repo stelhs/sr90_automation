@@ -600,7 +600,7 @@ class Guard {
                 $port->name(), $zone['desc']);
             $this->tg_info($msg);
 
-            run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id())); // TODO
+            run_cmd(sprintf("./image_sender.php current %d", tg_admin_chat_id())); // TODO
             return;
         }
 
@@ -652,7 +652,7 @@ class Guard {
                          $zone['desc'], $action_id);
 
         // send photos
-        run_cmd(sprintf("./image_sender.php current %d", telegram_get_admin_chat_id())); // TODO
+        run_cmd(sprintf("./image_sender.php current %d", tg_admin_chat_id())); // TODO
         //$this->send_alarm_photos_to_sr38($action_id);
         //$this->send_alarm_photos_to_telegram($action_id);
 

@@ -18,13 +18,15 @@ function print_help()
 
 function main($argv)
 {
-    dump(guard()->stoped_timestamp());
-    return;
     dump(skynet_stat_telegram());
 
     pnotice("List of periodicaly events:\n");
-    foreach (periodically_list() as $handler)
-        pnotice("\t%s\n", $handler->name());
+    foreach (periodically_list() as $handler) {
+        $class = get_class($handler);
+        $info = new ReflectionClass($class);
+        pnotice("\t%s : %s +%d\n", $handler->name(),
+                $info->getFileName(), $info->getStartLine());
+    }
 
     pnotice("\nList of cron events:\n");
     foreach (cron_handlers() as $handler)
