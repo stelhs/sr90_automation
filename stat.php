@@ -18,6 +18,8 @@ function print_help()
 
 function main($argv)
 {
+    dump(guard()->stoped_timestamp());
+    return;
     dump(skynet_stat_telegram());
 
     pnotice("List of periodicaly events:\n");

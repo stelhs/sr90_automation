@@ -63,8 +63,11 @@ class Gates {
         if (!$this->is_power_enabled())
             return "can`t close. power is disabled";
 
-        if ($this->is_closed())
+        if ($this->is_closed()) {
+            if ($auto_power_disable)
+                $this->power_disable();
             return "already closed";
+        }
 
         iop('gates_close')->up();
         sleep(1);
@@ -182,8 +185,8 @@ class Gates_io_handler implements IO_handler {
 
     function open_close($pname, $state)
     {
-        if (guard()->state() == 'ready' and
-                (time() - guard()->stoped_timestamp()) < 5) {
+        if (guard()->state() == 'ready' or
+                (time() - guard()->stoped_timestamp()) < 30) {
             unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             return;
         }
@@ -326,7 +329,6 @@ class Gates_tg_events implements Tg_skynet_events {
         }
 
         gates()->close_after(60);
-        tn()->send($chat_id, $msg_id, 'Ворота открываются');
     }
 
     function open_ped($chat_id, $msg_id, $user_id, $arg, $text)
@@ -337,7 +339,6 @@ class Gates_tg_events implements Tg_skynet_events {
             return;
         }
         gates()->close_after(60);
-        tn()->send($chat_id, $msg_id, 'Ворота открываются');
     }
 
     function close($chat_id, $msg_id, $user_id, $arg, $text)
