@@ -15,6 +15,7 @@ define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
 class Io {
     function __construct()
     {
+        $this->log = new Plog('sr90:io');
         if (DISABLE_HW) {
             if (!file_exists(FAKE_IN_FILE)) {
                 $str = '';
@@ -100,20 +101,33 @@ class Io {
 
     function trig_event($port, $state)
     {
-        global $log;
         if ($port->is_locked()) {
-            $log->warn('%s is locked', $port->name());
+            $this->log->warn('%s is locked', $port->str());
+            return 0;
+        }
+
+        $state = (int)$state;
+        if ($state != 0 and $state != 1) {
+            $this->log->err('port state %s is not correct. state = %s',
+                            $port->str(), $state);
             return 0;
         }
 
         db()->query('delete from io_events where ' .
                     'created < (now() - interval 3 month)');
 
-        db()->insert('io_events', ['port_name' => $port->name(),
-                                   'mode' => 'in',
-                                   'io_name' => $port->board()->name(),
-                                   'port' => $port->pn(),
-                                   'state' => $state]);
+        $row_id = db()->insert('io_events',
+                               ['port_name' => $port->name(),
+                                'mode' => 'in',
+                                'io_name' => $port->board()->name(),
+                                'port' => $port->pn(),
+                                'state' => $state]);
+
+        if ($row_id < 0) {
+            $this->log->err('Can`t insert into io_events table. %s :%s',
+                             $port->str(), $state);
+            return 0;
+        }
 
         $list = [];
         foreach (io_handlers() as $handler) {
@@ -247,7 +261,7 @@ class Board_io {
         $this->ip_addr = conf_io()[$io_name]['ip_addr'];
         $this->tcp_port = conf_io()[$io_name]['tcp_port'];
         $this->io_name = $io_name;
-        $this->log = new Plog(sprintf('sr90:Board_io_%s', $io_name));
+        $this->log = new Plog(sprintf('sr90:%s', $io_name));
 
         $this->ports = [];
         foreach (conf_io()[$io_name]['in'] as $pn => $pname)
@@ -345,12 +359,13 @@ class Board_io {
 
     function trig_all_ports()
     {
-        foreach (conf_io()[$io_name]['in'] as $port_num => $pname) {
-            if (!$pname)
-                continue;
-            $state = iop($pname)->state()[0];
-            io()->trig_event($pname, $state);
-        }
+        foreach (conf_io() as $io_name => $info)
+            foreach ($info['in'] as $port_num => $pname) {
+                if (!$pname)
+                    continue;
+                $state = iop($pname)->state()[0];
+                io()->trig_event(io()->port($pname), $state);
+            }
     }
 }
 
