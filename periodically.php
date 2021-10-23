@@ -238,11 +238,6 @@ function main($argv)
             return -EINVAL;
         }
 
-        if (task_is_paused($tname)) {
-            pnotice("task %s is paused\n", $tname);
-            return 0;
-        }
-
         run_task($tname);
         return 0;
 

@@ -252,6 +252,44 @@ class Io {
 
         return [$tg, $sms];
     }
+
+    private function pid_sequence_file_by_pname($pname) {
+        return sprintf('/tmp/io_sequence_%s_pid', $pname);
+    }
+
+    private function pid_sequence_task($tname) {
+        $fname = $this->pid_sequence_file_by_pname($tname);
+        if (!file_exists($fname))
+            return 0;
+        $pid = file_get_contents($fname);
+        return $pid;
+    }
+
+    function sequnce_start($pname, $sequence)
+    {
+        $pid = $this->pid_sequence_task($pname);
+        if ($pid)
+            return;
+
+        $seq_str = array_to_string($sequence, ' ');
+        $cmd = sprintf("./io_sequencer.sh %s %s \"%s\"",
+                       $this->pid_sequence_file_by_pname($pname),
+                       $pname, $seq_str);
+        dump($cmd);
+        run_cmd($cmd, true, '', false);
+        usleep(500 * 1000);
+        $pid = $this->pid_sequence_task($pname);
+        pnotice("IO sequence task %s/%d started\n", $pname, $pid);
+    }
+
+    function sequnce_stop($pname)
+    {
+        $pid = $this->pid_sequence_task($pname);
+        if (!$pid)
+            return;
+        $pid_file = $this->pid_sequence_file_by_pname($pname);
+        stop_daemon($pid_file);
+    }
 }
 
 

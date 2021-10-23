@@ -376,10 +376,18 @@ class Guard {
             return 'already_stopped';
         }
 
-        if (!$this->test_mode)
+        io()->sequnce_start('guard_lamp',
+                               [500, 500,
+                                500, 500,
+                                500, 500,
+                                500, 500,
+                                500, 500,
+                                500, 500]);
+
+/*        if (!$this->test_mode)
             player_start('sounds/unlock.wav');
         else
-            $this->tg_info('Run sound sounds/unlock.wav');
+            $this->tg_info('Run sound sounds/unlock.wav'); */
 
         $user = user_by_id($user_id);
         $user_name = 'кто-то';
@@ -434,12 +442,16 @@ class Guard {
             return 'already_started';
         }
 
+        io()->sequnce_start('guard_lamp',
+                               [150, 1000,
+                                3000, 1000]);
+
         gates()->close(true);
 
-        if (!$this->test_mode)
+     /*   if (!$this->test_mode)
             player_start('sounds/lock.wav', 55);
         else
-            $this->tg_info('Run sound sounds/lock.wav');
+            $this->tg_info('Run sound sounds/lock.wav');*/
 
         padlocks()->close();
         boiler()->set_room_t(5);
@@ -650,6 +662,13 @@ class Guard {
 
         $this->tg_alarm("!!! Внимание, Тревога !!!\nСработала зона: '%s', событие: %d\n",
                          $zone['desc'], $action_id);
+
+        // run lamp blinks 90 times (90 * 2 = 180)
+        io()->sequnce_stop('guard_lamp');
+        $seq = [];
+        for($i = 0; $i < 180; $i++)
+            $seq[] = ($i % 2) ? 150 : 500;
+        io()->sequnce_start('guard_lamp', $seq);
 
         // send photos
         run_cmd(sprintf("./image_sender.php current %d", tg_admin_chat_id())); // TODO

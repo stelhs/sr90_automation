@@ -51,7 +51,7 @@ function conf_io()
                         4 => 'gates_open_pedestration',
                         5 => 'RP_padlock',
                         6 => 'RP_sockets',
-                        7 => 'RP_exhaust_fan'
+                        7 => 'guard_lamp'
                     ]],
 
         'sbio1' => ['type' => 'sbio',

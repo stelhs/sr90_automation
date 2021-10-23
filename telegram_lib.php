@@ -297,7 +297,7 @@ class Telegram_periodically implements Periodically_events {
     function match_to_cmd($msg, $cmd_list)
     {
 
-        $msg = strtolower(trim($msg));
+        $msg = mb_strtolower(trim($msg));
         foreach ($cmd_list as $cmd) {
             foreach ($cmd['cmd'] as $cmd_text) {
                 if (strstr($msg, $cmd_text)) {
@@ -328,8 +328,8 @@ class Telegram_periodically implements Periodically_events {
         if (!$words)
             return 0;
 
-        $arg1 = strtolower($words[0]);
-        $arg2 = isset($words[1]) ? strtolower($words[1]) : "";
+        $arg1 = mb_strtolower($words[0]);
+        $arg2 = isset($words[1]) ? mb_strtolower($words[1]) : "";
         if ($arg1 != "skynet" && $arg1 != "sky.net" && $arg1 != "скайнет")
             return 0;
 

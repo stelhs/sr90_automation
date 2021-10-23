@@ -5,7 +5,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
-require_once 'board_io_api.php';
+require_once 'io_api.php';
 $app_name = $argv[0];
 
 function print_help()
@@ -24,6 +24,9 @@ function print_help()
 
                  "\t\t trig <in_port_name> <state>: emulate triggering in port\n" .
                  "\t\t\texample: $app_name trig vru_door 0\n" .
+
+                 "\t\t sequence <out_port_name> [interval1] [interval2] [interval3] ...: sequence up/down\n" .
+                 "\t\t\texample: $app_name sequence RP_exhaust_fan 1000 500 1000 500\n" .
 
                  "\t\t wdt_on: enable hardware watchdog\n" .
                  "\t\t wdt_off: disable hardware watchdog\n" .
@@ -119,6 +122,37 @@ function main($argv)
         pnotice("\n%s has triggered for: \n\t%s\n",
                 $port->str(), array_to_string($names, ", "));
         return 0;
+
+    case 'sequence':
+        $pname = $argv[2];
+        $port = io()->port($pname);
+        if (!$port) {
+            perror("Port name '%s' has not registred\n", $port->name());
+            return -EINVAL;
+        }
+
+        $sequence = $argv;
+        unset($sequence[0]);
+        unset($sequence[1]);
+        unset($sequence[2]);
+
+        if (count($sequence) == 1 && $sequence[3] == 0) {
+            iop($pname)->down();
+            return 0;
+        }
+
+        $mode = true;
+        foreach ($sequence as $interval) {
+            if ($mode)
+                iop($pname)->up();
+            else
+                iop($pname)->down();
+            $mode = !$mode;
+            usleep($interval * 1000);
+        }
+        return 0;
+
+
 
     default:
         $pname = $cmd;

@@ -5,8 +5,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 require_once 'common_lib.php';
 require_once 'config.php';
-require_once 'usio_lib.php';
-require_once 'board_io_api.php';
+require_once 'io_api.php';
 require_once 'power_api.php';
 
 

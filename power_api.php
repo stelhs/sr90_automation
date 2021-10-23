@@ -1,7 +1,7 @@
 <?php
 
 require_once 'config.php';
-require_once 'board_io_api.php';
+require_once 'io_api.php';
 require_once 'common_lib.php';
 
 define("UPS_BATT_VOLTAGE_FILE", "/tmp/ups_batt_voltage");
