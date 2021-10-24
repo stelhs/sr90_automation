@@ -17,6 +17,7 @@ define("PID_DIR", '/tmp/');
 define("FAKE_HALT_ALL_SYSTEMS_FILE", "/tmp/halt_all_systems");
 define("TEMPERATURES_FILE", "/tmp/temperatures");
 
+
 $log = new Plog('sr90:common');
 
 interface IO_handler {
@@ -99,6 +100,7 @@ function http_handlers()
 {
     return [new Http_io_handler,
             new Stat_io_handler,
+            new Dbg_io_handler,
             ];
 }
 
@@ -597,6 +599,28 @@ class Stat_io_handler implements Http_handler {
         $stat['batt_info'] = power()->battery_info();
         $stat['status'] = 'ok';
         return json_encode($stat);
+    }
+}
+
+
+class Dbg_io_handler implements Http_handler {
+    function name() {
+        return "dbg";
+    }
+
+    function requests() {
+        return ['/dbg' => ['method' => 'GET',
+                           'handler' => 'dbg',
+                            ]];
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:Test_io_handler');
+    }
+
+    function dbg($args, $from, $request)
+    {
+        return json_encode(['status' => 'ok']);
     }
 }
 

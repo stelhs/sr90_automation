@@ -376,6 +376,8 @@ class Guard {
             return 'already_stopped';
         }
 
+        $this->log->info("Guard call stop throught %s", $method);
+
         io()->sequnce_start('guard_lamp',
                                [500, 500,
                                 500, 500,
@@ -409,9 +411,7 @@ class Guard {
 
         gates()->power_enable();
         gates()->open();
-        gates()->close_after(60);
 
-        $stat_text = skynet_stat_sms();
         $this->log->info("Guard stoped by %s throught %s", $user_name, $method);
 
         $this->tg_info("Охрана отключена, отключил %s с помощью %s.",
@@ -421,7 +421,7 @@ class Guard {
         boiler()->set_room_t(16);
 
         if ($method == 'cli') {
-            pnotice("stat: %s\n", $stat_text);
+            pnotice("stat: %s\n", skynet_stat_sms());
             return 'ok';
         }
 
@@ -441,6 +441,8 @@ class Guard {
             $this->log->info("Guard already started");
             return 'already_started';
         }
+
+        $this->log->info("Guard call start throught %s", $method);
 
         io()->sequnce_start('guard_lamp',
                                [150, 1000,
