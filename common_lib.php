@@ -410,7 +410,7 @@ class Common_sms_events implements Sms_events {
 
 class Temperatures_cron_events implements Cron_events {
     function name() {
-        return "temparatures";
+        return "temperatures";
     }
 
     function interval() {
@@ -470,7 +470,7 @@ class Temperatures_cron_events implements Cron_events {
         db()->query('delete from termo_sensors_log where ' .
                     'created < (now() - interval 12 month)');
 
-        $termo_sensors = termosensors();
+        $termo_sensors = io()->termosensors();
 
         $temperature_stat = [];
         foreach ($termo_sensors as $sensor) {

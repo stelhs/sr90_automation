@@ -70,6 +70,7 @@ function main($argv) {
         if ($handler->interval() != $interval)
             continue;
 
+
         pnotice("run handler: %s\n", $handler->name());
         $handler->do();
     }
