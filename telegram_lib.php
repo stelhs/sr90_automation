@@ -144,10 +144,36 @@ class Telegram_notifier {
         return $list;
     }
 
+    function buffered_msg_file($chat_id) {
+        return sprintf("/tmp/telegram_last_msg_%d", $chat_id);
+    }
+
+    function buffered_msg_file_cnt($chat_id) {
+        return sprintf("/tmp/telegram_last_msg_cnt_%d", $chat_id);
+    }
+
+    function flush_beffered_msg($chat_id) {
+        $last_msg_file = $this->buffered_msg_file($chat_id);
+        $last_msg_cnt_file = $this->buffered_msg_file_cnt($chat_id);
+
+        if (!file_exists($last_msg_file))
+            return '';
+
+        $last_msg = file_get_contents($last_msg_file);
+        $cnt = file_get_contents($last_msg_cnt_file);
+
+        $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s\n",
+                            $cnt, $last_msg);
+
+        unlink_safe($last_msg_file);
+        unlink_safe($last_msg_cnt_file);
+        return $ret_msg;
+    }
+
     function buffering_msg($chat_id, $msg)
     {
-        $last_msg_file = sprintf("/tmp/telegram_last_msg_%d", $chat_id);
-        $last_msg_cnt_file = sprintf("/tmp/telegram_last_msg_cnt_%d", $chat_id);
+        $last_msg_file = $this->buffered_msg_file($chat_id);
+        $last_msg_cnt_file = $this->buffered_msg_file_cnt($chat_id);
 
         if (!file_exists($last_msg_file)) {
             file_put_contents($last_msg_file, $msg);
@@ -168,9 +194,8 @@ class Telegram_notifier {
             return NULL;
         }
 
-        $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s\n\n" .
-                           "Новое сообщение:\n%s",
-                            $cnt, $last_msg, $msg);
+        $ret_msg = sprintf("%s\nНовое сообщение:\n%s",
+                           $this->flush_beffered_msg($chat_id), $msg);
 
         file_put_contents($last_msg_file, $msg);
         file_put_contents($last_msg_cnt_file, 1);
@@ -361,6 +386,10 @@ class Telegram_periodically implements Periodically_events {
 
         foreach ($list_msg as $msg) {
             $text = $msg['text'];
+
+            $flushed_msg = tn()->flush_beffered_msg($msg['chat_id']);
+            tn()->send($msg['chat_id'], 0, $flushed_msg);
+
             $text = $this->do_parse($text, $msg['chat_id'], $msg['msg_id']);
             if (!$text)
                 continue;
