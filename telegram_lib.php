@@ -33,7 +33,7 @@ class Telegram_api {
             )
         );
         $context = stream_context_create($options);
-        @$result = file_get_contents($full_url, false, $context);
+        $result = file_get_contents_safe($full_url, false, $context);
         if ($result == FALSE) {
             $this->log->err("post_request(): Can't make POST request");
             return -EPARSE;

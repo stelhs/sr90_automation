@@ -239,6 +239,19 @@ function skynet_stat_telegram()
 }
 
 
+function file_get_contents_safe($f) {
+    $h = function ($errno, $str, $file, $line) use($f) {
+        $text = sprintf("Error: %s\n", $str);
+        plog(LOG_ERR, sprintf('sr90:file_get_contents_safe("%s")', $f), $text);
+    };
+
+    set_error_handler($h);
+    $c = file_get_contents($f);
+    restore_error_handler();
+    return $c;
+}
+
+
 function errno_to_str($errno)
 {
     $level = '';
@@ -405,7 +418,6 @@ class Common_sms_events implements Sms_events {
     {
         modem3g()->send_sms($phone, skynet_stat_sms());
     }
-
 }
 
 
@@ -428,7 +440,7 @@ class Temperatures_cron_events implements Cron_events {
             if ($io_name == 'usio1')
                 continue;
 
-            @$content = file_get_contents(sprintf('http://%s:%d/stat',
+            @$content = file_get_contents_safe(sprintf('http://%s:%d/stat',
                                          $io_data['ip_addr'], $io_data['tcp_port']));
             if ($content === FALSE) {
                 tn()->send_to_admin("Сбой связи с модулем %s", $io_name);
@@ -529,11 +541,11 @@ class Cryptocurrancy_cron_events implements Cron_events {
             if (!file_exists($filename))
                 continue;
 
-            @$threshold = (float)(file_get_contents($filename));
+            $threshold = (float)(file_get_contents($filename));
             if (!$threshold)
                 continue;
 
-            @$info = json_decode(file_get_contents(
+            $info = json_decode(file_get_contents_safe(
                                  sprintf("https://api.binance.com/api/v3/ticker/price?symbol=%sUSDT", $coin)), true);
             if (!is_array($info))
                 continue;
@@ -552,11 +564,11 @@ class Cryptocurrancy_cron_events implements Cron_events {
             if (!file_exists($filename))
                 continue;
 
-            @$threshold = (float)(file_get_contents($filename));
+            $threshold = (float)(file_get_contents($filename));
             if (!$threshold)
                 continue;
 
-            @$info = json_decode(file_get_contents(
+            $info = json_decode(file_get_contents_safe(
                                  sprintf("https://api.binance.com/api/v3/ticker/price?symbol=%sUSDT", $coin)), true);
             if (!is_array($info))
                 continue;

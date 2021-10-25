@@ -29,7 +29,7 @@ class Boiler {
         $http_request = sprintf("http://%s:%d/boiler",
                                 conf_boiler()['ip'],
                                 conf_boiler()['port']);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content)
             return -1;
 
@@ -51,7 +51,7 @@ class Boiler {
         $http_request = sprintf("http://%s:%d/boiler/reset_stat",
                                 conf_boiler()['ip'],
                                 conf_boiler()['port']);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content) {
             $this->log->err("Can't reset stat. http_request = %s", $http_request);
             return -1;
@@ -71,7 +71,7 @@ class Boiler {
         $http_request = sprintf("http://%s:%d/boiler/start",
                                 conf_boiler()['ip'],
                                 conf_boiler()['port']);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content) {
             $this->log->err("Can't start. http request failed: %s", $http_request);
             return -1;
@@ -102,7 +102,7 @@ class Boiler {
         $http_request = sprintf("http://%s:%d/boiler/stop",
                                 conf_boiler()['ip'],
                                 conf_boiler()['port']);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content) {
             $this->log->err("Can't stop. http request failed: %s", $http_request);
             return -1;
@@ -133,7 +133,7 @@ class Boiler {
                                 conf_boiler()['ip'],
                                 conf_boiler()['port'],
                                 $t);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content) {
             $this->log->err("Can't set_room_t(). http request failed: %s", $http_request);
             return -1;

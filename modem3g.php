@@ -29,7 +29,7 @@ class Modem3G {
             )
         );
         $context = stream_context_create($options);
-        @$result = file_get_contents($full_url, false, $context);
+        @$result = file_get_contents_safe($full_url, false, $context);
         if ($result == FALSE) {
             $this->log->err("Can't make post_request()");
             return -EPARSE;
@@ -43,7 +43,7 @@ class Modem3G {
     {
         $full_url = 'http://' . $this->ip_addr . $url;
 
-        @$result = file_get_contents($full_url);
+        $result = file_get_contents_safe($full_url);
         if ($result == FALSE) {
             $this->log->err("Can't make GET request()");
             return -EPARSE;

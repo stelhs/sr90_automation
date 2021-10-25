@@ -427,7 +427,7 @@ class Sbio extends Board_io {
                                 $this->tcp_port,
                                 $cmd,
                                 $query);
-        $content = file_get_contents($http_request);
+        $content = file_get_contents_safe($http_request);
         if (!$content) {
             $this->log->err("Null bytes received from addr: %s", $http_request);
             return ['status' => 'error',
@@ -506,7 +506,7 @@ class Sbio extends Board_io {
         $request = sprintf("http://%s:%d/reboot",
                            $this->ip_addr,
                            $this->tcp_port);
-        $content = file_get_contents($request);
+        $content = file_get_contents_safe($request);
         if (!$content) {
             $this->log->err("can't HTTP request %s\n", $request);
             return ['status' => 'error',
@@ -754,7 +754,7 @@ class Boards_io_cron_events implements Cron_events {
             if ($io_name == 'usio1')
                 continue;
 
-            @$content = file_get_contents(sprintf('http://%s:%d/stat',
+            @$content = file_get_contents_safe(sprintf('http://%s:%d/stat',
                                          $io_data['ip_addr'], $io_data['tcp_port']));
             if ($content === FALSE) {
                 tn()->send_to_admin("Сбой связи с модулем %s", $io_name);

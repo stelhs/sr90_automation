@@ -207,7 +207,7 @@ class Guard {
 
     function send_current_photos_to_telegram($chat_id = 0)
     {
-        $content = file_get_contents('http://sr38.org/plato/?no_view');
+        $content = file_get_contents_safe('http://sr38.org/plato/?no_view');
         $ret = json_decode($content, true);
         if ($ret === NULL) {
             $this->tg_info("Не удалось получить изображение с камер: %s",

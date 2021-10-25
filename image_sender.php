@@ -6,6 +6,7 @@ require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
+require_once 'common_lib.php';
 require_once 'modem3g.php';
 require_once 'telegram_lib.php';
 
@@ -52,7 +53,7 @@ function main($argv)
 
     case 'current':
         $chat_id = isset($argv[2]) ? $argv[2] : 0;
-        $content = file_get_contents('http://sr38.org/plato/?no_view');
+        $content = file_get_contents_safe('http://sr38.org/plato/?no_view');
         $ret = json_decode($content, true);
         if ($ret === NULL) {
             $rc = -1;

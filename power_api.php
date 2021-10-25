@@ -283,7 +283,7 @@ class Ups_batterry_periodically implements Periodically_events {
                     'current' => $current];
         }
 
-        $content = file_get_contents(sprintf("http://%s:%d/battery",
+        $content = file_get_contents_safe(sprintf("http://%s:%d/battery",
             conf_io()['sbio1']['ip_addr'],
             conf_io()['sbio1']['tcp_port']));
         if (!$content)
