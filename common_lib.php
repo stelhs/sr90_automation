@@ -71,6 +71,7 @@ function cron_handlers()
             new Guard_cron_events,
             new Lighting_cron_events,
             new Well_pump_cron_events,
+            new Check_sys_cron_events,
             ];
 }
 
@@ -567,6 +568,31 @@ class Cryptocurrancy_cron_events implements Cron_events {
             tn()->send_to_admin($msg);
             file_put_contents($filename, "");
         }
+    }
+}
+
+
+class Check_sys_cron_events implements Cron_events {
+    function name() {
+        return "common";
+    }
+
+    function interval() {
+        return "hour";
+    }
+
+    function do()
+    {
+        $msg = '';
+        if (DISABLE_HW)
+            $msg .= sprintf("DISABLE_HW\n");
+
+        if(file_exists('GUARD_TESTING'))
+            $msg .= sprintf("GUARD_TESTING\n");
+
+        if(file_exists('HIDE_TELEGRAM'))
+            $msg .= sprintf("HIDE_TELEGRAM\n");
+        tn()->send_to_admin($msg);
     }
 }
 
