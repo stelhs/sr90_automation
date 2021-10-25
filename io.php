@@ -169,7 +169,7 @@ function main($argv)
                     return;
                 }
                 pnotice("%s set to 1\n", $port->str());
-                return $port->up();
+                return $port->up()[0];
 
             case 'down':
                 if ($port->mode() != 'out') {
@@ -177,7 +177,7 @@ function main($argv)
                     return;
                 }
                 pnotice("%s set to 0\n", $port->str());
-                return $port->down();
+                return $port->down()[0];
 
             default:
                 $s = $port->state()[0];
@@ -276,8 +276,5 @@ function main($argv)
 }
 
 
-$rc = main($argv);
-if ($rc) {
+exit(main($argv));
 
-    exit($rc);
-}

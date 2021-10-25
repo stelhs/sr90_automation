@@ -6,7 +6,6 @@ require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
 require_once 'io_api.php';
-require_once 'sequencer_lib.php';
 require_once 'common_lib.php';
 require_once 'well_pump_api.php';
 

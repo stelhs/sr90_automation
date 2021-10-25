@@ -242,7 +242,7 @@ function skynet_stat_telegram()
 function file_get_contents_safe($f) {
     $h = function ($errno, $str, $file, $line) use($f) {
         $text = sprintf("Error: %s\n", $str);
-        plog(LOG_ERR, sprintf('sr90:file_get_contents_safe("%s")', $f), $text);
+        plog(LOG_ERR, sprintf('sr90:common'), $text);
     };
 
     set_error_handler($h);

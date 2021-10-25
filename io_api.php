@@ -95,7 +95,7 @@ class Io {
         if (!isset($conf[$io_name][$mode][$pn]))
             return NULL;
 
-        return $this->port(conf_io()[$io_name][$mode][$pn]);
+        return $this->board($io_name)->ports($mode)[$pn];
     }
 
 
@@ -323,16 +323,13 @@ class Board_io {
     function ports($mode = NULL) {
         $list = [];
         foreach ($this->ports as $port) {
-            if (!$port->name())
-                continue;
-
             if ($mode) {
                 if ($port->mode() == $mode)
-                    $list[] = $port;
+                    $list[$port->pn()] = $port;
                 continue;
             }
 
-            $list[] = $port;
+            $list[$port->pn()] = $port;
         }
         return $list;
     }

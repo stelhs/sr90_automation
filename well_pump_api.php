@@ -9,8 +9,7 @@ define("WELL_PUMP_TIME_FILE", "/tmp/well_pump_time");
 class Well_pump {
     private $log;
 
-    function __construct()
-    {
+    function __construct() {
         $this->log = new Plog('sr90:Well_pump');
     }
 
@@ -64,7 +63,7 @@ class Well_pump_io_handler implements IO_handler {
         $duration = $stat['duration'];
         if (!$duration) {
             well_pump()->start();
-            tn()->send_to_admin("Подача воды включена");
+            well_pump()->log->info("Water pump enabled\n");
             return;
         }
 
@@ -72,7 +71,7 @@ class Well_pump_io_handler implements IO_handler {
             return;
 
         well_pump()->stop();
-        tn()->send_to_admin("Подача воды отключена");
+        well_pump()->log->info("Water pump disabled\n");
     }
 }
 

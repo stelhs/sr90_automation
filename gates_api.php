@@ -186,7 +186,6 @@ class Gates_io_handler implements IO_handler {
         if (gates()->is_closed()) {
             unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             $rc = gates()->open();
-            tn()->send_to_admin("Ворота открываются");
             $this->log->info("gates opening");
             if ($rc)
                 tn()->send_to_admin("Ворота не открылись, видимо нет питания");
@@ -195,7 +194,6 @@ class Gates_io_handler implements IO_handler {
 
         if (!file_exists(GATES_REMOTE_BUTTON_REVERSE)) {
             $rc = gates()->close();
-            tn()->send_to_admin("Ворота закрываются");
             $this->log->info("gates closing");
             if ($rc)
                 tn()->send_to_admin("Ворота не закрылись, причина: %s", $rc);
@@ -204,7 +202,6 @@ class Gates_io_handler implements IO_handler {
         }
 
         $rc = gates()->open();
-        tn()->send_to_admin("Ворота открываются");
         $this->log->info("gates opening");
         if ($rc)
             tn()->send_to_admin("Ворота не открылись, видимо нет питания");
@@ -215,20 +212,18 @@ class Gates_io_handler implements IO_handler {
     function gates_closed($pname, $state)
     {
         if ($state) {
-            $msg = "Ворота закрылись";
             unlink_safe(GATES_WAIT_FOR_CLOSED);
             if (file_exists(GATES_AUTO_POWER_DISABLE)) {
                 gates()->power_disable();
                 unlink_safe(GATES_AUTO_POWER_DISABLE);
-                $msg .= ", питание ворот отключено";
-                tn()->send_to_msg($msg);
+                tn()->send_to_msg("Ворота закрылись, питание ворот отключено");
                 return;
             }
-            tn()->send_to_admin($msg);
+            $this->log->info("gates closed");
             return;
         }
-        tn()->send_to_admin("Ворота открылись");
-    }
+        $this->log->info("gates opening");
+   }
 }
 
 
