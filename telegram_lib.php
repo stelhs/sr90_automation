@@ -24,6 +24,7 @@ class Telegram_api {
 
         $query = http_build_query($params);
 
+
         $options = array(
             'http' => array(
                 'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
@@ -34,8 +35,8 @@ class Telegram_api {
         );
         $context = stream_context_create($options);
         $result = file_get_contents_safe($full_url, false, $context);
-        if ($result == FALSE) {
-            $this->log->err("post_request(): Can't make POST request");
+        if ($result === FALSE) {
+            $this->log->err("Can't make POST request");
             return -EPARSE;
         }
 
@@ -104,7 +105,7 @@ class Telegram_api {
 
         $resp = $this->post_request('sendMessage', $params);
         if (!is_array($resp)) {
-            $this->log->err("Can't make POST request for send %s\n", $resp);
+            $this->log->err("Can't make POST request for send. resp = %s\n", $resp);
             return $resp;
         }
 
@@ -291,8 +292,10 @@ class Telegram_notifier {
         if (!$list_msg)
             return NULL;
 
-        foreach ($list_msg as $msg)
+        foreach ($list_msg as $msg) {
+            $msg['text'] = addslashes($msg['text']);
             db()->insert('telegram_msg', $msg);
+        }
 
         $this->save_last_rx_update_id($msg['update_id']);
         return $list_msg;

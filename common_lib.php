@@ -239,14 +239,17 @@ function skynet_stat_telegram()
 }
 
 
-function file_get_contents_safe($f) {
-    $h = function ($errno, $str, $file, $line) use($f) {
+function file_get_contents_safe(
+        $filename,
+        $use_include_path = false,
+        $context = NULL) {
+    $h = function ($errno, $str, $file, $line) use($filename) {
         $text = sprintf("Error: %s\n", $str);
         plog(LOG_ERR, sprintf('sr90:common'), $text);
     };
 
     set_error_handler($h);
-    $c = file_get_contents($f);
+    $c = file_get_contents($filename, $use_include_path, $context);
     restore_error_handler();
     return $c;
 }
