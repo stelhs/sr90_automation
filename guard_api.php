@@ -168,103 +168,6 @@ class Guard {
         return null;
     }
 
-    function make_alarm_photos($alarm_id)
-    {
-        $rc = 0;
-        foreach (conf_guard()['video_cameras'] as $cam) {
-            $cmd = sprintf('ffmpeg -f video4linux2 -i %s -vf scale=%s -vframes 1 %s/%scam_%d.jpeg',
-                           $cam['v4l_dev'], $cam['resolution'],
-                           conf_guard()['alarm_snapshot_dir'], $alarm_id, $cam['id']);
-            $ret = run_cmd($cmd);
-            if ($ret['rc']) {
-                $this->log->err("Can't create screenshot for camera %d %s: cmd='%s' response:, %s",
-                                $cam['id'], $cam['v4l_dev'], $cmd, $ret['log']);
-            }
-            $rc |= $ret['rc'];
-        }
-        return $rc;
-    }
-
-
-    function send_alarm_photos_to_sr38($alarm_id)
-    {
-        $ret = run_cmd(sprintf('scp %s/%d_*.jpeg stelhs@sr38.org:/storage/www/plato/alarm_img/',
-                       conf_guard()['alarm_snapshot_dir'], $alarm_id));
-        if ($ret['rc'])
-            $this->log->err("Error occured during alarm cam photos sending: %s",
-                            $ret['log']);
-        return $ret['rc'];
-    }
-
-
-    function send_alarm_photos_to_telegram($alarm_id)
-    {
-        foreach (conf_guard()['video_cameras'] as $cam) {
-            $this->tg_alarm("Камера %d:\n http://sr38.org/plato/alarm_img/%d_cam_%d.jpeg",
-                             $cam['id'], $alarm_id, $cam['id']);
-        }
-    }
-
-    function send_current_photos_to_telegram($chat_id = 0)
-    {
-        $content = file_get_contents_safe('http://sr38.org/plato/?no_view');
-        $ret = json_decode($content, true);
-        if ($ret === NULL) {
-            $this->tg_info("Не удалось получить изображение с камер: %s",
-                            $content);
-            $this->log->err("can't getting current photos\n");
-            return;
-        }
-        $photos = $ret;
-
-        foreach ($photos as $cam_num => $file) {
-            $msg = sprintf("Камера %d:\n %s", $cam_num, $file);
-            if ($chat_id) {
-                telegram()->send_message($chat_id, $msg);
-                continue;
-            }
-            $this->tg_info($msg);
-        }
-    }
-
-    function upload_cam_video($cam, $server_dir, $start_time, $duration, $prefix = "")
-    {
-        $server_files = [];
-
-        $video_files = avreg()->video_files($start_time, $duration, $cam['name']);
-        if (!$video_files || !count($video_files)) {
-            $msg = sprintf("Неудалось получить видеофайлы для камеры %s",
-                           $cam['name']);
-            tn()->send_to_admin($msg);
-            $this->log->err("Can't get videos for camera %s\n", $cam['name']);
-            return -1;
-        }
-        $cnt = 0;
-        foreach ($video_files as $file) {
-            $cnt ++;
-            if ($cnt > 15) {
-                $this->log->err("To many video files for send\n");
-                return -1;
-            }
-            $server_filename = sprintf("%s_%d_%s", $prefix, $cam['id'], basename($file['file']));
-
-            $cmd = sprintf('scp %s stelhs@sr38.org:/storage/www/plato/%s/%s',
-                           $file['file'], $server_dir, $server_filename);
-            $ret = run_cmd($cmd);
-            if ($ret['rc']) {
-                $msg = sprintf("Неудалось загрузить видеофайл %s для камеры %s: %s",
-                               $file['file'], $cam['name'], $ret['log']);
-                tn()->send_to_admin($msg);
-                $this->log->err("Can't upload videos for camera %s: %s\n", $cam['name'], $ret['log']);
-                continue;
-            }
-
-            $server_files[] = sprintf("http://sr38.org/plato/%s/%s",
-                                      $server_dir, $server_filename);
-        }
-        return $server_files;
-    }
-
     function stoped_timestamp()
     {
         $row = db()->query("SELECT UNIX_TIMESTAMP(created) as timestamp " .
@@ -371,6 +274,7 @@ class Guard {
 
     function stop($method, $user_id = 0, $with_sms = false)
     {
+        $event_time = time() - 1;
         if ($this->state() == 'sleep') {
             $this->log->info("Guard already stopped");
             return 'already_stopped';
@@ -416,7 +320,8 @@ class Guard {
 
         $this->tg_info("Охрана отключена, отключил %s с помощью %s.",
                         $user_name, $method);
-        $this->send_current_photos_to_telegram();
+        tn()->send_to_alarm("%s?time_position=%s",
+                            conf_dvr()['site'], $event_time);
 
         boiler()->set_room_t(16);
 
@@ -437,6 +342,7 @@ class Guard {
 
     function start($method, $user_id = 0, $with_sms = false)
     {
+        $event_time = time() - 1;
         if ($this->state() == 'ready') {
             $this->log->info("Guard already started");
             return 'already_started';
@@ -500,7 +406,10 @@ class Guard {
         $this->log->info("Guard started by %s throught %s", $user_name, $method);
         $this->tg_info("Охрана включена, включил %s с помощью %s.",
                         $user_name, $method);
-        $this->send_current_photos_to_telegram();
+
+        tn()->send_to_alarm("%s?time_position=%s",
+                            conf_dvr()['site'], $event_time);
+
         if ($method == 'cli') {
             pnotice("stat: %s\n", $stat_text);
             return 'ok';
@@ -565,6 +474,7 @@ class Guard {
 
     function sensor_handler($port, $state)
     {
+        $event_time = time() - 1;
         // ignore sensors if guard stopped
         if ($this->state() == 'sleep')
             return;
@@ -614,7 +524,8 @@ class Guard {
                 $port->name(), $zone['desc']);
             $this->tg_info($msg);
 
-            run_cmd(sprintf("./image_sender.php current %d", tg_admin_chat_id())); // TODO
+            tn()->send_to_admin("Видео с привязкой ко времени: %s?time_position=%s",
+                                conf_dvr()['site'], $event_time);
             return;
         }
 
@@ -672,37 +583,16 @@ class Guard {
             $seq[] = ($i % 2) ? 150 : 500;
         io()->sequnce_start('guard_lamp', $seq);
 
-        // send photos
-        run_cmd(sprintf("./image_sender.php current %d", tg_admin_chat_id())); // TODO
-        //$this->send_alarm_photos_to_sr38($action_id);
-        //$this->send_alarm_photos_to_telegram($action_id);
-
         // send videos
+        tn()->send_to_alarm("Видео сработки с привязкой ко времени: %s?time_position=%s",
+                            conf_dvr()['site'], $event_time);
+
         $row = db()->query('SELECT UNIX_TIMESTAMP(created) as timestamp ' .
                            'FROM guard_alarms WHERE id = ' . $action_id);
         if ($row < 0)
             $this->log->err("Can't MySQL query\n");
 
         $alarm_timestamp = $row['timestamp'];
-
-        if (!DISABLE_HW) {
-            $this->tg_alarm("Загружаю видео файлы по событию %d, ожидайте...", $action_id);
-            foreach(conf_guard()['video_cameras'] as $cam) {
-                $server_video_urls = $this->upload_cam_video($cam, 'alarm_video',
-                                                             $alarm_timestamp - 10, 20,
-                                                             $action_id);
-                if (!is_array($server_video_urls))
-                    continue;
-                $msg = "";
-                foreach($server_video_urls as $url)
-                    $msg .= sprintf("Видео запись события %d: Камера %d:\n %s\n",
-                                    $action_id, $cam['id'], $url);
-
-                if ($msg)
-                    $this->tg_alarm($msg);
-            }
-            $this->tg_alarm("Процесс загрузки видео по событию %d завершен", $action_id);
-        }
 
         if (!$this->test_mode)
             modem3g()->send_sms_alarm("Сработала сигнализация! зона %s", $zone['desc']);

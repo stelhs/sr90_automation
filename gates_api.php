@@ -111,7 +111,7 @@ class Gates {
                          "Ворота %s\n",
                          ($s['power'] == "enabled") ? 'присутствует' : 'отсутствует',
                          ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
-        $sms .= sprintf("ворота %s\n", ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
+        $sms .= sprintf("ворота %s", ($s['gates'] == "closed") ? 'закрыты' : 'открыты');
         return [$tg, $sms];
     }
 

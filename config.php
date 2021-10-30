@@ -2,6 +2,8 @@
 require_once '/usr/local/lib/php/common.php';
 require_once '/usr/local/lib/php/os.php';
 
+require_once 'config_dvr.php';
+
 define("CONFIG_PATH", "/etc/sr90_automation/");
 
 if (is_file('DISABLE_HW'))
@@ -270,34 +272,8 @@ function conf_guard()
         ],
 
         'ready_set_interval' => 30, /* in seconds */
-        'light_ready_timeout' => 30 * 60, /* in seconds */
-        'light_sleep_timeout' => 30 * 60, /* in seconds */
-        'alarm_snapshot_dir' => '/storage/sr90_automation/images/alarm_actions',
-        'sensor_snapshot_dir' => '/storage/sr90_automation/images/sensor_actions',
-        'video_cameras' => [
-                            ['id' => 1,
-                             'name' => "01-Kamera_1",
-                             'v4l_dev' => '/dev/video14',
-                             'resolution' => '1920:1080'],
-
-                             ['id' => 2,
-                             'name' => "02-Kamera_2",
-                             'v4l_dev' => '/dev/video15',
-                             'resolution' => '1920:1080'],
-
-                             ['id' => 3,
-                             'name' => "03-Kamera_3",
-                             'v4l_dev' => '/dev/video16',
-                             'resolution' => '1920:1080'],
-
-                            ['id' => 4,
-                             'name' => "04-Kamera_4",
-                             'v4l_dev' => '/dev/video17',
-                             'resolution' => '1280:1024']
-                            ],
     ];
 }
-
 
 function conf_termo_sensors()
 {
@@ -314,6 +290,7 @@ function conf_termo_sensors()
             '28-012033e45839' => 'в радиаторах отопления',
     ];
 }
+
 
 function conf_modem()
 {

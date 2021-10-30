@@ -17,6 +17,9 @@ function print_help()
              "\tcommands:\n" .
 
              "\t\tmin [task_name] - Run all or specific 'min' tasks\n" .
+             "\t\t5min [task_name] - Run all or specific '5min' tasks\n" .
+             "\t\t15min [task_name] - Run all or specific '15min' tasks\n" .
+             "\t\t30min [task_name] - Run all or specific '30min' tasks\n" .
              "\t\thour [task_name] - Run all or specific 'hour' tasks\n" .
              "\t\tday [task_name] - Run all or specific 'day' tasks\n" .
 
@@ -47,6 +50,9 @@ function main($argv) {
 
     switch ($interval) {
     case "min":
+    case "5min":
+    case "15min":
+    case "30min":
     case "hour":
     case "day":
         break;

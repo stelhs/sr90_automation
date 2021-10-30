@@ -10,6 +10,7 @@ require_once 'boiler_api.php';
 require_once 'gates_api.php';
 require_once 'guard_api.php';
 require_once 'power_api.php';
+require_once 'dvr_api.php';
 
 
 define("PID_DIR", '/tmp/');
@@ -72,6 +73,7 @@ function cron_handlers()
             new Lighting_cron_events,
             new Well_pump_cron_events,
             new Check_sys_cron_events,
+            new Dvr_cron_events,
             ];
 }
 
@@ -202,6 +204,7 @@ function skynet_stat_sms()
              'Питание' => power(),
              'Дизельный котёл' => boiler(),
              'Ворота' => gates(),
+             'Видеокамеры' => dvr(),
             ];
 
     $text = '';
@@ -226,6 +229,7 @@ function skynet_stat_telegram()
              'Питание' => power(),
              'Дизельный котёл' => boiler(),
              'Ворота' => gates(),
+             'Видеокамеры' => dvr(),
             ];
 
     $text = '';
@@ -350,10 +354,12 @@ class Common_tg_events implements Tg_skynet_events {
 
     function status($chat_id, $msg_id, $user_id, $arg, $text)
     {
+        $event_time = time();
         tn()->send($chat_id, $msg_id, 'делаю...');
         $stat_text = skynet_stat_telegram();
+        $stat_text .= sprintf("%s?time_position=%s\n",
+                            conf_dvr()['site'], $event_time);
         tn()->send($chat_id, $msg_id, $stat_text);
-        run_cmd(sprintf("./image_sender.php current %d", $chat_id));
     }
 
     function tell($chat_id, $msg_id, $user_id, $arg, $text)

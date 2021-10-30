@@ -163,8 +163,8 @@ class Telegram_notifier {
         $last_msg = file_get_contents($last_msg_file);
         $cnt = file_get_contents($last_msg_cnt_file);
 
-        $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s\n",
-                            $cnt, $last_msg);
+        $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s, len = %d\n",
+                            $cnt, $last_msg, strlen($last_msg));
 
         unlink_safe($last_msg_file);
         unlink_safe($last_msg_cnt_file);
@@ -208,6 +208,10 @@ class Telegram_notifier {
         $argv = func_get_args();
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
+        if (!$msg) {
+            $this->log->err("send to admin empty message");
+            return;
+        }
 
         $chat_list = $this->chats('admin');
         foreach ($chat_list as $chat) {
@@ -222,6 +226,11 @@ class Telegram_notifier {
         $argv = func_get_args();
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
+
+        if (!$msg) {
+            $this->log->err("send to alarm empty message");
+            return;
+        }
 
         if ($this->hide) {
             $this->send_to_admin($msg);
@@ -241,6 +250,11 @@ class Telegram_notifier {
         $argv = func_get_args();
         $format = array_shift($argv);
         $msg = vsprintf($format, $argv);
+
+        if (!$msg) {
+            $this->log->err("send to msg empty message");
+            return;
+        }
 
         if ($this->hide) {
             $this->send_to_admin($msg);

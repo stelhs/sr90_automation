@@ -147,7 +147,7 @@ function main($argv)
             pnotice("\t%s : %s +%d\n", $handler->name(),
                 $info->getFileName(), $info->getStartLine());
             foreach ($handler->cmd_list() as $cmd)
-                pnotice("\t\t%s - %s\n", $cmd['method'], $cmd['cmd'][0]);
+                pnotice("\t\t%s() - %s\n", $cmd['method'], $cmd['cmd'][0]);
             pnotice("\n");
         }
         break;
