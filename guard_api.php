@@ -7,7 +7,6 @@ require_once 'modem3g.php';
 require_once 'padlock_api.php';
 require_once 'lighters_api.php';
 require_once 'well_pump_api.php';
-require_once 'avreg_lib.php';
 require_once 'player_lib.php';
 
 class Guard {
@@ -320,8 +319,8 @@ class Guard {
 
         $this->tg_info("Охрана отключена, отключил %s с помощью %s.",
                         $user_name, $method);
-        tn()->send_to_alarm("%s?time_position=%s",
-                            conf_dvr()['site'], $event_time);
+        tn()->send_to_msg("%s?time_position=%s",
+                          conf_dvr()['site'], $event_time);
 
         boiler()->set_room_t(16);
 
@@ -407,8 +406,8 @@ class Guard {
         $this->tg_info("Охрана включена, включил %s с помощью %s.",
                         $user_name, $method);
 
-        tn()->send_to_alarm("%s?time_position=%s",
-                            conf_dvr()['site'], $event_time);
+        tn()->send_to_msg("%s?time_position=%s",
+                          conf_dvr()['site'], $event_time);
 
         if ($method == 'cli') {
             pnotice("stat: %s\n", $stat_text);

@@ -3,8 +3,9 @@
 function conf_dvr()
 {
     return ['video_file_duration' => 60,
+            'min_file_size' => 10*1024*1024,
 
-            'storage' => ['dir' => '/storage/video-archive',
+            'storage' => ['dir' => '/storage/video-archive/',
                           'max_size_gb' => 700],
 
             'site' => 'http://sr38.org:3080/dvr',

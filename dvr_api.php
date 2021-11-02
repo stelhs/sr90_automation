@@ -126,6 +126,10 @@ class Camera {
         return sprintf('%s.camera_%s_pid', PID_DIR, $this->cname);
     }
 
+    function restart_file_name() {
+        return sprintf('%s.camera_%s_started', PID_DIR, $this->cname);
+    }
+
     function pid() {
         $fname = $this->pid_file_name($this->cname);
         if (!file_exists($fname))
@@ -142,11 +146,17 @@ class Camera {
             return;
         }
 
-        $cmd = sprintf("./cam_rec.sh %s '/usr/local/bin/openRTSP -K -b 1000000 -4 -P %d -c -t -f 25 " .
+        file_put_contents($this->restart_file_name(), '');
+
+        $cmd = sprintf("./cam_rec.sh %s %s '/usr/local/bin/openRTSP " .
+                       "-D 20 -K -b 1000000 -4 -P %d -c -t -f 25 " .
                        "-F %s -N %s -j %s %s'",
-                       $this->pid_file_name(), $this->file_duration,
+                       $this->pid_file_name(),
+                       $this->restart_file_name(),
+                       $this->file_duration,
                        $this->rec_dir, $this->cname,
                        $this->pid_file_name(), $this->rtsp);
+
         run_cmd($cmd, true, '', false);
         $this->log->info("camera '%s' recording has started", $this->cname);
     }
@@ -157,6 +167,7 @@ class Camera {
                             "Recording already was stopped.\n", $this->cname);
             return;
         }
+        unlink_safe($this->restart_file_name());
         run_cmd(sprintf('kill %d', $this->pid()));
         $this->log->info("camera '%s' recording has stopped", $this->cname);
     }
@@ -230,16 +241,49 @@ class Dvr_cron_events implements Cron_events {
     }
 
     function do() {
-        $this->do_check();
+        $this->do_check_recording();
+        $this->do_check_file_size();
         $this->do_remove();
     }
 
-    function do_check()
+    function do_check_recording()
     {
         foreach (dvr()->cams() as $cam) {
             if ($cam->is_recording())
                 continue;
-            tn()->send_to_admin("Запись камеры '%s' прервана");
+//            $cam->start();
+            tn()->send_to_admin("Запись камеры '%s' остановлена", $cam->name());
+        }
+    }
+
+    function do_check_file_size()
+    {
+        $rows = db()->query_list('select * from videos where file_size is not null ' .
+                                 'and file_size < %d', conf_dvr()['min_file_size']);
+        if ($rows == NULL)
+            return;
+
+        if (!is_array($rows) or $rows < 0) {
+            $this->log->err("Can't select from videos for check file size");
+            return;
+        }
+
+        $cams = [];
+        foreach ($rows as $row) {
+            if (!isset($cams[$row['cam_name']]))
+                $cams[$row['cam_name']] = 0;
+            $cams[$row['cam_name']]++;
+            unlink(conf_dvr()['storage']['dir'] . $row['fname']);
+            db()->query('delete from videos where id = %d', $row['id']);
+        }
+
+        foreach ($cams as $cam_name => $cnt) {
+            if (!$cnt)
+                continue;
+            $cam = dvr()->cam($cam_name);
+            tn()->send_to_admin('Обнаруженно %d файл малого размера, на камере "%s"',
+                                $cnt, $cam->description());
+            $cam->stop();
             $cam->start();
         }
     }
@@ -278,7 +322,7 @@ class Dvr_cron_events implements Cron_events {
 
             $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
             $this->log->info("remove %s\n", $fname);
-            unlink($fname);
+            unlink(conf_dvr()['storage']['dir'] . $fname);
 
             db()->query('delete from videos where id = %d', $row['id']);
             $size_to_delete -= $row['file_size'];

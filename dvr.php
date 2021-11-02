@@ -48,7 +48,7 @@ function main($argv)
         $cam = dvr()->cam($cname);
         if (!$cam) {
             perror("Can't find camera %s\n", $cname);
-            error -1;
+            return -1;
         }
         $cam->start();
         return 0;
