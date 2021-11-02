@@ -123,11 +123,11 @@ class Camera {
     }
 
     function pid_file_name() {
-        return sprintf('%s.camera_%s_pid', PID_DIR, $this->cname);
+        return sprintf('%s/camera_%s_pid', PID_DIR, $this->cname);
     }
 
     function restart_file_name() {
-        return sprintf('%s.camera_%s_started', PID_DIR, $this->cname);
+        return sprintf('%s/camera_%s_started', PID_DIR, $this->cname);
     }
 
     function pid() {
@@ -216,6 +216,25 @@ class Camera {
 
         return $end - $start;
     }
+
+    function make_screenshot()
+    {
+        $fname = sprintf('%s_%s.jpeg',
+                         $this->cname,
+                         date("Y-m-d_H_m_s"));
+
+        $cmd = sprintf("ffmpeg -i %s -filter:v scale=1920:-1 -vframes 1 %s/%s",
+                       $this->rtsp,
+                       conf_dvr()['storage']['snapshot_dir'],
+                       $fname);
+        $ret = run_cmd($cmd);
+        if ($ret['rc']) {
+            $this->log->warn("Can't make screenshot for camera '%s': %s",
+                             $this->cname, $ret['log']);
+            return NULL;
+        }
+        return $fname;
+    }
 }
 
 function dvr()
@@ -248,12 +267,15 @@ class Dvr_cron_events implements Cron_events {
 
     function do_check_recording()
     {
+        $str = '';
         foreach (dvr()->cams() as $cam) {
             if ($cam->is_recording())
                 continue;
 //            $cam->start();
-            tn()->send_to_admin("Запись камеры '%s' остановлена", $cam->name());
+            $str .= sprintf("Запись камеры '%s' остановлена\n", $cam->name());
         }
+        if ($str)
+            tn()->send_to_admin($str);
     }
 
     function do_check_file_size()
@@ -284,6 +306,7 @@ class Dvr_cron_events implements Cron_events {
             tn()->send_to_admin('Обнаруженно %d файл малого размера, на камере "%s"',
                                 $cnt, $cam->description());
             $cam->stop();
+            sleep(1);
             $cam->start();
         }
     }
@@ -331,5 +354,44 @@ class Dvr_cron_events implements Cron_events {
     }
 }
 
+
+class Dvr_handler implements Http_handler {
+    function name() {
+        return "dvr";
+    }
+
+    function requests() {
+        return ['/dvr/screenshots' => ['method' => 'GET',
+                                       'handler' => 'screenshots',
+                            ]];
+    }
+
+    function __construct() {
+        $this->log = new Plog('sr90:Dvr_io_handler');
+    }
+
+    function screenshots($args, $from, $request)
+    {
+        $stat = [];
+        $stat['cameras'] = [];
+        $index = 0;
+        foreach (dvr()->cams() as $cam) {
+            $fname = $cam->make_screenshot();
+            if (!$fname)
+                continue;
+
+            $url = sprintf("http://sr38.org:3080/dvr/videos/screenshots/%s", $fname);
+            $info = [];
+            $info['desc'] = $cam->description();
+            $info['index'] = ++$index;
+            $info['screenshot'] = $url;
+            $stat['cameras'][$cam->name()] = $info;
+        }
+
+        $stat['status'] = count($stat['cameras']) ? 'ok' : 'error';
+        $stat['status'] = 'ok';
+        return json_encode($stat);
+    }
+}
 
 

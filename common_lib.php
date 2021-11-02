@@ -104,6 +104,7 @@ function http_handlers()
     return [new Http_io_handler,
             new Stat_io_handler,
             new Dbg_io_handler,
+            new Dvr_handler,
             ];
 }
 

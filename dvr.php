@@ -23,6 +23,10 @@ function print_help()
                  "\t\t\texample: $app_name stop\n" .
                  "\t\t\texample: $app_name stop workshop_entrance\n" .
 
+                 "\t\t screenshot [cam_name] - Make camera screenshot\n" .
+                 "\t\t\texample: $app_name screenshot\n" .
+                 "\t\t\texample: $app_name screenshot south\n" .
+
                  "\t\t stat - print status\n" .
                  "\t\t\texample: $app_name voice_power up \n" .
 
@@ -83,6 +87,37 @@ function main($argv)
         pnotice("Maximum duration: %.1f hours\n", dvr()->duration() / 3600);
         pnotice("Total storage size: %.1fGb\n", $total_size / (1024*1024*1024));
         pnotice("Maximum storage size: %.1fGb\n\n", conf_dvr()['storage']['max_size_gb']);
+        return 0;
+
+    case 'screenshot':
+        $cname = isset($argv[2]) ? $argv[2] : NULL;
+        if (!$cname) {
+            foreach (dvr()->cams() as $cam) {
+                $fname = $cam->make_screenshot();
+                if ($fname)
+                    pnotice("Screenshot '%s': %s/%s\n",
+                        $cam->name(),
+                        conf_dvr()['storage']['snapshot_dir'],
+                        $fname);
+                else
+                    perror("Screenshot '%s' not captured\n", $cam->name());
+            }
+            return 0;
+        }
+
+        $cam = dvr()->cam($cname);
+        if (!$cam) {
+            perror("Can't find camera %s\n", $cname);
+            return -1;
+        }
+        $fname = $cam->make_screenshot();
+        if ($fname)
+            pnotice("Screenshot '%s': %s/%s\n",
+                    $cam->name(),
+                    conf_dvr()['storage']['snapshot_dir'],
+                    $fname);
+        else
+            perror("Screenshot '%s' not captured\n", $cam->name());
         return 0;
 
     default:
