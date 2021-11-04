@@ -347,7 +347,7 @@ class Dvr_cron_events implements Cron_events {
 
             $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
             $this->log->info("remove %s\n", $fname);
-            unlink(conf_dvr()['storage']['dir'] . $fname);
+            unlink($fname);
 
             db()->query('delete from videos where id = %d', $row['id']);
             $size_to_delete -= $row['file_size'];
