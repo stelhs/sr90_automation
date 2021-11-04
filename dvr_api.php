@@ -271,7 +271,7 @@ class Dvr_cron_events implements Cron_events {
         foreach (dvr()->cams() as $cam) {
             if ($cam->is_recording())
                 continue;
-//            $cam->start();
+
             $str .= sprintf("Запись камеры '%s' остановлена\n", $cam->name());
         }
         if ($str)
@@ -290,21 +290,23 @@ class Dvr_cron_events implements Cron_events {
             return;
         }
 
+        $str = '';
         $cams = [];
         foreach ($rows as $row) {
             if (!isset($cams[$row['cam_name']]))
                 $cams[$row['cam_name']] = 0;
-            $cams[$row['cam_name']]++;
+            $cams[$row['cam_name']] ++;
+            $str .= sprintf("Файл %s имеет размер %.1fKb\n",
+                            $row['fname'], $row['file_size'] / 1024);
             unlink(conf_dvr()['storage']['dir'] . $row['fname']);
             db()->query('delete from videos where id = %d', $row['id']);
         }
+        tn()->send_to_admin("Обнаруженны попорченные видео файлы:\n%s", $str);
 
         foreach ($cams as $cam_name => $cnt) {
             if (!$cnt)
                 continue;
             $cam = dvr()->cam($cam_name);
-            tn()->send_to_admin('Обнаруженно %d файл малого размера, на камере "%s"',
-                                $cnt, $cam->description());
             $cam->stop();
             sleep(1);
             $cam->start();
@@ -380,7 +382,7 @@ class Dvr_handler implements Http_handler {
             if (!$fname)
                 continue;
 
-            $url = sprintf("http://sr38.org:3080/dvr/videos/screenshots/%s", $fname);
+            $url = sprintf("%s/%s", conf_dvr()['storage']['http_snapshot_dir'], $fname);
             $info = [];
             $info['desc'] = $cam->description();
             $info['index'] = ++$index;

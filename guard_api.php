@@ -271,6 +271,59 @@ class Guard {
     }
 
 
+    function send_screnshots($group = 'msg')
+    {
+        $c = file_get_contents_safe("http://sr38.org/plato/?noview=1");
+        if (!$c)
+            return;
+
+        $list = json_decode($c, true);
+        if (!$list)
+            return;
+
+        if ($this->test_mode)
+            $group = 'admin';
+
+        foreach ($list as $url) {
+            switch ($group) {
+            case 'alarm':
+                tn()->send_to_alarm($url);
+                continue;
+
+            case 'admin':
+                tn()->send_to_admin($url);
+                continue;
+
+            case 'msg':
+                tn()->send_to_msg($url);
+                continue;
+            }
+        }
+    }
+
+    function send_video_url($time, $group = 'msg')
+    {
+        $str = sprintf("%s?time_position=%s",
+                       conf_dvr()['site'], $time);
+
+        if ($this->test_mode)
+            $group = 'admin';
+
+        switch ($group) {
+        case 'alarm':
+            tn()->send_to_alarm($str);
+            return;
+
+        case 'admin':
+            tn()->send_to_admin($str);
+            return;
+
+        case 'msg':
+            tn()->send_to_msg($str);
+            return;
+        }
+    }
+
     function stop($method, $user_id = 0, $with_sms = false)
     {
         $event_time = time() - 1;
@@ -319,10 +372,9 @@ class Guard {
 
         $this->tg_info("Охрана отключена, отключил %s с помощью %s.",
                         $user_name, $method);
-        tn()->send_to_msg("%s?time_position=%s",
-                          conf_dvr()['site'], $event_time);
-
         boiler()->set_room_t(16);
+        $this->send_screnshots();
+        $this->send_video_url($event_time);
 
         if ($method == 'cli') {
             pnotice("stat: %s\n", skynet_stat_sms());
@@ -349,9 +401,7 @@ class Guard {
 
         $this->log->info("Guard call start throught %s", $method);
 
-        io()->sequnce_start('guard_lamp',
-                               [150, 1000,
-                                3000, 1000]);
+        io()->sequnce_start('guard_lamp', [4000, 1000]);
 
         gates()->close(true);
 
@@ -406,8 +456,8 @@ class Guard {
         $this->tg_info("Охрана включена, включил %s с помощью %s.",
                         $user_name, $method);
 
-        tn()->send_to_msg("%s?time_position=%s",
-                          conf_dvr()['site'], $event_time);
+        $this->send_screnshots();
+        $this->send_video_url($event_time);
 
         if ($method == 'cli') {
             pnotice("stat: %s\n", $stat_text);
@@ -523,8 +573,7 @@ class Guard {
                 $port->name(), $zone['desc']);
             $this->tg_info($msg);
 
-            tn()->send_to_admin("Видео с привязкой ко времени: %s?time_position=%s",
-                                conf_dvr()['site'], $event_time);
+            $this->send_video_url($event_time, 'admin');
             return;
         }
 
@@ -583,8 +632,9 @@ class Guard {
         io()->sequnce_start('guard_lamp', $seq);
 
         // send videos
-        tn()->send_to_alarm("Видео сработки с привязкой ко времени: %s?time_position=%s",
-                            conf_dvr()['site'], $event_time);
+        $this->send_screnshots('alarm');
+        $this->send_video_url($event_time, 'alarm');
+
 
         $row = db()->query('SELECT UNIX_TIMESTAMP(created) as timestamp ' .
                            'FROM guard_alarms WHERE id = ' . $action_id);

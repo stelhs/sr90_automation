@@ -190,7 +190,6 @@ class Ext_power_io_handler implements IO_handler {
     function trigger_ports() {
         return ['ext_power' => ['ext_power' => 2],
                 'ups_220vac' => ['ups_220vac' => 2],
-                'ups_14vdc' => ['ups_14vdc' => 0],
                 'ups_250vdc' => ['ups_250vdc' => 0]];
     }
 
@@ -250,12 +249,6 @@ class Ext_power_io_handler implements IO_handler {
     function ups_250vdc($pname, $state)
     {
         $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 250vdc';
-        tn()->send_to_admin($msg);
-    }
-
-    function ups_14vdc($pname, $state)
-    {
-        $msg = 'Ошибка ИБП: отсутсвует выходное напряжение 14vdc';
         tn()->send_to_admin($msg);
     }
 }
