@@ -162,6 +162,8 @@ class Telegram_notifier {
 
         $last_msg = file_get_contents($last_msg_file);
         $cnt = file_get_contents($last_msg_cnt_file);
+        if ($cnt <= 1)
+            return '';
 
         $ret_msg = sprintf("Сообщение ниже было отправлено %d раз:\n%s\n",
                             $cnt, $last_msg);
