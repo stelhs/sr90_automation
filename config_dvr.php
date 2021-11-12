@@ -6,7 +6,7 @@ function conf_dvr()
             'min_file_size' => 10*1024*1024,
 
             'storage' => ['dir' => '/storage/video-archive/',
-                          'max_size_gb' => 700,
+                          'max_size_gb' => 800,
                           'snapshot_dir' => '/storage/video-archive/screenshots',
                           'http_snapshot_dir' => 'http://sr38.org:3080/dvr/videos/screenshots'],
 

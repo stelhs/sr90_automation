@@ -17,7 +17,7 @@ function main($argv) {
     iop('battery_relay')->down();
 
     io()->refresh_out_ports();
-    dvr()->start_recording_all();
+    dvr()->start();
 }
 
 exit(main($argv));

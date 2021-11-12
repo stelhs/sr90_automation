@@ -545,7 +545,7 @@ class Cryptocurrancy_cron_events implements Cron_events {
 
     function do()
     {
-        $coins = ['ETC', 'BTC', 'BNB'];
+        $coins = ['ETC', 'ADA'];
         foreach ($coins as $coin) {
             $filename = sprintf(".crypto_currency_%s_max_threshold", strtolower($coin));
             if (!file_exists($filename))

@@ -82,14 +82,15 @@ class Dvr {
         foreach (dvr()->cams() as $cam) {
             $size = $cam->size();
             $size_gb = $size / (1024*1024*1024);
-            $tg .= sprintf("Камера '%s': %s, %.1fGb, %.1f hours\n",
+            $tg .= sprintf("Камера '%s': %s, %.1fGb, %.1f часов\n",
                 $cam->description(), $cam->is_recording() ? 'пишется' : 'не пишется',
                 $size_gb, $cam->duration() / 3600);
             $total_size += $size;
             if (!$cam->is_recording())
                 $all_recording = false;
         }
-        $tg .= sprintf("Записанно: %.1f hours\n", dvr()->duration() / 3600);
+        $tg .= sprintf("Покрыто записями последние: %.1f суток\n",
+                       dvr()->duration() / 3600 / 24);
         $tg .= sprintf("Занимает: %.1fGb\n", $total_size / (1024*1024*1024));
         $tg .= sprintf("Размер накопителя: %.1fGb\n", conf_dvr()['storage']['max_size_gb']);
 
@@ -191,6 +192,19 @@ class Camera {
 
     function duration()
     {
+        $row = db()->query('select sum(duration) as sum from videos ' .
+                           'where cam_name = "%s" and file_size is not NULL',
+                           $this->cname);
+        if ($row == NULL)
+            return 0;
+
+        if (!is_array($row) or $row < 0 or !isset($row['sum'])) {
+            $this->log->err("Can't calculate recording duration for camera %s", $this->cname);
+            return -1;
+        }
+
+        return $row['sum'];
+
         $row = db()->query('select UNIX_TIMESTAMP(created) as start from videos ' .
                            'where cam_name = "%s" order by id asc limit 1',
                            $this->cname);
@@ -313,6 +327,19 @@ class Dvr_cron_events implements Cron_events {
         }
     }
 
+    function remove_empty_sub_dirs($base_dir, $subdir)
+    {
+        $dir = $subdir;
+        while ($dir) {
+            $full_dir = sprintf("%s/%s", $base_dir, $dir);
+            if (!is_dir_empty($full_dir))
+                return;
+
+            rmdir($full_dir);
+            $dir = dirname($dir);
+        }
+    }
+
     function do_remove()
     {
         $gb = (1024 * 1024 * 1024);
@@ -334,8 +361,11 @@ class Dvr_cron_events implements Cron_events {
         $cnt = 0;
         while($size_to_delete > 0) {
             $cnt ++;
-            $row = db()->query('select id, fname, file_size from videos ' .
+/*            $row = db()->query('select id, fname, file_size from videos ' .
                                'where file_size is not NULL ' .
+                               'order by id asc limit 1');*/
+            $row = db()->query('select id, fname, file_size from videos ' .
+                               'where created < (now() - interval 5 minute) ' .
                                'order by id asc limit 1');
             if ($row == NULL)
                 break;
@@ -348,6 +378,8 @@ class Dvr_cron_events implements Cron_events {
             $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
             $this->log->info("remove %s\n", $fname);
             unlink($fname);
+            $this->remove_empty_sub_dirs(conf_dvr()['storage']['dir'],
+                                         dirname($row['fname']));
 
             db()->query('delete from videos where id = %d', $row['id']);
             $size_to_delete -= $row['file_size'];
