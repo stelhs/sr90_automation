@@ -126,7 +126,7 @@ class Modem3G {
     function new_ussd()
     {
         if (DISABLE_HW) {
-            perror("modem.check_for_new_ussd\n");
+            perror("modem.new_ussd\n");
             return 0;
         }
 

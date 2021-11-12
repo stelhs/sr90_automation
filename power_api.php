@@ -41,8 +41,14 @@ class Power {
 
     function power_state()
     {
+        iop('ext_power')->disable_logs();
+        iop('ups_220vac')->disable_logs();
+
         $power['input'] = iop('ext_power')->state()[0];
         $power['ups'] = iop('ups_220vac')->state()[0];
+
+        iop('ext_power')->enable_logs();
+        iop('ups_220vac')->enable_logs();
         return $power;
     }
 

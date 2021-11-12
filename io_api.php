@@ -334,18 +334,6 @@ class Board_io {
         return $list;
     }
 
-    function insert_to_db($port, $state)
-    {
-        $row_id = db()->insert('io_events',
-                                ['mode' => 'out',
-                                 'port_name' => $port->name(),
-                                 'io_name' => $this->name(),
-                                 'port' => $port->pn(),
-                                 'state' => $state]);
-        if (!$row_id)
-            $this->log->err("Can't insert into io_events");
-    }
-
     function fake_relay_set($port, $state)
     {
         $ports = $this->parse_fake_file(FAKE_OUT_FILE);
@@ -442,9 +430,6 @@ class Sbio extends Board_io {
 
     function relay_set($port, $state)
     {
-        $this->log->info("set %s -> %d\n", $port->str(), $state);
-        $this->insert_to_db($port, $state);
-
         if (DISABLE_HW)
             return $this->fake_relay_set($port, $state);
 
@@ -467,9 +452,7 @@ class Sbio extends Board_io {
 
         $ret = $this->send_cmd("relay_get", ['port' => $port->pn()]);
         if ($ret['status'] == "ok") {
-            $s = $ret['state'];
-            $this->log->info("state %s -> %d\n", $port->str(), $s);
-            return [$s, 'ok'];
+            return [$ret['state'], 'ok'];
         }
 
         $err = sprintf("Can't get %s over HTTP. " .
@@ -485,11 +468,8 @@ class Sbio extends Board_io {
             return $this->fake_input_state($port);
 
         $ret = $this->send_cmd("input_get", ['port' => $port->pn()]);
-        if ($ret['status'] == "ok") {
-            $s = $ret['state'];
-            $this->log->info("state %s -> %d\n", $port->str(), $s);
-            return [$s, 'ok'];
-        }
+        if ($ret['status'] == "ok")
+            return [$ret['state'], 'ok'];
 
         $err = sprintf("Can't get state %s over HTTP. " .
                        "HTTP server return error: '%s'\n",
@@ -552,9 +532,6 @@ class Usio extends Board_io{
 
     public function relay_set($port, $state)
     {
-        $this->log->info("set %s -> %d\n", $port->str(), $state);
-        $this->insert_to_db($port, $state);
-
         if (DISABLE_HW)
             return $this->fake_relay_set($port, $state);
 
@@ -577,9 +554,7 @@ class Usio extends Board_io{
 
         $ret = $this->send_cmd(sprintf("relay_get %d\n", $port->pn()));
         if ($ret == "0" || $ret == "1") {
-            $s = $ret;
-            $this->log->info("state %s -> %d\n", $port->str(), $s);
-            return [$s, 'ok'];
+            return [$ret, 'ok'];
         }
 
         $err = sprintf("Can't get %s over USIO driver. " .
@@ -596,9 +571,7 @@ class Usio extends Board_io{
 
         $ret = $this->send_cmd(sprintf("input_get %d\n", $port->pn()));
         if ($ret == "0" || $ret == "1") {
-            $s = $ret;
-            $this->log->info("state %s -> %d\n", $port->str(), $s);
-            return [$s, 'ok'];
+            return [$ret, 'ok'];
         }
 
         $err = sprintf("Can't get state %s over USIO driver. " .
@@ -646,6 +619,7 @@ class Io_port {
         $this->mode = $mode;
         $this->pn = $pn;
         $this->log = new Plog(sprintf('sr90:Io_port_%s', $pname));
+        $this->hide_logs = false;
     }
 
     function is_locked()
@@ -680,6 +654,16 @@ class Io_port {
     function board() {
         return $this->board;
     }
+
+    function disable_logs()
+    {
+        $this->hide_logs = true;
+    }
+
+    function enable_logs()
+    {
+        $this->hide_logs = false;
+    }
 }
 
 class Io_in_port extends Io_port {
@@ -688,7 +672,10 @@ class Io_in_port extends Io_port {
     }
 
     function state() {
-        return $this->board->input_state($this);
+        $s = $this->board->input_state($this);
+        if (!$this->hide_logs)
+            $this->log->info("state %s -> %d\n", $this->str(), $s[0]);
+        return $s;
     }
 }
 
@@ -707,11 +694,24 @@ class Io_out_port extends Io_port {
     }
 
     function set_val($val) {
+        if (!$this->hide_logs)
+            $this->log->info("set %s -> %d\n", $this->str(), $val);
+        $row_id = db()->insert('io_events',
+                                ['mode' => 'out',
+                                 'port_name' => $this->name(),
+                                 'io_name' => $this->board->name(),
+                                 'port' => $this->pn(),
+                                 'state' => $val]);
+        if (!$row_id)
+            $this->log->err("Can't insert into io_events");
         return $this->board->relay_set($this, $val);
     }
 
     function state() {
-        return $this->board->relay_state($this);
+        $s = $this->board->relay_state($this);
+        if (!$this->hide_logs)
+            $this->log->info("state %s -> %d\n", $this->str(), $s[0]);
+        return $s;
     }
 }
 
