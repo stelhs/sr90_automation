@@ -158,6 +158,7 @@ function main($argv)
         $pname = $cmd;
         $port = io()->port($pname);
         if ($port) {
+            $port->disable_logs();
             $op = '';
             if (isset($argv[2]))
                 $op = $argv[2];
@@ -225,6 +226,7 @@ function main($argv)
 
                 foreach (conf_io()[$io_name][$mode] as $pn => $pname) {
                     $port = io()->port_by_addr($io_name, $mode, $pn);
+                    $port->disable_logs();
                     $s = $port->state()[0];
                     pnotice("%s return %d\n", $port->str(), $s);
                 }
@@ -233,12 +235,14 @@ function main($argv)
 
             foreach (conf_io()[$io_name]['in'] as $pn => $pname) {
                 $port = io()->port_by_addr($io_name, 'in', $pn);
+                $port->disable_logs();
                 $s = $port->state()[0];
                 pnotice("%s return %d\n", $port->str(), $s);
             }
             pnotice("\n");
             foreach (conf_io()[$io_name]['out'] as $pn => $pname) {
                 $port = io()->port_by_addr($io_name, 'out', $pn);
+                $port->disable_logs();
                 $s = $port->state()[0];
                 pnotice("%s return %d\n", $port->str(), $s);
             }
@@ -250,6 +254,7 @@ function main($argv)
             $op = $argv[2];
 
         $port = io()->port_by_addr($io_name, $mode, $pn);
+        $port->disable_logs();
         switch ($op) {
         case 'up':
         case 'down':
