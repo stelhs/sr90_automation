@@ -372,7 +372,6 @@ class Guard {
 
         $this->tg_info("Охрана отключена, отключил %s с помощью %s.",
                         $user_name, $method);
-        boiler()->set_room_t(16);
         $this->send_screnshots();
         $this->send_video_url($event_time);
 
@@ -556,26 +555,7 @@ class Guard {
         if (isset($ret['id'])) {
             $this->log->info("Alarm was ignored because ready state a little time ago\n");
             return 0;
-        }
-
-        if (!$this->is_all_sensors_trig($zone, $port->name())) {
-            $this->log->info("not all sensors is active\n");
-            $cmd = './text_spech.php "Уходи" 0';
-            if (!$this->test_mode) {
-                run_cmd($cmd);
-                player_start(['sounds/access_denyed.wav',
-                              'sounds/text.wav'], 100);
-            } else
-                $this->tg_info('run text spitch cmd: %s', $cmd);
-
-            $msg = sprintf("Срабатал датчик '%s' из группы \"%s\".\n" .
-                "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
-                $port->name(), $zone['desc']);
-            $this->tg_info($msg);
-
-            $this->send_video_url($event_time, 'admin');
-            return;
-        }
+	}
 
         // ignore ALARM if system already in ALARM state
         $ret = db()->query("SELECT id, zone FROM guard_alarms " .
@@ -600,6 +580,26 @@ class Guard {
                 $this->log->info("Alarm was ignored because system already in alarm state\n");
                 return 0;
             }
+        }
+	
+
+        if (!$this->is_all_sensors_trig($zone, $port->name())) {
+            $this->log->info("not all sensors is active\n");
+            $cmd = './text_spech.php "Уходи" 0';
+            if (!$this->test_mode) {
+                run_cmd($cmd);
+                player_start(['sounds/access_denyed.wav',
+                              'sounds/text.wav'], 100);
+            } else
+                $this->tg_info('run text spitch cmd: %s', $cmd);
+
+            $msg = sprintf("Срабатал датчик '%s' из группы \"%s\".\n" .
+                "(Поскольку сработал только один датчик из данной группы, то скорее всего это ложное срабатывание)\n",
+                $port->name(), $zone['desc']);
+            $this->tg_info($msg);
+
+            $this->send_video_url($event_time, 'admin');
+            return;
         }
 
         // store guard alarm
