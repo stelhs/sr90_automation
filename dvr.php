@@ -169,10 +169,8 @@ function main($argv)
         $cmd .= sprintf('-c:v copy %s -strict -2 -f mp4 "%s"',
                         $a_copy, $full_file_name);
 
-        file_put_contents('/home/stelhs/req', $cmd);
         unlink_safe($full_file_name);
         $ret = run_cmd($cmd);
-        file_put_contents('/home/stelhs/res', print_r($ret, 1));
         if ($ret['rc']) {
             tn()->send_to_admin("can't encode video file %s",
                                 $full_file_name);
@@ -187,7 +185,7 @@ function main($argv)
             $log->err("can't parse encoder output for file %s: \n%s\n",
                                 $full_file_name, $ret['log']);
         }
-        $duration = $m[1][0] * 3600 + $m[2][0] * 60 + $m[3][0];
+        $duration = end($m[1]) * 3600 + end($m[2]) * 60 + end($m[3]);
 
         db()->insert('videos',
                      ['cam_name' => $cname,
