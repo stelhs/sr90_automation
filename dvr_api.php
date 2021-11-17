@@ -103,6 +103,7 @@ class Camera {
     function __construct($cname, $settings) {
         $this->log = new Plog(sprintf("sr90:camera_%s", $cname));
         $this->cname = $cname;
+        $this->desc = $settings['desc'];
         $this->settings = $settings;
         $this->rtsp = $settings['rtsp'];
         $this->frame_rate = $settings['video']['frame_rate'];
