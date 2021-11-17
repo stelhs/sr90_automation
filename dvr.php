@@ -120,6 +120,86 @@ function main($argv)
             perror("Screenshot '%s' not captured\n", $cam->name());
         return 0;
 
+    case 'openrtsp_callback':
+        $log = new Plog('sr90:openRTSP_cb');
+        $cname = isset($argv[2]) ? $argv[2] : NULL;
+        if (!$cname) {
+            perror("Camera name has not specified");
+            return -1;
+        }
+
+        $cam = dvr()->cam($cname);
+        if (!$cam) {
+            perror("Can't find camera %s\n", $cname);
+            return -1;
+        }
+
+        $start_time = isset($argv[3]) ? (int)$argv[3] : NULL;
+        if (!$start_time) {
+            perror("Timestamp is absent");
+            return -1;
+        }
+
+        $video_file = isset($argv[4]) ? $argv[4] : NULL;
+        if (!$video_file) {
+            perror("video file is absent");
+            return -1;
+        }
+
+        $audio_file = isset($argv[5]) ? $argv[5] : NULL;
+
+        $cmd = sprintf('ffmpeg -i "%s" ', $video_file);
+        $a_copy = '';
+        if ($audio_file) {
+            if ($cam->settings()['audio']['codec'] == 'PCMA')
+                $cmd .= sprintf('-f alaw -ar %d -i "%s" ',
+                                $cam->settings()['audio']['sample_rate'],
+                                $audio_file);
+            $a_copy = '-c:a aac -b:a 256k';
+        }
+
+        $dir = sprintf("%s/%s", date('Y-m/d', $start_time), $cname);
+        $full_dir = sprintf("%s/%s", conf_dvr()['storage']['dir'], $dir);
+        if (!file_exists($full_dir))
+            mkdir($full_dir, 0777, true);
+
+        $file_name = sprintf("%s/%s.mp4", $dir, date('h_i_s', $start_time));
+        $full_file_name = sprintf('%s/%s', conf_dvr()['storage']['dir'], $file_name);
+
+        $cmd .= sprintf('-c:v copy %s -strict -2 -f mp4 "%s"',
+                        $a_copy, $full_file_name);
+
+        file_put_contents('/home/stelhs/req', $cmd);
+        unlink_safe($full_file_name);
+        $ret = run_cmd($cmd);
+        file_put_contents('/home/stelhs/res', print_r($ret, 1));
+        if ($ret['rc']) {
+            tn()->send_to_admin("can't encode video file %s",
+                                $full_file_name);
+            $log->err("can't decode video file %s: \n%s\n",
+                                $full_file_name, $ret['log']);
+            return -1;
+        }
+        preg_match_all('/time=(\d{2}):(\d{2}):(\d{2})/', $ret['log'], $m);
+        if (count($m) < 4) {
+            tn()->send_to_admin("can't parse encoder output for file %s, ",
+                                $full_file_name);
+            $log->err("can't parse encoder output for file %s: \n%s\n",
+                                $full_file_name, $ret['log']);
+        }
+        $duration = $m[1][0] * 3600 + $m[2][0] * 60 + $m[3][0];
+
+        db()->insert('videos',
+                     ['cam_name' => $cname,
+                      'fname' => $file_name,
+                      'duration' => $duration,
+                      'file_size' => filesize($full_file_name),
+                     ],
+                     ['created' => sprintf('FROM_UNIXTIME(%s)', $start_time)]);
+
+        return 0;
+
+
     default:
         perror("Invalid arguments\n");
         return -EINVAL;

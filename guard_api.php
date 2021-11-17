@@ -288,15 +288,15 @@ class Guard {
             switch ($group) {
             case 'alarm':
                 tn()->send_to_alarm($url);
-                continue;
+                break;
 
             case 'admin':
                 tn()->send_to_admin($url);
-                continue;
+                break;
 
             case 'msg':
                 tn()->send_to_msg($url);
-                continue;
+                break;
             }
         }
     }
@@ -581,7 +581,7 @@ class Guard {
                 return 0;
             }
         }
-	
+
 
         if (!$this->is_all_sensors_trig($zone, $port->name())) {
             $this->log->info("not all sensors is active\n");

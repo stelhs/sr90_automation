@@ -11,9 +11,7 @@ class Dvr {
         $this->log = new Plog("sr90:dvr");
         $this->cameras = [];
         foreach (conf_dvr()['cameras'] as $cam) {
-            $this->cameras[$cam['name']] = new Camera($cam['name'],
-                                                      $cam['desc'],
-                                                      $cam['rtsp']);
+            $this->cameras[$cam['name']] = new Camera($cam['name'], $cam);
         }
     }
 
@@ -102,11 +100,12 @@ class Dvr {
 
 
 class Camera {
-    function __construct($cname, $desc, $rtsp) {
+    function __construct($cname, $settings) {
         $this->log = new Plog(sprintf("sr90:camera_%s", $cname));
         $this->cname = $cname;
-        $this->desc = $desc;
-        $this->rtsp = $rtsp;
+        $this->settings = $settings;
+        $this->rtsp = $settings['rtsp'];
+        $this->frame_rate = $settings['video']['frame_rate'];
         $this->rec_dir = conf_dvr()['storage']['dir'];
         $this->file_duration = conf_dvr()['video_file_duration'];
     }
@@ -121,6 +120,10 @@ class Camera {
 
     function rtsp() {
         return $this->rtsp;
+    }
+
+    function settings() {
+        return $this->settings;
     }
 
     function pid_file_name() {
@@ -150,12 +153,13 @@ class Camera {
         file_put_contents($this->restart_file_name(), '');
 
         $cmd = sprintf("./cam_rec.sh %s %s '/usr/local/bin/openRTSP " .
-                       "-D 20 -K -b 1000000 -4 -P %d -c -t -f 25 " .
+                       "-D 20 -K -b 1000000 -P %d -c -t -f %d " .
                        "-F %s -N %s -j %s %s'",
                        $this->pid_file_name(),
                        $this->restart_file_name(),
                        $this->file_duration,
-                       $this->rec_dir, $this->cname,
+                       $this->frame_rate,
+                       $this->cname, sprintf('%s/dvr.php', dirname(__FILE__)),
                        $this->pid_file_name(), $this->rtsp);
 
         run_cmd($cmd, true, '', false);
@@ -204,31 +208,6 @@ class Camera {
         }
 
         return $row['sum'];
-
-        $row = db()->query('select UNIX_TIMESTAMP(created) as start from videos ' .
-                           'where cam_name = "%s" order by id asc limit 1',
-                           $this->cname);
-        if ($row == NULL)
-            return 0;
-        if (!is_array($row) or $row < 0 or !isset($row['start'])) {
-            $this->log->err("Can't calculate recording duration for camera %s", $this->cname);
-            return -1;
-        }
-        $start = $row['start'];
-
-        $row = db()->query('select UNIX_TIMESTAMP(created) as end from videos ' .
-                           'where cam_name = "%s" order by id desc limit 1',
-                           $this->cname);
-        if ($row == NULL)
-            return 0;
-        if (!is_array($row) or $row < 0 or !isset($row['end'])) {
-            $this->log->err("Can't calculate recording duration for camera %s", $this->cname);
-            return -1;
-        }
-
-        $end = $row['end'];
-
-        return $end - $start;
     }
 
     function make_screenshot()
@@ -275,7 +254,7 @@ class Dvr_cron_events implements Cron_events {
 
     function do() {
         $this->do_check_recording();
-        $this->do_check_file_size();
+    //    $this->do_check_file_size();
         $this->do_remove();
     }
 
@@ -290,6 +269,8 @@ class Dvr_cron_events implements Cron_events {
         }
         if ($str)
             tn()->send_to_admin($str);
+
+        // TODO check that databases is updated
     }
 
     function do_check_file_size()
@@ -361,9 +342,6 @@ class Dvr_cron_events implements Cron_events {
         $cnt = 0;
         while($size_to_delete > 0) {
             $cnt ++;
-/*            $row = db()->query('select id, fname, file_size from videos ' .
-                               'where file_size is not NULL ' .
-                               'order by id asc limit 1');*/
             $row = db()->query('select id, fname, file_size from videos ' .
                                'where created < (now() - interval 5 minute) ' .
                                'order by id asc limit 1');
