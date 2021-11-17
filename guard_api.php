@@ -598,7 +598,7 @@ class Guard {
                 $port->name(), $zone['desc']);
             $this->tg_info($msg);
 
-            $this->send_video_url($event_time, 'admin');
+            $this->send_video_url($event_time);
             return;
         }
 

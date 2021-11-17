@@ -30,7 +30,7 @@ class Telegram_api {
                 'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
                 'method'  => 'POST',
                 'content' => $query,
-                'timeout' => 45,
+                'timeout' => 4,
             )
         );
         $context = stream_context_create($options);

@@ -27,8 +27,11 @@ class Dvr {
 
     function start()
     {
-        foreach ($this->cameras as $cam)
+        foreach ($this->cameras as $cam) {
             $cam->start();
+            pnotice("Waiting 5 seconds\n");
+            sleep(5);
+        }
     }
 
     function stop()
@@ -179,7 +182,12 @@ class Camera {
     }
 
     function is_recording() {
-        return $this->pid() ? true : false;
+        $pid = $this->pid();
+        if (!$pid)
+            return false;
+        if (!file_exists("/proc/$pid"))
+            return false;
+        return true;
     }
 
     function size() {
@@ -254,8 +262,8 @@ class Dvr_cron_events implements Cron_events {
     }
 
     function do() {
+        $this->do_check_openRTSP();
         $this->do_check_recording();
-    //    $this->do_check_file_size();
         $this->do_remove();
     }
 
@@ -263,50 +271,48 @@ class Dvr_cron_events implements Cron_events {
     {
         $str = '';
         foreach (dvr()->cams() as $cam) {
-            if ($cam->is_recording())
-                continue;
+            $row = db()->query('select UNIX_TIMESTAMP(created) as time from videos '.
+                               'where cam_name = "%s"' .
+                               'order by id desc limit 1',
+                               $cam->name());
 
-            $str .= sprintf("Запись камеры '%s' остановлена\n", $cam->name());
+            if ($row == NULL) {
+                $str .= sprintf("Нет видеозаписей с камеры '%s'\n", $cam->description());
+                continue;
+            }
+
+            if (!is_array($row) or $row < 0 or !isset($row['time'])) {
+                $this->log->err("Can't select last video file for camera %s", $cam->name());
+                $str .= sprintf("Ошибка БД при запросе камеры '%s'\n", $cam->description());
+                continue;
+            }
+
+            $last_video_time = $row['time'];
+            $curr_time = time();
+            $no_rec_duration = $curr_time - $last_video_time;
+            if ($no_rec_duration > 5 * 60) {
+                $str .= sprintf("Нет видеозаписей с камеры '%s' более чем %.1f часов. " .
+                                "Последняя запись %s\n\n",
+                                $cam->description(),
+                                $no_rec_duration / 3600,
+                                date('Y-m-d H:i:s', $last_video_time));
+            }
         }
         if ($str)
             tn()->send_to_admin($str);
-
-        // TODO check that databases is updated
     }
 
-    function do_check_file_size()
+    function do_check_openRTSP()
     {
-        $rows = db()->query_list('select * from videos where file_size is not null ' .
-                                 'and file_size < %d', conf_dvr()['min_file_size']);
-        if ($rows == NULL)
-            return;
-
-        if (!is_array($rows) or $rows < 0) {
-            $this->log->err("Can't select from videos for check file size");
-            return;
-        }
-
         $str = '';
-        $cams = [];
-        foreach ($rows as $row) {
-            if (!isset($cams[$row['cam_name']]))
-                $cams[$row['cam_name']] = 0;
-            $cams[$row['cam_name']] ++;
-            $str .= sprintf("Файл %s имеет размер %.1fKb\n",
-                            $row['fname'], $row['file_size'] / 1024);
-            unlink(conf_dvr()['storage']['dir'] . $row['fname']);
-            db()->query('delete from videos where id = %d', $row['id']);
-        }
-        tn()->send_to_admin("Обнаруженны попорченные видео файлы:\n%s", $str);
-
-        foreach ($cams as $cam_name => $cnt) {
-            if (!$cnt)
+        foreach (dvr()->cams() as $cam) {
+            if ($cam->is_recording())
                 continue;
-            $cam = dvr()->cam($cam_name);
-            $cam->stop();
-            sleep(1);
-            $cam->start();
+
+            $str .= sprintf("openRTSP '%s' остановлен\n", $cam->description());
         }
+        if ($str)
+            tn()->send_to_admin($str);
     }
 
     function remove_empty_sub_dirs($base_dir, $subdir)

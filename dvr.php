@@ -163,7 +163,7 @@ function main($argv)
         if (!file_exists($full_dir))
             mkdir($full_dir, 0777, true);
 
-        $file_name = sprintf("%s/%s.mp4", $dir, date('h_i_s', $start_time));
+        $file_name = sprintf("%s/%s.mp4", $dir, date('H_i_s', $start_time));
         $full_file_name = sprintf('%s/%s', conf_dvr()['storage']['dir'], $file_name);
 
         $cmd .= sprintf('-c:v copy %s -strict -2 -f mp4 "%s"',
@@ -171,6 +171,10 @@ function main($argv)
 
         unlink_safe($full_file_name);
         $ret = run_cmd($cmd);
+/*        if ($cname == 'from_lamp_post') {
+            file_put_contents('/root/sr90_automation/dvr_report',
+                                print_r($cmd, 1) . "\n\n\n" . print_r($ret, 1));
+        }*/
         if ($ret['rc']) {
             tn()->send_to_admin("can't encode video file %s",
                                 $full_file_name);

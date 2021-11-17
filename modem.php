@@ -125,7 +125,7 @@ function main($argv)
 
         perror("waiting for response\n");
         for (;;) {
-            sleep(1);
+            sleep(3);
             $response = $modem->new_ussd();
             if ($response < 0)
                 continue;

@@ -69,7 +69,8 @@ class Io {
     function ports($mode = NULL) {
         $list = [];
         foreach ($this->boards as $board)
-            $list = array_merge($list, $board->ports($mode));
+            foreach ($board->ports($mode) as $port)
+                $list[] = $port;
         return $list;
     }
 
@@ -329,7 +330,7 @@ class Board_io {
                 continue;
             }
 
-            $list[$port->pn()] = $port;
+            $list[] = $port;
         }
         return $list;
     }
@@ -627,9 +628,10 @@ class Io_port {
         if (!count(settings_io()['locked_io']))
             return false;
 
-        foreach (settings_io()['locked_io'] as $p)
+        foreach (settings_io()['locked_io'] as $p) {
             if ($p == $this->pname)
                 return true;
+        }
         return false;
     }
 

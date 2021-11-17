@@ -16,20 +16,22 @@ class Modem3G {
 
     function post_request($url, $request)
     {
-        $full_url = 'http://' . $this->ip_addr . $url;
+        $full_url = sprintf('http://%s%s', $this->ip_addr, $url);
 
         $query = '<?xml version="1.0" encoding="UTF-8"?>' .
                  '<request>' . $request . '</request>';
 
         $options = array(
             'http' => array(
-                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+                'protocol_version' => 1.1,
+                'header'  => "Connection: close\r\n" .
+                             "Content-Type: application/x-www-form-urlencoded\r\n",
                 'method'  => 'POST',
                 'content' => $query,
             )
         );
         $context = stream_context_create($options);
-        @$result = file_get_contents_safe($full_url, false, $context);
+        @$result = file_get_contents($full_url, false, $context);
         if ($result == FALSE) {
             $this->log->err("Can't make post_request()");
             return -EPARSE;
@@ -41,9 +43,9 @@ class Modem3G {
 
     function request($url)
     {
-        $full_url = 'http://' . $this->ip_addr . $url;
+        $full_url = sprintf('http://%s%s', $this->ip_addr, $url);
 
-        $result = file_get_contents_safe($full_url);
+        $result = file_get_contents($full_url);
         if ($result == FALSE) {
             $this->log->err("Can't make GET request()");
             return -EPARSE;
@@ -422,7 +424,7 @@ class Modem3G {
         }
 
         for ($i = 0; $i < 5; $i++) {
-            sleep(1);
+            sleep(3);
             $response = $this->new_ussd();
             if ($response < 0)
                 continue;

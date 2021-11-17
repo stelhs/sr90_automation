@@ -153,6 +153,36 @@ class Boiler {
         return 0;
     }
 
+    function month_fuel_consumption()
+    {
+        $row = db()->query('select sum(fuel_consumption) as total from boiler_statistics ' .
+                          'where created > LAST_DAY(NOW() - INTERVAL 1 MONTH) + INTERVAL 1 DAY');
+        if ($row == NULL)
+            return 0;
+
+        if (!is_array($row) or $row < 0 or !isset($row['total'])) {
+            $this->log->err("Can't select boiler fuel consumption");
+            return -1;
+        }
+
+        return $row['total'] / 1000;
+    }
+
+    function year_fuel_consumption()
+    {
+        $row = db()->query('select sum(fuel_consumption) as total from boiler_statistics ' .
+                           'where created > MAKEDATE(year(now()),1)');
+        if ($row == NULL)
+            return 0;
+
+        if (!is_array($row) or $row < 0 or !isset($row['total'])) {
+            $this->log->err("Can't select boiler fuel consumption");
+            return -1;
+        }
+
+        return $row['total'] / 1000;
+    }
+
     function stat_text()
     {
         $tg = '';
@@ -167,12 +197,16 @@ class Boiler {
                        "Средняя температура в радиаторах: %.1f градусов\n" .
                        "Количество запусков котла за текущие сутки: %d\n" .
                        "Время нагрева за текущие сутки: %s\n" .
-                       "Объём потраченного топлива за текущие сутки: %.1f л.\n",
+                       "Объём потраченного топлива за текущие сутки: %.1f л.\n" .
+                       "Объём потраченного топлива за текущий месяц: %.1f л.\n" .
+                       "Объём потраченного топлива за текущий год: %.1f л.\n",
                          $s['state'], $s['target_boiler_t_min'], $s['target_boiler_t_max'],
                          $s['target_room_t'], $s['current_room_t'],
                          $s['overage_room_t'], $s['overage_return_water_t'],
                          $s['ignition_counter'], $s['total_burning_time_text'],
-                         $s['total_fuel_consumption']);
+                         $s['total_fuel_consumption'],
+                         $this->month_fuel_consumption(),
+                         $this->year_fuel_consumption());
 
         return [$tg, $sms];
     }
@@ -221,10 +255,14 @@ class Boiler_tg_events implements Tg_skynet_events {
         $t = 18;
         $rc = boiler()->set_room_t($t);
         if ($rc) {
-            tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в помещении');
+            tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в мастерской');
             return 0;
         }
-        tn()->send($chat_id, $msg_id, 'Установлена температура %.1f градусов', $t);
+        $stat = boiler()->stat();
+        tn()->send($chat_id, $msg_id,
+                   "Установлена температура в мастерской %.1f градусов\n" .
+                   "Текущая температура в мастерской %.1f градусов\n",
+                   $t, $stat['current_room_t']);
     }
 
     function set_t($chat_id, $msg_id, $user_id, $arg, $text)
@@ -238,10 +276,15 @@ class Boiler_tg_events implements Tg_skynet_events {
         $t = (float)$m[1];
         $rc = boiler()->set_room_t($t);
         if ($rc) {
-            tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в помещении');
+            tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в мастерской');
             return 0;
         }
-        tn()->send($chat_id, $msg_id, 'Установлена температура %.1f градусов', $t);
+        $stat = boiler()->stat();
+
+        tn()->send($chat_id, $msg_id,
+                   "Установлена температура в мастерской %.1f градусов\n" .
+                   "Текущая температура в мастерской %.1f градусов\n",
+                   $t, $stat['current_room_t']);
     }
 
     function start($chat_id, $msg_id, $user_id, $arg, $text)
