@@ -48,6 +48,15 @@ function conf_dvr()
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
                              ],
+
+                            ['name' => "west",
+                             'desc' => "Запад",
+                             'rtsp' => 'rtsp://192.168.10.55/user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 25],
+                             'audio' => ['codec' => 'PCMA',
+                                         'sample_rate' => 8000],
+                             ],
                             ],
             ];
 }

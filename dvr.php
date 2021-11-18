@@ -178,8 +178,11 @@ function main($argv)
         if ($ret['rc']) {
             tn()->send_to_admin("can't encode video file %s",
                                 $full_file_name);
-            $log->err("can't decode video file %s: \n%s\n",
+            $log->err("can't encode video file %s: \n%s\n",
                                 $full_file_name, $ret['log']);
+            $cam->stop();
+            sleep(5);
+            $cam->start();
             return -1;
         }
         preg_match_all('/time=(\d{2}):(\d{2}):(\d{2})/', $ret['log'], $m);

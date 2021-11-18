@@ -223,9 +223,9 @@ class Camera {
     {
         $fname = sprintf('%s_%s.jpeg',
                          $this->cname,
-                         date("Y-m-d_H_m_s"));
+                         date("Y-m-d_H_i_s"));
 
-        $cmd = sprintf("ffmpeg -i %s -filter:v scale=1920:-1 -vframes 1 %s/%s",
+        $cmd = sprintf("ffmpeg -i '%s' -filter:v scale=1920:-1 -vframes 1 %s/%s",
                        $this->rtsp,
                        conf_dvr()['storage']['snapshot_dir'],
                        $fname);
@@ -296,6 +296,9 @@ class Dvr_cron_events implements Cron_events {
                                 $cam->description(),
                                 $no_rec_duration / 3600,
                                 date('Y-m-d H:i:s', $last_video_time));
+                $cam->stop();
+                sleep(5);
+                $cam->start();
             }
         }
         if ($str)
