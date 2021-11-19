@@ -14,7 +14,7 @@ function conf_dvr()
 
             'cameras' => [
                             ['name' => "from_lamp_post",
-                             'desc' => "со столба",
+                             'desc' => "со столба основная",
                              'rtsp' => 'rtsp://192.168.10.52/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
@@ -36,8 +36,6 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.53/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-                             'audio' => ['codec' => 'PCMA',
-                                         'sample_rate' => 8000],
                              ],
 
                             ['name' => "toilet",
@@ -45,17 +43,31 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.54/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-                             'audio' => ['codec' => 'PCMA',
-                                         'sample_rate' => 8000],
-                             ],
+                            ],
 
                             ['name' => "west",
-                             'desc' => "Запад",
+                             'desc' => "Запад с мастерской",
                              'rtsp' => 'rtsp://192.168.10.55/user=admin&password=&channel=0&stream=0.sdp',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
+                             ],
+
+                            ['name' => "west_post",
+                             'desc' => "Запад со столба",
+                             'rtsp' => 'rtsp://192.168.10.56/stream?user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 20],
+                             'audio' => ['codec' => 'PCMA',
+                                         'sample_rate' => 8000],
+                             ],
+
+                            ['name' => "east",
+                             'desc' => "Восток",
+                             'rtsp' => 'rtsp://192.168.10.57/user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 20],
                              ],
                             ],
             ];
