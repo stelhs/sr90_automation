@@ -46,9 +46,9 @@ class Telegram_api {
     function recv_messages($from_update_id)
     {
         $resp = $this->post_request('getUpdates', ['offset' => (int)$from_update_id + 1,
-                                                   'limit' => 10,
+                                                   'limit' => 30,
                                                    'timeout' => 30]);
-        if (!is_array($resp)) {
+	if (!is_array($resp)) {
             $this->log->err("recv_messages(): Can't make POST request %s\n", $resp);
             return NULL;
         }
@@ -97,6 +97,10 @@ class Telegram_api {
     function send_message($chat_id, $text,
                 $reply_to_message_id = 0, $disable_notification = false)
     {
+        $text = trim($text);
+        if (!$text)
+            return 0;
+
         $params = ['chat_id' => $chat_id, 'text' => $text];
         if ($reply_to_message_id)
             $params['reply_to_message_id'] = $reply_to_message_id;
@@ -400,7 +404,7 @@ class Telegram_periodically implements Periodically_events {
 
     function do() {
         $list_msg = tn()->new_messages();
-        if (!$list_msg)
+	if (!$list_msg)
             return;
 
         foreach ($list_msg as $msg) {

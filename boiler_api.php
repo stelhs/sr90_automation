@@ -252,7 +252,7 @@ class Boiler_tg_events implements Tg_skynet_events {
 
     function set_fixed_t($chat_id, $msg_id, $user_id, $arg, $text)
     {
-        $t = 18;
+        $t = 17;
         $rc = boiler()->set_room_t($t);
         if ($rc) {
             tn()->send($chat_id, $msg_id, 'Не удалось задать температуру в мастерской');
