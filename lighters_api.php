@@ -75,7 +75,7 @@ class Lighters {
 
     function is_night()
     {
-        $month = date('m');
+        $month = date('n');
         $hour = date('H');
         $min = date('i');
 
@@ -104,7 +104,7 @@ class Lighters {
         $sms = '';
         $stat = $this->stat();
         foreach ($stat as $row) {
-            switch ($row['state'][0]) {
+            switch ($row['state']) {
             case 0:
                 $tg .= sprintf("Фонарь '%s': отключен\n", $row['desc']);
                 $sms .= sprintf("свет '%s':откл, ", $row['desc']);
