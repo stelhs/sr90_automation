@@ -28,6 +28,8 @@ class Dvr {
     function start()
     {
         foreach ($this->cameras as $cam) {
+            if (!$cam->settings()['recording'])
+                continue;
             $cam->start();
             pnotice("Waiting 5 seconds\n");
             sleep(5);
@@ -37,6 +39,8 @@ class Dvr {
     function stop()
     {
         foreach ($this->cameras as $cam)
+            if (!$cam->settings()['recording'])
+                continue;
             $cam->stop();
     }
 
@@ -99,6 +103,19 @@ class Dvr {
         return [$tg, $sms];
     }
 
+}
+
+function remove_empty_sub_dirs($base_dir, $subdir)
+{
+    $dir = $subdir;
+    while ($dir) {
+        $full_dir = sprintf("%s/%s", $base_dir, $dir);
+        if (!is_dir_empty($full_dir))
+            return;
+
+        rmdir($full_dir);
+        $dir = dirname($dir);
+    }
 }
 
 
@@ -237,6 +254,27 @@ class Camera {
         }
         return $fname;
     }
+
+    function remove_all_videos()
+    {
+        $rows = db()->query('select id, fname, file_size from videos ' .
+                            'where cam_name = "%s"', $this->name());
+        if ($rows == NULL)
+            return 0;
+
+        $size_deleted = 0;
+        foreach ($rows as $row) {
+            $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
+            $this->log->info("remove %s\n", $fname);
+            unlink($fname);
+            remove_empty_sub_dirs(conf_dvr()['storage']['dir'],
+                                  dirname($row['fname']));
+
+            db()->query('delete from videos where id = %d', $row['id']);
+            $size_deleted += $row['file_size'];
+        }
+        return $size_deleted;
+    }
 }
 
 function dvr()
@@ -271,6 +309,9 @@ class Dvr_cron_events implements Cron_events {
     {
         $str = '';
         foreach (dvr()->cams() as $cam) {
+            if (!$cam->settings()['recording'])
+                continue;
+
             $row = db()->query('select UNIX_TIMESTAMP(created) as time from videos '.
                                'where cam_name = "%s"' .
                                'order by id desc limit 1',
@@ -309,6 +350,9 @@ class Dvr_cron_events implements Cron_events {
     {
         $str = '';
         foreach (dvr()->cams() as $cam) {
+            if (!$cam->settings()['recording'])
+                continue;
+
             if ($cam->is_recording())
                 continue;
 
@@ -316,19 +360,6 @@ class Dvr_cron_events implements Cron_events {
         }
         if ($str)
             tn()->send_to_admin($str);
-    }
-
-    function remove_empty_sub_dirs($base_dir, $subdir)
-    {
-        $dir = $subdir;
-        while ($dir) {
-            $full_dir = sprintf("%s/%s", $base_dir, $dir);
-            if (!is_dir_empty($full_dir))
-                return;
-
-            rmdir($full_dir);
-            $dir = dirname($dir);
-        }
     }
 
     function do_remove()
@@ -366,8 +397,8 @@ class Dvr_cron_events implements Cron_events {
             $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
             $this->log->info("remove %s\n", $fname);
             unlink($fname);
-            $this->remove_empty_sub_dirs(conf_dvr()['storage']['dir'],
-                                         dirname($row['fname']));
+            remove_empty_sub_dirs(conf_dvr()['storage']['dir'],
+                                  dirname($row['fname']));
 
             db()->query('delete from videos where id = %d', $row['id']);
             $size_to_delete -= $row['file_size'];
@@ -398,6 +429,9 @@ class Dvr_handler implements Http_handler {
         $stat['cameras'] = [];
         $index = 0;
         foreach (dvr()->cams() as $cam) {
+            if (!$cam->settings()['viewing'])
+                continue;
+
             $fname = $cam->make_screenshot();
             if (!$fname)
                 continue;

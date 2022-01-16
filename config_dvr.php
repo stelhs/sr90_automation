@@ -20,6 +20,8 @@ function conf_dvr()
                                          'frame_rate' => 25],
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
                             ],
 
                             ['name' => "south",
@@ -29,6 +31,8 @@ function conf_dvr()
                                          'frame_rate' => 25],
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
                              ],
 
                             ['name' => "workshop_entrance",
@@ -36,14 +40,18 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.53/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-                             ],
+                             'recording' => false,
+                             'viewing' => true,
+		     ],
 
-                    /*        ['name' => "toilet",
+                            ['name' => "toilet",
                              'desc' => "Толчок",
                              'rtsp' => 'rtsp://192.168.10.54/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-				 ], */
+                             'recording' => false,
+                             'viewing' => true,
+				             ],
 
                             ['name' => "west",
                              'desc' => "Запад с мастерской",
@@ -52,6 +60,8 @@ function conf_dvr()
                                          'frame_rate' => 30],
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
                              ],
 
                             ['name' => "west_post",
@@ -61,6 +71,8 @@ function conf_dvr()
                                          'frame_rate' => 30],
                              'audio' => ['codec' => 'PCMA',
                                          'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
                              ],
 
                             ['name' => "east",
@@ -68,6 +80,8 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.57/user=admin&password=&channel=0&stream=0.sdp',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 30],
+                             'recording' => true,
+                             'viewing' => true,
                              ],
                             ],
             ];

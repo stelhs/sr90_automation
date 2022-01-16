@@ -27,6 +27,9 @@ function print_help()
                  "\t\t\texample: $app_name screenshot\n" .
                  "\t\t\texample: $app_name screenshot south\n" .
 
+                 "\t\t remove [cam_name] - Remove all videos from this camera\n" .
+                 "\t\t\texample: $app_name remove south\n" .
+
                  "\t\t stat - print status\n" .
                  "\t\t\texample: $app_name voice_power up \n" .
 
@@ -118,6 +121,19 @@ function main($argv)
                     $fname);
         else
             perror("Screenshot '%s' not captured\n", $cam->name());
+        return 0;
+
+
+    case 'remove':
+        $cname = isset($argv[2]) ? $argv[2] : NULL;
+        $cam = dvr()->cam($cname);
+        if (!$cam) {
+            perror("Can't find camera %s\n", $cname);
+            return -1;
+        }
+
+        $size = $cam->remove_all_videos();
+        pnotice("Removed %.1fGb\n", $size / (1024*1024*1024));
         return 0;
 
     case 'openrtsp_callback':
