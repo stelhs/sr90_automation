@@ -424,7 +424,7 @@ class Modem3G {
         }
 
         for ($i = 0; $i < 5; $i++) {
-            sleep(3);
+            sleep(5);
             $response = $this->new_ussd();
             if ($response < 0)
                 continue;
