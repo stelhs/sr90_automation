@@ -47,6 +47,9 @@ class Io {
             case 'sbio':
                 $this->boards[$io_name] = new Sbio($io_name);
                 break;
+            case 'mbio':
+                $this->boards[$io_name] = new Mbio($io_name);
+                break;
             }
         }
     }
@@ -506,6 +509,12 @@ class Sbio extends Board_io {
     }
 }
 
+class Mbio extends Sbio {
+    function __construct($io_name) {
+        parent::__construct($io_name);
+    }
+}
+
 
 class Usio extends Board_io{
     function __construct($io_name) {
@@ -799,11 +808,15 @@ class Http_io_handler implements Http_handler {
 
     function requests() {
         return ['/ioserver' => ['method' => 'GET',
-                               'required_args' => ['io',
-                                                   'port',
-                                                   'state'],
-                               'handler' => 'trig_io',
-                                                   ]
+                                'required_args' => ['io',
+                                                    'port',
+                                                    'state'],
+                                'handler' => 'trig_io',
+                               ],
+                '/ioconfig' => ['method' => 'GET',
+                                'required_args' => ['io'],
+                                'handler' => 'io_config',
+                               ],
         ];
     }
 
@@ -818,10 +831,8 @@ class Http_io_handler implements Http_handler {
         $state = strtolower(trim($args['state']));
 
         $port = io()->port_by_addr($io_name, 'in', $pn);
-
         if (!$port) {
-            $err = sprintf("port %s is not registred\n",
-                           port_str($port->name(), $io_name, 'in', $pn));
+            $err = sprintf("port %s:%s is not registred\n", $io_name, $pn);
             $this->log->err($err);
             return json_encode(['status' => 'error',
                                 'reason' => $err]);
@@ -836,6 +847,24 @@ class Http_io_handler implements Http_handler {
 
         io()->trig_event($port, $state);
         return json_encode(['status' => 'ok']);
+    }
+
+    function io_config($args, $from, $request)
+    {
+        $io_name = strtolower(trim($args['io']));
+        if (!isset(conf_io()[$io_name])) {
+            $err = sprintf("IO board %s does not exist\n", $io_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $in_list = conf_io()[$io_name]['in'];
+        $out_list = conf_io()[$io_name]['out'];
+        return json_encode(['status' => 'ok',
+                            'ports' => ['in' => $in_list,
+                                        'out' => $out_list]]);
+
     }
 }
 

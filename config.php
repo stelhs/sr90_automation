@@ -152,6 +152,22 @@ function conf_io()
                         11 => ''
                     ]],
 
+        'mbio1' => ['type' => 'mbio',
+                    'location' => 'home',
+                    'ip_addr' => '192.168.10.84',
+                    'tcp_port' => 8890,
+                    'in' => [
+                        23 => 'in1',
+                        22 => 'in2',
+                        21 => '',
+                        20 => '',
+                    ],
+                    'out' => [
+                        1 => 'out1',
+                        2 => 'out2',
+                        3 => 'out3',
+                    ]],
+
         'boiler' => ['type' => 'sbio',
                      'ip_addr' => '192.168.10.10',
                      'tcp_port' => 8890,
