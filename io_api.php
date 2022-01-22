@@ -319,6 +319,10 @@ class Board_io {
         return $this->io_name;
     }
 
+    function blink($port, $d1, $d2 = 0, $cnt = 0) {
+        return;
+    }
+
     function port($pname) {
         foreach ($this->ports as $port) {
             if ($port->name() == $pname)
@@ -405,9 +409,10 @@ class Board_io {
 class Sbio extends Board_io {
     function __construct($io_name) {
         parent::__construct($io_name);
+        $this->type = "sbio";
     }
 
-    private function send_cmd($cmd, $args)
+    function send_cmd($cmd, $args)
     {
         $query = "";
         $separator = "";
@@ -425,7 +430,7 @@ class Sbio extends Board_io {
         if (!$content) {
             $this->log->err("Null bytes received from addr: %s", $http_request);
             return ['status' => 'error',
-            		'reason' => 'connection error'];
+            		'reason' => 'connection erro  r'];
         }
 
         $ret_data = json_decode($content, true);
@@ -517,6 +522,27 @@ class Sbio extends Board_io {
 class Mbio extends Sbio {
     function __construct($io_name) {
         parent::__construct($io_name);
+        $this->type = "mbio";
+    }
+
+    function blink($port, $d1, $d2 = 0, $cnt = 0) {
+        if (DISABLE_HW)
+            return $this->fake_relay_set($port, 'blink');
+
+        $ret = $this->send_cmd("relay_set", ['port' => $port->pn(),
+                                             'state' => 'blink',
+                                             'd1' => $d1,
+                                             'd2' => $d2,
+                                             'cnt' => $cnt]);
+        if ($ret['status'] == "ok")
+            return [0, 'ok'];
+
+        $err = sprintf("Can't set to blink (%d, %d, %d) %s: %d over HTTP. " .
+                        "HTTP server return error: '%s'\n",
+                        $d1, $d2, $cnt,
+                        $port->str(), $state, $ret['reason']);
+        $this->log->err($err);
+        return [-1, $err];
     }
 }
 
@@ -524,6 +550,7 @@ class Mbio extends Sbio {
 class Usio extends Board_io{
     function __construct($io_name) {
         parent::__construct($io_name);
+        $this->type = "usio";
     }
 
     private function send_cmd($cmd)
@@ -671,13 +698,11 @@ class Io_port {
         return $this->board;
     }
 
-    function disable_logs()
-    {
+    function disable_logs() {
         $this->hide_logs = true;
     }
 
-    function enable_logs()
-    {
+    function enable_logs() {
         $this->hide_logs = false;
     }
 }
@@ -721,6 +746,10 @@ class Io_out_port extends Io_port {
         if (!$row_id)
             $this->log->err("Can't insert into io_events");
         return $this->board->relay_set($this, $val);
+    }
+
+    function blink($d1, $d2 = 0, $cnt = 0) {
+        return $this->board->blink($this, $d1, $d2, $cnt);
     }
 
     function state() {

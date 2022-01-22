@@ -120,7 +120,7 @@ function conf_io()
                         11 => ''
                     ]],
 
-        'mbio3' => ['type' => 'sbio',
+        'mbio3' => ['type' => 'mbio',
                     'location' => 'Workshop',
                     'ip_addr' => '192.168.10.6',
                     'tcp_port' => 8890,

@@ -180,6 +180,35 @@ function main($argv)
                 pnotice("%s set to 0\n", $port->str());
                 return $port->down()[0];
 
+            case 'blink':
+                if ($port->board->type != 'mbio') {
+                    perror("Blink features is not supported\n");
+                    return -EINVAL;
+                }
+                if (!isset($argv[3])) {
+                    perror("enabling duration is not set\n");
+                    return -EINVAL;
+                }
+
+                $d1 = (int)$argv[3];
+                if (!$d1) {
+                    perror("duration incorrect, d1 = %d\n", $d1);
+                    return -EINVAL;
+                }
+
+                $d2 = $d1;
+                if (isset($argv[4]))
+                    $d2 = $argv[4];
+
+                $cnt = 0;
+                if (isset($argv[5]))
+                    $cnt = $argv[5];
+
+                $port->blink($d1, $d2, $cnt);
+                pnotice("%s blinked: d1=%d, d2=%d, cnt=%d\n",
+                        $port->str(), $d1, $d2, $cnt);
+                return 0;
+
             default:
                 $s = $port->state()[0];
                 pnotice("%s return %d\n", $port->str(), $s);
