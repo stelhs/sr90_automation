@@ -7,8 +7,6 @@ require_once 'common_lib.php';
 define("WELL_PUMP_TIME_FILE", "/tmp/well_pump_time");
 
 class Well_pump {
-    private $log;
-
     function __construct() {
         $this->log = new Plog('sr90:Well_pump');
     }

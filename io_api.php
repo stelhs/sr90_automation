@@ -306,8 +306,10 @@ class Board_io {
         $this->log = new Plog(sprintf('sr90:%s', $io_name));
 
         $this->ports = [];
-        foreach (conf_io()[$io_name]['in'] as $pn => $pname)
+        foreach (conf_io()[$io_name]['in'] as $pn => $pinfo) {
+            $pname = is_array($pinfo) ? $pinfo['name'] : "";
             $this->ports[] = new Io_in_port($this, $pn, $pname);
+        }
 
         foreach (conf_io()[$io_name]['out'] as $pn => $pname)
             $this->ports[] = new Io_out_port($this, $pn, $pname);
@@ -387,7 +389,10 @@ class Board_io {
     function trig_all_ports()
     {
         foreach (conf_io() as $io_name => $info)
-            foreach ($info['in'] as $port_num => $pname) {
+            foreach ($info['in'] as $port_num => $pinfo) {
+                if (!is_array($pinfo))
+                    continue;
+                $pname = $pinfo['name'];
                 if (!$pname)
                     continue;
                 $state = iop($pname)->state()[0];
