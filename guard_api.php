@@ -649,6 +649,19 @@ class Guard {
 }
 
 
+function guard()
+{
+    static $guard = NULL;
+
+    if ($guard)
+        return $guard;
+
+    $guard = new Guard;
+    return $guard;
+}
+
+
+
 class Guard_io_handler implements IO_handler {
     function __construct()
     {
@@ -677,6 +690,7 @@ class Guard_io_handler implements IO_handler {
 
         $this->log->info("guard stopped by remote");
         guard()->stop('remote');
+        dvr()->stop_private_cams();
     }
 
     function guard_start($port, $state)
@@ -686,6 +700,7 @@ class Guard_io_handler implements IO_handler {
 
         $this->log->info("guard ready by remote");
         guard()->start('remote');
+        dvr()->start_private_cams();
     }
 
     function process_sensors($port, $state) {
@@ -693,17 +708,6 @@ class Guard_io_handler implements IO_handler {
     }
 }
 
-
-function guard()
-{
-    static $guard = NULL;
-
-    if ($guard)
-        return $guard;
-
-    $guard = new Guard;
-    return $guard;
-}
 
 
 class Guard_tg_events implements Tg_skynet_events {
@@ -730,6 +734,7 @@ class Guard_tg_events implements Tg_skynet_events {
     {
         tn()->send($chat_id, $msg_id, 'ok, попробую');
         $rc = guard()->start('telegram', $user_id);
+        dvr()->start_private_cams();
         switch($rc) {
         case 'already_started':
             tn()->send($chat_id, $msg_id,

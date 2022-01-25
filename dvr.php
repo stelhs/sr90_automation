@@ -16,22 +16,22 @@ function print_help()
     pnotice("Usage: $utility_name <command> <args>\n" .
              "\tcommands:\n" .
                  "\t\t start [cam_name] - Start cameras/camera recording\n" .
-                 "\t\t\texample: $app_name start\n" .
-                 "\t\t\texample: $app_name start south\n" .
+                 "\t\t\texample: $utility_name start\n" .
+                 "\t\t\texample: $utility_name start south\n" .
 
                  "\t\t stop [cam_name] - Stop cameras/camera recording\n" .
-                 "\t\t\texample: $app_name stop\n" .
-                 "\t\t\texample: $app_name stop workshop_entrance\n" .
+                 "\t\t\texample: $utility_name stop\n" .
+                 "\t\t\texample: $utility_name stop workshop_entrance\n" .
 
                  "\t\t screenshot [cam_name] - Make camera screenshot\n" .
-                 "\t\t\texample: $app_name screenshot\n" .
-                 "\t\t\texample: $app_name screenshot south\n" .
+                 "\t\t\texample: $utility_name screenshot\n" .
+                 "\t\t\texample: $utility_name screenshot south\n" .
 
                  "\t\t remove [cam_name] - Remove all videos from this camera\n" .
-                 "\t\t\texample: $app_name remove south\n" .
+                 "\t\t\texample: $utility_name remove south\n" .
 
                  "\t\t stat - print status\n" .
-                 "\t\t\texample: $app_name voice_power up \n" .
+                 "\t\t\texample: $utility_name voice_power up \n" .
 
     "\n\n");
 }

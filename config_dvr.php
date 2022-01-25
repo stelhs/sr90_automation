@@ -22,6 +22,7 @@ function conf_dvr()
                                          'sample_rate' => 8000],
                              'recording' => true,
                              'viewing' => true,
+                             'private' => false,
                             ],
 
                             ['name' => "south",
@@ -33,6 +34,7 @@ function conf_dvr()
                                          'sample_rate' => 8000],
                              'recording' => true,
                              'viewing' => true,
+                             'private' => false,
                              ],
 
                             ['name' => "workshop_entrance",
@@ -42,7 +44,8 @@ function conf_dvr()
                                          'frame_rate' => 25],
                              'recording' => false,
                              'viewing' => true,
-		     ],
+                             'private' => false,
+                		     ],
 
                             ['name' => "toilet",
                              'desc' => "Толчок",
@@ -51,6 +54,7 @@ function conf_dvr()
                                          'frame_rate' => 25],
                              'recording' => false,
                              'viewing' => true,
+                             'private' => false,
 				             ],
 
                             ['name' => "west",
@@ -62,6 +66,7 @@ function conf_dvr()
                                          'sample_rate' => 8000],
                              'recording' => true,
                              'viewing' => true,
+                             'private' => false,
                              ],
 
                             ['name' => "west_post",
@@ -73,6 +78,7 @@ function conf_dvr()
                                          'sample_rate' => 8000],
                              'recording' => true,
                              'viewing' => true,
+                             'private' => false,
                              ],
 
                             ['name' => "east",
@@ -82,6 +88,29 @@ function conf_dvr()
                                          'frame_rate' => 30],
                              'recording' => true,
                              'viewing' => true,
+                             'private' => false,
+                             ],
+
+                            ['name' => "workshop_1",
+                             'desc' => "мастерская угол у ВРУ",
+                             'rtsp' => 'rtsp://192.168.10.58/stream?user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 30],
+                             'audio' => ['codec' => 'PCMA',
+                                         'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
+                             'private' => true,
+                             ],
+
+                            ['name' => "workshop_2",
+                             'desc' => "мастерская угол у ворот",
+                             'rtsp' => 'rtsp://192.168.10.59/user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 30],
+                             'recording' => true,
+                             'viewing' => true,
+                             'private' => true,
                              ],
                             ],
             ];

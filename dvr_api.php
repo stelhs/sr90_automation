@@ -25,6 +25,38 @@ class Dvr {
         return $this->cameras;
     }
 
+
+    function private_cams() {
+        $list = [];
+        foreach ($this->cameras as $cam)
+            if ($cam->settings()['private'])
+                $list[] = $cam;
+
+        return $list;
+    }
+
+    function start_private_cams()
+    {
+        $cams = $this->private_cams();
+        foreach ($cams as $cam) {
+            if (!$cam->settings()['recording'])
+                continue;
+            $cam->start();
+            pnotice("Waiting 5 seconds\n");
+            sleep(5);
+        }
+    }
+
+    function stop_private_cams()
+    {
+        $cams = $this->private_cams();
+        foreach ($cams as $cam) {
+            if (!$cam->settings()['recording'])
+                continue;
+            $cam->stop();
+        }
+    }
+
     function start()
     {
         foreach ($this->cameras as $cam) {
@@ -213,7 +245,7 @@ class Camera {
                     $this->cname);
         if ($row == NULL)
             return 0;
-        if (!is_array($row) or $row < 0 or !isset($row['size'])) {
+        if (!is_array($row) or $row < 0 or !array_key_exists('size', $row)) {
             $this->log->err("Can't calculate recording size for camera %s", $this->cname);
             return -1;
         }
@@ -228,12 +260,12 @@ class Camera {
         if ($row == NULL)
             return 0;
 
-        if (!is_array($row) or $row < 0 or !isset($row['sum'])) {
+        if (!is_array($row) and $row < 0 and !array_key_exists('sum', $row)) {
             $this->log->err("Can't calculate recording duration for camera %s", $this->cname);
             return -1;
         }
 
-        return $row['sum'];
+        return (int)$row['sum'];
     }
 
     function make_screenshot()
@@ -312,6 +344,9 @@ class Dvr_cron_events implements Cron_events {
             if (!$cam->settings()['recording'])
                 continue;
 
+            if ($cam->settings()['private'] and guard()->state() == 'sleep')
+                continue;
+
             $row = db()->query('select UNIX_TIMESTAMP(created) as time from videos '.
                                'where cam_name = "%s"' .
                                'order by id desc limit 1',
@@ -351,6 +386,9 @@ class Dvr_cron_events implements Cron_events {
         $str = '';
         foreach (dvr()->cams() as $cam) {
             if (!$cam->settings()['recording'])
+                continue;
+
+            if ($cam->settings()['private'] and guard()->state() == 'sleep')
                 continue;
 
             if ($cam->is_recording())
