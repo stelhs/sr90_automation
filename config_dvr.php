@@ -112,6 +112,18 @@ function conf_dvr()
                              'viewing' => true,
                              'private' => true,
                              ],
+
+                            ['name' => "workshop_3",
+                             'desc' => "мастерская второй этаж",
+                             'rtsp' => 'rtsp://192.168.10.60/user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 30],
+                             'audio' => ['codec' => 'PCMA',
+                                         'sample_rate' => 8000],
+                             'recording' => true,
+                             'viewing' => true,
+                             'private' => true,
+                             ],
                             ],
             ];
 }
