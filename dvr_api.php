@@ -479,6 +479,7 @@ class Dvr_handler implements Http_handler {
             $info['desc'] = $cam->description();
             $info['index'] = ++$index;
             $info['screenshot'] = $url;
+            $info['private'] = $cam->settings()['private'];
             $stat['cameras'][$cam->name()] = $info;
         }
 
