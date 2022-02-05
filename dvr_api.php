@@ -70,10 +70,11 @@ class Dvr {
 
     function stop()
     {
-        foreach ($this->cameras as $cam)
+        foreach ($this->cameras as $cam) {
             if (!$cam->settings()['recording'])
                 continue;
             $cam->stop();
+        }
     }
 
     function size()
