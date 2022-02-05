@@ -123,7 +123,18 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => true,
-                             ],
+                            ],
+
+                            ['name' => "north-gate",
+                             'desc' => "калитка на севере",
+                             'rtsp' => 'rtsp://192.168.10.61/user=admin&password=&channel=0&stream=0.sdp',
+                             'video' => ['codec' => 'h264',
+                                         'frame_rate' => 30],
+                             'recording' => true,
+                             'viewing' => true,
+                             'private' => false,
+                            ], 
+
                             ],
             ];
 }
