@@ -187,13 +187,11 @@ function main($argv)
 
         unlink_safe($full_file_name);
         $ret = run_cmd($cmd);
-/*        if ($cname == 'from_lamp_post') {
-            file_put_contents('/root/sr90_automation/dvr_report',
-                                print_r($cmd, 1) . "\n\n\n" . print_r($ret, 1));
-        }*/
         if ($ret['rc']) {
-            tn()->send_to_admin("can't encode video file %s",
-                                $full_file_name);
+            if (!$cam->settings()['hide_errors'])
+                tn()->send_to_admin("can't encode video file %s",
+                                    $full_file_name);
+
             $log->err("can't encode video file %s: \n%s\n",
                                 $full_file_name, $ret['log']);
             $cam->stop();
@@ -203,10 +201,16 @@ function main($argv)
         }
         preg_match_all('/time=(\d{2}):(\d{2}):(\d{2})/', $ret['log'], $m);
         if (count($m) < 4) {
-            tn()->send_to_admin("can't parse encoder output for file %s, ",
-                                $full_file_name);
+            if (!$cam->settings()['hide_errors'])
+                tn()->send_to_admin("can't parse encoder output for file %s, ",
+                                    $full_file_name);
+
             $log->err("can't parse encoder output for file %s: \n%s\n",
                                 $full_file_name, $ret['log']);
+            $cam->stop();
+            sleep(5);
+            $cam->start();
+            return -1;
         }
         $duration = end($m[1]) * 3600 + end($m[2]) * 60 + end($m[3]);
 

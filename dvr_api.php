@@ -354,7 +354,8 @@ class Dvr_cron_events implements Cron_events {
                                $cam->name());
 
             if ($row == NULL) {
-                $str .= sprintf("Нет видеозаписей с камеры '%s'\n", $cam->description());
+                if (!$cam->settings()['hide_errors'])
+                    $str .= sprintf("Нет видеозаписей с камеры '%s'\n", $cam->description());
                 continue;
             }
 
@@ -368,11 +369,12 @@ class Dvr_cron_events implements Cron_events {
             $curr_time = time();
             $no_rec_duration = $curr_time - $last_video_time;
             if ($no_rec_duration > 5 * 60) {
-                $str .= sprintf("Нет видеозаписей с камеры '%s' более чем %.1f часов. " .
-                                "Последняя запись %s\n\n",
-                                $cam->description(),
-                                $no_rec_duration / 3600,
-                                date('Y-m-d H:i:s', $last_video_time));
+                if (!$cam->settings()['hide_errors'])
+                    $str .= sprintf("Нет видеозаписей с камеры '%s' более чем %.1f часов. " .
+                                    "Последняя запись %s\n\n",
+                                    $cam->description(),
+                                    $no_rec_duration / 3600,
+                                    date('Y-m-d H:i:s', $last_video_time));
                 $cam->stop();
                 sleep(5);
                 $cam->start();

@@ -23,6 +23,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                             ],
 
                             ['name' => "south",
@@ -35,6 +36,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "workshop_entrance",
@@ -42,9 +44,10 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.53/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-                             'recording' => false,
+                             'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => true,
                 		     ],
 
                             ['name' => "toilet",
@@ -52,9 +55,10 @@ function conf_dvr()
                              'rtsp' => 'rtsp://192.168.10.54/stream',
                              'video' => ['codec' => 'h264',
                                          'frame_rate' => 25],
-                             'recording' => false,
+                             'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => true,
 				             ],
 
                             ['name' => "west",
@@ -67,6 +71,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "west_post",
@@ -79,6 +84,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "east",
@@ -89,6 +95,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "workshop_1",
@@ -101,6 +108,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => true,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "workshop_2",
@@ -111,6 +119,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => true,
+                             'hide_errors' => false,
                              ],
 
                             ['name' => "workshop_3",
@@ -123,6 +132,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => true,
+                             'hide_errors' => false,
                             ],
 
                             ['name' => "north-gate",
@@ -133,6 +143,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => false,
+                             'hide_errors' => false,
                             ],
 
                             ],
