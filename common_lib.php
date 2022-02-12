@@ -56,7 +56,6 @@ interface Http_handler {
 function periodically_list()
 {
     return [new Gates_periodically,
-            new Ups_batterry_periodically,
             new Ups_periodically,
             new Telegram_periodically,
             new Modem3g_periodically,
@@ -68,7 +67,8 @@ function cron_handlers()
     return [new Boiler_cron_events,
             new Temperatures_cron_events,
             new Cryptocurrancy_cron_events,
-            new Boards_io_cron_events,
+            new Boards_io_min_cron_events,
+            new Boards_io_day_cron_events,
             new Guard_cron_events,
             new Lighting_cron_events,
             new Well_pump_cron_events,
@@ -283,57 +283,6 @@ function errno_to_str($errno)
     return $level;
 }
 
-class Queue_file {
-    function __construct($filename, $size)
-    {
-        $this->size = $size;
-        $this->filename = $filename;
-    }
-
-    function put($value)
-    {
-        if (!file_exists($this->filename)) {
-            file_put_contents($this->filename, json_encode([$value]));
-            return;
-        }
-
-        $content = file_get_contents($this->filename);
-        if (!$content) {
-            file_put_contents($this->filename, json_encode([$value]));
-            return;
-        }
-
-        @$list = json_decode($content, true);
-        if (!is_array($list)) {
-            file_put_contents($this->filename, json_encode([$value]));
-            return;
-        }
-
-        if (count($list) >= $this->size)
-            unset($list[0]);
-
-        $list[] = $value;
-        $list = array_values($list);
-        file_put_contents($this->filename, json_encode($list));
-    }
-
-    function get_val()
-    {
-        if (!file_exists($this->filename))
-            return NULL;
-
-        $content = file_get_contents($this->filename);
-        if (!$content)
-            return NULL;
-
-        @$list = json_decode($content, true);
-        if (!is_array($list))
-            return NULL;
-
-        sort($list);
-        return $list[ceil(count($list) / 2) - 1];
-    }
-}
 
 class Common_tg_events implements Tg_skynet_events {
     function name() {
@@ -467,7 +416,7 @@ class Temperatures_cron_events implements Cron_events {
 
             if ($response['status'] != 'ok') {
                 tn()->send_to_admin("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
-                                        $io_name, $response['error_msg']);
+                                        $io_name, $response['reason']);
                 continue;
             }
 

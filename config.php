@@ -68,6 +68,7 @@ function conf_io()
                     'ip_addr' => '192.168.10.2',
                     'tcp_port' => 8890,
                     'in' => [
+                        6 => ['name' => 'in_test1', 'edge' => 'fall', 'delay' => 0],
                         12 => ['name' => 'vru_door', 'edge' => 'fall', 'delay' => 500],
                         13 => ['name' => 'guard_motion_sensor_1', 'edge' => 'fall', 'delay' => 3000],
                         15 => ['name' => 'RP_door', 'edge' => 'fall', 'delay' => 500],
@@ -75,9 +76,10 @@ function conf_io()
 
                     ],
                     'out' => [
-                        1 => 'RP_sockets',
+                        1 => 'RP_fun',
                         2 => 'lighting_pole',
-                        3 => 'RP_fun',
+                        3 => 'RP_sockets',
+                        8 => 'out_test1',
                         14 => 'battery_relay',
                         19 => 'mbio1_break_power',
                         23 => 'RP_padlock',
@@ -133,6 +135,7 @@ function conf_io()
                         13 => ['name' => 'guard_motion_sensor_16', 'edge' => 'fall', 'delay' => 3000],
                         12 => ['name' => 'guard_motion_sensor_17', 'edge' => 'fall', 'delay' => 3000],
                         5 =>  ['name' => 'guard_motion_sensor_18', 'edge' => 'fall', 'delay' => 3000],
+                        6 =>  ['name' => 'gates_op_cl_workshop', 'edge' => 'rise', 'delay' => 1000],
                     ],
                     'out' => [
                         1 => 'workshop_power',
@@ -326,10 +329,10 @@ function conf_street_light()
                          ],
 
             'light_calendar' => [1 =>  ['17:00', '9:00'],
-                                 2 =>  ['18:00', '8:30'],
-                                 3 =>  ['18:30', '7:00'],
+                                 2 =>  ['18:30', '8:30'],
+                                 3 =>  ['19:00', '7:00'],
                                  4 =>  ['19:30', '6:00'],
-                                 5 =>  ['20:30', '5:00'],
+                                 5 =>  ['21:30', '5:00'],
                                  6 =>  ['22:30', '5:00'],
                                  7 =>  ['22:30', '5:00'],
                                  8 =>  ['21:00', '5:30'],

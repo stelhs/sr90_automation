@@ -37,9 +37,8 @@ class Gates {
         if (!$this->is_power_enabled())
             return "can`t close. power is disabled";
 
-        iop('gates_open')->up();
-        sleep(1);
-        iop('gates_open')->down();
+        iop('gates_close')->down();
+        iop('gates_open')->blink(1000, 500, 1);
         return 0;
     }
 
@@ -48,9 +47,7 @@ class Gates {
         if (!$this->is_power_enabled())
             return "can`t close. power is disabled";
 
-        iop('gates_open_pedestration')->up();
-        sleep(1);
-        iop('gates_open_pedestration')->down();
+        iop('gates_open_pedestration')->blink(1000, 500, 1);
         return 0;
     }
 
@@ -65,9 +62,8 @@ class Gates {
             return "already closed";
         }
 
-        iop('gates_close')->up();
-        sleep(1);
-        iop('gates_close')->down();
+        iop('gates_open')->down();
+        iop('gates_close')->blink(1000, 500, 1);
         file_put_contents(GATES_WAIT_FOR_CLOSED, time() + $this->close_timeout());
         if ($auto_power_disable)
             file_put_contents(GATES_AUTO_POWER_DISABLE, '');
@@ -138,7 +134,7 @@ class Gates_io_handler implements IO_handler {
 
     function trigger_ports() {
         return ['open_close_ped' => ['remote_gates_open_close' => 1],
-                'open_close' => ['remote_guard_sleep' => 1],
+                'open_close' => ['remote_guard_sleep' => 1, 'gates_op_cl_workshop' => 1],
                 'gates_closed' => ['gates_closed' => 2],
                 ];
     }
@@ -159,8 +155,9 @@ class Gates_io_handler implements IO_handler {
             return;
         }
 
-        io()->sequnce_start('guard_lamp',
-                               [150, 150]);
+        iop('guard_lamp')->blink(200, 200, 1);
+//        io()->sequnce_start('guard_lamp',
+  //                             [150, 150]);
 
         if (gates()->is_closed()) {
             gates()->open_ped();
@@ -179,9 +176,11 @@ class Gates_io_handler implements IO_handler {
             return;
         }
 
-        io()->sequnce_start('guard_lamp',
+/*        io()->sequnce_start('guard_lamp',
                                [150, 150,
-                                150, 150]);
+                                150, 150]);*/
+
+        iop('guard_lamp')->blink(200, 200, 2);
 
         if (gates()->is_closed()) {
             unlink_safe(GATES_REMOTE_BUTTON_REVERSE);

@@ -4,12 +4,7 @@ require_once 'config.php';
 require_once 'io_api.php';
 require_once 'common_lib.php';
 
-define("UPS_BATT_VOLTAGE_FILE", "/tmp/ups_batt_voltage");
-define("UPS_BATT_CURRENT_FILE", "/tmp/ups_batt_current");
 define("CHARGER_STAGE_FILE", "/tmp/battery_charge_stage");
-
-define("VOLTAGE_FILE_QUEUE", "/tmp/ups_batt_voltage_queue");
-define("CURRENT_FILE_QUEUE", "/tmp/ups_batt_current_queue");
 
 define("CHARGER_DISABLE_FILE", "/tmp/charger_disable");
 define("CHARGE_LASTTIME_FILE", "/tmp/battery_charge_lasttime");
@@ -20,22 +15,11 @@ define("EXT_POWER_STATE_FILE", "/run/ext_power_state");
 class Power {
     function battery_info()
     {
-        if (!file_exists(UPS_BATT_VOLTAGE_FILE))
-            return null;
+        $ret = io()->board('mbio1')->battery_info();
+        if ($ret[0])
+            return NULL;
 
-        if (!file_exists(UPS_BATT_CURRENT_FILE))
-            return null;
-
-        $voltage = trim(file_get_contents(UPS_BATT_VOLTAGE_FILE));
-        if ($voltage === FALSE)
-            return null;
-
-        @$current = trim(file_get_contents(UPS_BATT_CURRENT_FILE));
-        if ($current === FALSE)
-            return null;
-
-        return ['voltage' => $voltage,
-                'current' => $current];
+        return $ret[1];
     }
 
 
@@ -196,8 +180,15 @@ class Ext_power_io_handler implements IO_handler {
     function trigger_ports() {
         return ['ext_power' => ['ext_power' => 2],
                 'ups_220vac' => ['ups_220vac' => 2],
-                'ups_250vdc' => ['ups_250vdc' => 0]];
+                'ups_250vdc' => ['ups_250vdc' => 0],
+                //'in_test1' => ['in_test1' => 0]
+                ];
     }
+/*
+    function in_test1($pname, $state)
+    {
+        iop('out_test1')->up();
+    }*/
 
     function ext_power($pname, $state)
     {
@@ -259,111 +250,6 @@ class Ext_power_io_handler implements IO_handler {
     }
 }
 
-
-
-class Ups_batterry_periodically implements Periodically_events {
-    function name() {
-        return "ups_battery";
-    }
-
-    function interval() {
-        return 1;
-    }
-
-    function batt_info()
-    {
-        if (DISABLE_HW) {
-            $voltage = 12.0;
-            $current = 0;
-            perror("FAKE: _battery_info() return voltage %.2fv, curent %.2fA\n",
-                    $voltage, $current);
-            return ['status' => 'ok',
-                    'voltage' => $voltage,
-                    'current' => $current];
-        }
-
-        $content = file_get_contents_safe(sprintf("http://%s:%d/battery",
-            conf_io()['sbio1']['ip_addr'],
-            conf_io()['sbio1']['tcp_port']));
-        if (!$content)
-            return ['status' => 'error',
-                    'error' => "no_io",
-                    'error_msg' => sprintf('Can`t response from sbio1')];
-
-        $ret_data = json_decode($content, true);
-        if (!$ret_data)
-            return ['status' => 'error',
-                    'error' => "no_batt",
-                    'error_msg' => sprintf('Can`t decoded battery info: %s', $content)];
-
-        if ($ret_data['status'] != 'ok')
-            return ['status' => $ret_data['status'],
-                    'error_msg' => $ret_data['error_msg']];
-
-        return ['status' => 'ok',
-                'voltage' => $ret_data['voltage'],
-                'current' => $ret_data['current']];
-    }
-
-
-    function is_around($probe_val, $reference_val, $tolerance)
-    {
-        if (($reference_val - $probe_val) > $tolerance)
-            return False;
-
-        if (($probe_val - $reference_val) > $tolerance)
-            return False;
-
-        return True;
-    }
-
-    function do() {
-        $batt_info = $this->batt_info();
-        if (!is_array($batt_info))
-            return -1;
-
-        if ($batt_info['status'] != 'ok') {
-            if (isset($batt_info['error'])) {
-                if ($batt_info['error'] == 'no_io')
-                    return -1;
-
-                $msg = sprintf("Error: battery_info() return %s, sbio1 go to reboot",
-                    $batt_info['error_msg']);
-                tn()->send_to_admin($msg);
-                unlink_safe(UPS_BATT_VOLTAGE_FILE);
-                unlink_safe(UPS_BATT_CURRENT_FILE);
-                io()->board('sbio1')->reboot();
-            }
-            tn()->send_to_admin("Ошибка АКБ");
-            return -1;
-        }
-
-        $voltage_queue = new Queue_file(VOLTAGE_FILE_QUEUE, 5);
-        $current_queue = new Queue_file(CURRENT_FILE_QUEUE, 5);
-
-        $voltage_queue->put($batt_info['voltage']);
-        $current_queue->put($batt_info['current']);
-        $filtred_voltage = $voltage_queue->get_val();
-        $filtred_current = $current_queue->get_val();
-
-        $prev_voltage = $prev_current = 0;
-        if (file_exists(UPS_BATT_VOLTAGE_FILE))
-            $prev_voltage = file_get_contents(UPS_BATT_VOLTAGE_FILE);
-
-        if (file_exists(UPS_BATT_CURRENT_FILE))
-            $prev_current = file_get_contents(UPS_BATT_CURRENT_FILE);
-
-        if ($filtred_voltage == $prev_voltage &&
-                $this->is_around($filtred_current, $prev_current, 0.03))
-            return;
-
-        file_put_contents(UPS_BATT_VOLTAGE_FILE, $filtred_voltage);
-        file_put_contents(UPS_BATT_CURRENT_FILE, $filtred_current);
-        db()->insert('ups_battery',
-                     ['voltage' => $filtred_voltage,
-                      'current' => $filtred_current]);
-    }
-}
 
 
 class Ups_periodically implements Periodically_events {
@@ -644,12 +530,12 @@ class Ups_periodically implements Periodically_events {
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 2.2) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 2.5A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+              //      tn()->send_to_admin($msg);
                     $this->log->err("No charge current 2.5A!\n");
                 }
                 if ($mode == 'discharge' && $current > -0.2 && $switch_interval > 10) {
                     $msg = sprintf("Ошибка! Нет разрядного тока 0.3A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+                   // tn()->send_to_admin($msg);
                     $this->log->err("No discharge current 0.3A!\n");
                 }
             }
@@ -671,12 +557,12 @@ class Ups_periodically implements Periodically_events {
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 0.9) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 1.3A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+                 //   tn()->send_to_admin($msg);
                     $this->log->err("No charge current 1.3A!\n");
                 }
                 if ($mode == 'discharge' && $current > -0.08) {
                     $msg = sprintf("Ошибка! Нет разрядного тока 0.15A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+                   // tn()->send_to_admin($msg);
                     $this->log->err("No discharge current 0.15A!\n");
                 }
             }
@@ -697,12 +583,12 @@ class Ups_periodically implements Periodically_events {
             if ($switch_interval > 10 && $switch_interval < 18) {
                 if ($mode == 'charge' && $current < 0.3) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+              //      tn()->send_to_admin($msg);
                     $this->log->err("No charge current 0.5A!\n");
                 }
                 if ($mode == 'discharge' && $current > -0.03) {
                     $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+              //      tn()->send_to_admin($msg);
                     $this->log->err("No discharge current 0.5A!\n");
                 }
             }
@@ -730,12 +616,12 @@ class Ups_periodically implements Periodically_events {
             if ($switch_interval > 10 && $switch_interval < 13) {
                 if ($mode == 'charge' && $current < 0.3) {
                     $msg = sprintf("Ошибка! Нет зарядного тока 0.5A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+                 //   tn()->send_to_admin($msg);
                     $this->log->err("No charge current 0.5A!\n");
                 }
                 if ($mode == 'discharge' && $current > -0.03) {
                     $msg = sprintf("Ошибка! Нет разрядного тока 0.05A. Текущий ток: %f", $current);
-                    tn()->send_to_admin($msg);
+               //     tn()->send_to_admin($msg);
                     $this->log->err("No discharge current 0.5A!\n");
                 }
             }

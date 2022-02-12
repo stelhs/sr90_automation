@@ -117,9 +117,6 @@ class Io {
             return 0;
         }
 
-        db()->query('delete from io_events where ' .
-                    'created < (now() - interval 3 month)');
-
         $row_id = db()->insert('io_events',
                                ['port_name' => $port->name(),
                                 'mode' => 'in',
@@ -544,6 +541,24 @@ class Mbio extends Sbio {
         $this->log->err($err);
         return [-1, $err];
     }
+
+    function battery_info() {
+        $http_request = sprintf("http://%s:%d/battery",
+                                $this->ip_addr,
+                                $this->tcp_port);
+        $content = file_get_contents_safe($http_request);
+        if (!$content) {
+            $this->log->err("Null bytes received from addr: %s", $http_request);
+            return [-1, 'connection error'];
+        }
+
+        $ret_data = json_decode($content, true);
+        if (!$ret_data) {
+            $log->err("can't decode JSON: %s\n", $content);
+            return [-1, sprintf('Can`t decoded response: %s', $content)];
+        }
+        return [0, $ret_data];
+    }
 }
 
 
@@ -777,7 +792,7 @@ function iop($pname) {
 }
 
 
-class Boards_io_cron_events implements Cron_events {
+class Boards_io_min_cron_events implements Cron_events {
     function name() {
         return "board_io";
     }
@@ -813,7 +828,7 @@ class Boards_io_cron_events implements Cron_events {
 
             if ($response['status'] != 'ok') {
                 tn()->send_to_admin("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
-                                        $io_name, $response['error_msg']);
+                                        $io_name, $response['reason']);
                 continue;
             }
 
@@ -831,6 +846,22 @@ class Boards_io_cron_events implements Cron_events {
         }
 
         file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
+    }
+}
+
+class Boards_io_day_cron_events implements Cron_events {
+    function name() {
+        return "board_io";
+    }
+
+    function interval() {
+        return "day";
+    }
+
+    function do()
+    {
+        db()->query('delete from io_events where ' .
+                    'created < (now() - interval 3 month)');
     }
 }
 

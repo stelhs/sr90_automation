@@ -334,13 +334,14 @@ class Guard {
 
         $this->log->info("Guard call stop throught %s", $method);
 
-        io()->sequnce_start('guard_lamp',
+     /*   io()->sequnce_start('guard_lamp',
                                [500, 500,
                                 500, 500,
                                 500, 500,
                                 500, 500,
                                 500, 500,
-                                500, 500]);
+                                500, 500]);*/
+        iop('guard_lamp')->blink(500, 500, 6);
 
 /*        if (!$this->test_mode)
             player_start('sounds/unlock.wav');
@@ -400,7 +401,9 @@ class Guard {
 
         $this->log->info("Guard call start throught %s", $method);
 
-        io()->sequnce_start('guard_lamp', [4000, 1000]);
+      //  io()->sequnce_start('guard_lamp', [4000, 1000]);
+        iop('guard_lamp')->blink(4000, 1000, 2);
+
 
         gates()->close(true);
 
@@ -625,11 +628,12 @@ class Guard {
                          $zone['desc'], $action_id);
 
         // run lamp blinks 90 times (90 * 2 = 180)
-        io()->sequnce_stop('guard_lamp');
+    /*    io()->sequnce_stop('guard_lamp');
         $seq = [];
         for($i = 0; $i < 180; $i++)
             $seq[] = ($i % 2) ? 150 : 500;
-        io()->sequnce_start('guard_lamp', $seq);
+        io()->sequnce_start('guard_lamp', $seq);*/
+        iop('guard_lamp')->blink(150, 500, 180);
 
         // send videos
         $this->send_screnshots('alarm');

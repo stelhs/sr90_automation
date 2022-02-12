@@ -108,7 +108,7 @@ function conf_dvr()
                              'recording' => true,
                              'viewing' => true,
                              'private' => true,
-                             'hide_errors' => false,
+                             'hide_errors' => true,
                              ],
 
                             ['name' => "workshop_2",

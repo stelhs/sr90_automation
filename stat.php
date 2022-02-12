@@ -18,6 +18,8 @@ function print_help()
 
 function main($argv)
 {
+    iop('out_test1')->blink(1000, 500, 3);
+    return;
     dump(skynet_stat_telegram());
 
     pnotice("List of periodicaly events:\n");
