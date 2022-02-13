@@ -18,7 +18,7 @@ function print_help()
 
 function main($argv)
 {
-    iop('out_test1')->blink(1000, 500, 3);
+    dump(io()->board('mbio4')->temperatures());
     return;
     dump(skynet_stat_telegram());
 

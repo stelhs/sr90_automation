@@ -275,19 +275,48 @@ function conf_guard()
     ];
 }
 
-function conf_termo_sensors()
+function conf_termosensors()
 {
-    return ['28-00000a872141' => 'на синем контейнере',
-            '28-00000a87afc5' => 'внутри синего контейнера',
-            '28-00000a882264' => 'под синим контейнером',
-            '28-00000a5dcf5f' => 'на крыше РП',
-            '28-00000a5ecf0b' => 'в помещении РП',
-            '28-3c01d075cc7f' => 'в кабельном коллекторе',
+    return [
+            'SK_top' => ['io' => 'sbio2',
+                         'addr' => '28-00000a872141',
+                         'description' => 'на синем контейнере'],
 
-            '28-012033f3fd8f' => 'в мастерской',
-            '28-012033e26477' => 'в котле',
-            '28-012033f9c648' => 'в корпусе котла',
-            '28-012033e45839' => 'в радиаторах отопления',
+            'SK_inside' => ['io' => 'sbio2',
+                            'addr' => '28-00000a87afc5',
+                            'description' => 'внутри синего контейнера'],
+
+            'SK_bottom' => ['io' => 'sbio2',
+                            'addr' => '28-00000a882264',
+                            'description' => 'под синим контейнером'],
+
+            'RP_top' => ['io' => 'mbio1',
+                         'addr' => '28-00000a5dcf5f',
+                         'description' => 'на крыше РП'],
+
+            'RP_inside' => ['io' => 'mbio1',
+                            'addr' => '28-00000a5ecf0b',
+                            'description' => 'в помещении РП'],
+
+            'RP_collector' => ['io' => 'mbio4',
+                               'addr' => '28-3c01d075cc7f',
+                               'description' => 'в кабельном коллекторе'],
+
+            'workshop_inside1' => ['io' => 'boiler',
+                                   'addr' => '28-012033f3fd8f',
+                                   'description' => 'в мастерской'],
+
+            'boiler_inside' => ['io' => 'boiler',
+                                'addr' => '28-012033e26477',
+                                'description' => 'в котле'],
+
+            'boiler_inside_case' => ['io' => 'boiler',
+                                     'addr' => '28-012033f9c648',
+                                     'description' => 'в корпусе котла'],
+
+            'workshop_radiators' => ['io' => 'boiler',
+                                     'addr' => '28-012033e45839',
+                                     'description' => 'в радиаторах отопления'],
     ];
 }
 

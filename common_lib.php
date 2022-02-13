@@ -11,6 +11,7 @@ require_once 'gates_api.php';
 require_once 'guard_api.php';
 require_once 'power_api.php';
 require_once 'dvr_api.php';
+require_once 'termosensors_api.php';
 
 
 define("PID_DIR", '/tmp/');
@@ -394,88 +395,47 @@ class Temperatures_cron_events implements Cron_events {
         if (DISABLE_HW)
             return;
 
-        $temperatures = [];
-        foreach(conf_io() as $io_name => $io_data) {
-            if ($io_name == 'usio1')
-                continue;
-
-            @$content = file_get_contents_safe(sprintf('http://%s:%d/stat',
-                                         $io_data['ip_addr'], $io_data['tcp_port']));
-            if ($content === FALSE) {
-                tn()->send_to_admin("Сбой связи с модулем %s", $io_name);
-                trig_io_board_for_curr_state($io_name);
-                continue;
-            }
-
-            $response = json_decode($content, true);
-            if ($response === NULL) {
-                tn()->send_to_admin("Модуль ввода вывода %s вернул не корректный ответ на запрос: %s",
-                                        $io_name, $content);
-                continue;
-            }
-
-            if ($response['status'] != 'ok') {
-                tn()->send_to_admin("При опросе модуля ввода-вывода %s, он вернул ошибку: %s",
-                                        $io_name, $response['reason']);
-                continue;
-            }
-
-            if (!isset($response['termo_sensors']))
-                continue;
-
-            $sensors = $response['termo_sensors'];
-            foreach ($sensors as $sensor) {
-                    if ($sensor['temperature'] < -60 || $sensor['temperature'] > 100)
-                        continue;
-                    $row = ['io_name' => $io_name,
-                            'sensor_name' => $sensor['name'],
-                            'temperature' => $sensor['temperature']];
-                    db()->insert('termo_sensors_log', $row);
-                    $temperatures[] = $row;
-            }
-        }
-
-        file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
-
+        $t_list = termosensors()->list();
 
         pnotice("remove old temperatures data\n");
         db()->query('delete from termo_sensors_log where ' .
                     'created < (now() - interval 12 month)');
 
-        $termo_sensors = io()->termosensors();
-
         $temperature_stat = [];
-        foreach ($termo_sensors as $sensor) {
-            $temperature_stat[$sensor['sensor_name']] = $sensor;
+        foreach ($t_list as $ts) {
+            $item = ['temperature' => $ts->t(),
+                     'name' => $ts->description()];
 
-            pnotice("calculate minimum for %s\n", $sensor['sensor_name']);
+            pnotice("calculate minimum for %s\n", $ts->addr());
             $query = sprintf("SELECT created, temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
                 "AND created > (now() - INTERVAL 1 DAY) " .
                 "ORDER BY temperature ASC LIMIT 1",
-                $sensor['sensor_name']);
+                $ts->addr());
             $row = db()->query($query);
-            $temperature_stat[$sensor['sensor_name']]['min'] = $row;
+            $item['min'] = $row;
 
-            pnotice("calculate maximum for %s\n", $sensor['sensor_name']);
+            pnotice("calculate maximum for %s\n", $ts->addr());
             $query = sprintf("SELECT created, temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
                 "AND created > (now() - INTERVAL 1 DAY) " .
                 "ORDER BY temperature DESC LIMIT 1",
-                $sensor['sensor_name']);
+                $ts->addr());
             $row = db()->query($query);
-            $temperature_stat[$sensor['sensor_name']]['max'] = $row;
+            $item['max'] = $row;
 
-            pnotice("calculate average for %s\n", $sensor['sensor_name']);
+            pnotice("calculate average for %s\n", $ts->addr());
             $query = sprintf("SELECT avg(temperature) as temperature " .
                 "FROM `termo_sensors_log` " .
                 "WHERE sensor_name = '%s' " .
                 "AND created > (now() - INTERVAL 1 DAY)",
-                $sensor['sensor_name']);
+                $ts->addr());
             $row = db()->query($query);
-            $temperature_stat[$sensor['sensor_name']]['avg'] = $row['temperature'];
+            $item['avg'] = $row['temperature'];
+
+            $temperature_stat[$ts->addr()] = $item;
         }
 
         file_put_contents(TEMPERATURES_FILE, json_encode($temperature_stat));

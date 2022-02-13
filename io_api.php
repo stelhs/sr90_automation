@@ -6,10 +6,10 @@ require_once '/usr/local/lib/php/os.php';
 require_once 'common_lib.php';
 require_once 'config.php';
 require_once 'settings.php';
+require_once 'termosensors_api.php';
 
 define("FAKE_IN_FILE", "fake_in_ports");
 define("FAKE_OUT_FILE", "fake_out_ports");
-define("CURRENT_TEMPERATURES_FILE", "/tmp/current_temperatures");
 
 
 class Io {
@@ -204,31 +204,6 @@ class Io {
         }
     }
 
-    function termosensors()
-    {
-        if (!file_exists(CURRENT_TEMPERATURES_FILE))
-            return [];
-
-        $content = file_get_contents(CURRENT_TEMPERATURES_FILE);
-        if (!$content)
-            return [];
-
-        @$rows = json_decode($content, true);
-        if (!$rows || !is_array($rows))
-            return [];
-
-        $list = [];
-        foreach ($rows as $row) {
-            if (!isset(conf_termo_sensors()[$row['sensor_name']]))
-                continue;
-            $list[] = ['name' => conf_termo_sensors()[$row['sensor_name']],
-                       'value' => $row['temperature'],
-                       'sensor_name' => $row['sensor_name'],
-            ];
-        }
-        return $list;
-    }
-
 
     function stat_text()
     {
@@ -245,11 +220,11 @@ class Io {
             }
         }
 
-        $tlist = $this->termosensors();
+        $tlist = termosensors()->list();
         if ($tlist)
-            foreach($tlist as $sensor)
+            foreach($tlist as $ts)
                 $tg .= sprintf("Температура %s: %.01f градусов\n",
-                               $sensor['name'], $sensor['value']);
+                               $ts->description(), $ts->t());
 
         return [$tg, $sms];
     }
@@ -514,6 +489,65 @@ class Sbio extends Board_io {
         }
         return 0;
     }
+
+    function temperatures() {
+        $http_request = sprintf("http://%s:%d/stat",
+                                $this->ip_addr,
+                                $this->tcp_port);
+        $content = file_get_contents_safe($http_request);
+        if (!$content) {
+            $this->log->err("Null bytes received from addr: %s", $http_request);
+            return [-1, 'connection error'];
+        }
+
+        $ret_data = json_decode($content, true);
+        if (!$ret_data) {
+            $log->err("can't decode JSON: %s\n", $content);
+            return [-1, sprintf('Can`t decoded response: %s', $content)];
+        }
+
+        if (!isset($ret_data['termo_sensors'])) {
+            $msg = sprintf("Can't getting termosensor %s info: %s\n",
+                            $addr, $ret_data['reason']);
+            $log->err($msg);
+            return [-1, $msg];
+        }
+        $list = [];
+        foreach ($ret_data['termo_sensors'] as $row) {
+            $list[$row['name']] = $row['temperature'];
+        }
+        return [0, $list];
+    }
+
+    function temperature($addr) {
+        $http_request = sprintf("http://%s:%d/stat",
+                                $this->ip_addr,
+                                $this->tcp_port);
+        $content = file_get_contents_safe($http_request);
+        if (!$content) {
+            $this->log->err("Null bytes received from addr: %s", $http_request);
+            return [-1, 'connection error'];
+        }
+
+        $ret_data = json_decode($content, true);
+        if (!$ret_data) {
+            $log->err("can't decode JSON: %s\n", $content);
+            return [-1, sprintf('Can`t decoded response: %s', $content)];
+        }
+
+        if (!isset($ret_data['termo_sensors'])) {
+            $msg = sprintf("Can't getting termosensor %s info: %s\n",
+                            $addr, $ret_data['reason']);
+            $log->err($msg);
+            return [-1, $msg];
+        }
+
+        foreach ($ret_data['termo_sensors'] as $row)
+            if ($row['name'] == $addr)
+                return [0, $row['temperature']];
+
+        return [-1, sprintf("can't found termosensor %s", $addr)];
+    }
 }
 
 class Mbio extends Sbio {
@@ -558,6 +592,59 @@ class Mbio extends Sbio {
             return [-1, sprintf('Can`t decoded response: %s', $content)];
         }
         return [0, $ret_data];
+    }
+
+    function temperatures() {
+        $http_request = sprintf("http://%s:%d/termosensors",
+                                $this->ip_addr,
+                                $this->tcp_port);
+        $content = file_get_contents_safe($http_request);
+        if (!$content) {
+            $this->log->err("Null bytes received from addr: %s", $http_request);
+            return [-1, 'connection error'];
+        }
+
+        $ret_data = json_decode($content, true);
+        if (!$ret_data) {
+            $log->err("can't decode JSON: %s\n", $content);
+            return [-1, sprintf('Can`t decoded response: %s', $content)];
+        }
+
+        if ($ret_data['status'] != 'ok') {
+            $msg = sprintf("Can't getting termosensor %s info: %s\n",
+                            $addr, $ret_data['reason']);
+            $log->err($msg);
+            return [-1, $msg];
+        }
+
+        return [0, $ret_data['list']];
+    }
+
+    function temperature($addr) {
+        $http_request = sprintf("http://%s:%d/termosensors?addr=%s",
+                                $this->ip_addr,
+                                $this->tcp_port,
+                                $addr);
+        $content = file_get_contents_safe($http_request);
+        if (!$content) {
+            $this->log->err("Null bytes received from addr: %s", $http_request);
+            return [-1, 'connection error'];
+        }
+
+        $ret_data = json_decode($content, true);
+        if (!$ret_data) {
+            $log->err("can't decode JSON: %s\n", $content);
+            return [-1, sprintf('Can`t decoded response: %s', $content)];
+        }
+
+        if ($ret_data['status'] != 'ok') {
+            $msg = sprintf("Can't getting termosensor %s info: %s\n",
+                            $addr, $ret_data['reason']);
+            $log->err($msg);
+            return [-1, $msg];
+        }
+
+        return [0, $ret_data['t']];
     }
 }
 
@@ -845,7 +932,7 @@ class Boards_io_min_cron_events implements Cron_events {
             }
         }
 
-        file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
+#        file_put_contents(CURRENT_TEMPERATURES_FILE, json_encode($temperatures));
     }
 }
 
@@ -882,6 +969,12 @@ class Http_io_handler implements Http_handler {
                                 'required_args' => ['io'],
                                 'handler' => 'io_config',
                                ],
+                '/termosensor_config' => ['method' => 'GET',
+                                          'required_args' => ['io'],
+                                          'handler' => 'termosensor_config',
+                                         ],
+
+
         ];
     }
 
@@ -930,6 +1023,23 @@ class Http_io_handler implements Http_handler {
                             'ports' => ['in' => $in_list,
                                         'out' => $out_list]]);
 
+    }
+
+    function termosensor_config($args, $from, $request)
+    {
+        $io_name = strtolower(trim($args['io']));
+        if (!isset(conf_io()[$io_name])) {
+            $err = sprintf("IO board %s does not exist\n", $io_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+        $sensors = termosensors()->list_by_board_name($io_name);
+        $list = [];
+        foreach ($sensors as $tsensor)
+            $list[] = $tsensor->addr();
+        return json_encode(['status' => 'ok',
+                            'list' => $list]);
     }
 }
 
