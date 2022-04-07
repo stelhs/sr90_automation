@@ -56,10 +56,9 @@ interface Http_handler {
 
 function periodically_list()
 {
-    return [new Gates_periodically,
-            new Ups_periodically,
+    return [new Ups_periodically,
             new Telegram_periodically,
-            new Modem3g_periodically,
+            //new Modem3g_periodically,
             ];
 }
 

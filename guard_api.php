@@ -332,15 +332,9 @@ class Guard {
             return 'already_stopped';
         }
 
-        $this->log->info("Guard call stop throught %s", $method);
+        player_stop();
 
-     /*   io()->sequnce_start('guard_lamp',
-                               [500, 500,
-                                500, 500,
-                                500, 500,
-                                500, 500,
-                                500, 500,
-                                500, 500]);*/
+        $this->log->info("Guard call stop throught %s", $method);
         iop('guard_lamp')->blink(500, 500, 6);
 
 /*        if (!$this->test_mode)
@@ -361,7 +355,6 @@ class Guard {
             return 'db_error';
         }
 
-        gates()->power_enable();
         gates()->open();
 
         iop('sk_power')->up();
@@ -401,11 +394,9 @@ class Guard {
 
         $this->log->info("Guard call start throught %s", $method);
 
-      //  io()->sequnce_start('guard_lamp', [4000, 1000]);
         iop('guard_lamp')->blink(4000, 1000, 2);
-
-
-        gates()->close(true);
+        gates()->close();
+        player_stop();
 
      /*   if (!$this->test_mode)
             player_start('sounds/lock.wav', 55);

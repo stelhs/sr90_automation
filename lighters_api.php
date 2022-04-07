@@ -83,16 +83,16 @@ class Lighters {
         list($start_hour, $start_min) = string_to_words($light_interval[0]);
         list($end_hour, $end_min) = string_to_words($light_interval[1]);
 
-        if ($hour == $start_hour and $min > $end_min)
+        if ($hour == $start_hour and $min > $start_min)
             return true;
 
-        if ($hour >= $start_hour)
+        if ($hour > $start_hour)
             return true;
 
         if ($hour == $end_hour and $min <= $end_min)
             return true;
 
-        if ($hour <= $end_hour)
+        if ($hour < $end_hour)
             return true;
 
         return false;

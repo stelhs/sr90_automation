@@ -29,9 +29,9 @@ function player_start($files, $volume = 100, $duration = 0)
 }
 
 
-/*function player_stop($io_name, $port)
+function player_stop($io_name, $port)
 {
     $pid_file = PID_DIR . 'player.pid';
     stop_daemon($pid_file);
     run_cmd('./player.sh stop');
-}*/
+}
