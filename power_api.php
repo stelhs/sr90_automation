@@ -334,6 +334,7 @@ class Ups_periodically implements Periodically_events {
 
     function switch_mode_to_stage1($batt_info, $reason = "")
     {
+        printf("switch_mode_to_stage1\n");
         $this->switch_to_charge();
         $this->set_high_current_charge();
         $this->enable_charge();
@@ -509,7 +510,7 @@ class Ups_periodically implements Periodically_events {
             return 0;
         }
 
-        $stage = 'charge_stage1';
+        $stage = NULL;
         if (file_exists(CHARGER_STAGE_FILE))
             $stage = trim(file_get_contents(CHARGER_STAGE_FILE));
 

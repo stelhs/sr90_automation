@@ -279,12 +279,14 @@ class Camera {
                        $this->rtsp,
                        conf_dvr()['storage']['snapshot_dir'],
                        $fname);
+
         $ret = run_cmd($cmd);
         if ($ret['rc']) {
             $this->log->warn("Can't make screenshot for camera '%s': %s",
                              $this->cname, $ret['log']);
             return NULL;
         }
+        sleep(1);
         return $fname;
     }
 
@@ -437,7 +439,7 @@ class Dvr_cron_events implements Cron_events {
 
             $fname = sprintf("%s/%s", conf_dvr()['storage']['dir'], $row['fname']);
             $this->log->info("remove %s\n", $fname);
-            unlink($fname);
+            unlink_safe($fname);
             remove_empty_sub_dirs(conf_dvr()['storage']['dir'],
                                   dirname($row['fname']));
 

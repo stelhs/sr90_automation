@@ -47,8 +47,8 @@ class Telegram_api {
     {
         $resp = $this->post_request('getUpdates', ['offset' => (int)$from_update_id + 1,
                                                    'limit' => 30,
-                                                   'timeout' => 30]);
-	if (!is_array($resp)) {
+                                                   'timeout' => 1]);
+	    if (!is_array($resp)) {
             $this->log->err("recv_messages(): Can't make POST request %s\n", $resp);
             return NULL;
         }

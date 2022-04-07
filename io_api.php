@@ -851,6 +851,8 @@ class Io_out_port extends Io_port {
     }
 
     function blink($d1, $d2 = 0, $cnt = 0) {
+        if (!$this->hide_logs)
+            $this->log->info("blink %s: %d, %d, %d\n", $this->str(), $d1, $d2, $cnt);
         return $this->board->blink($this, $d1, $d2, $cnt);
     }
 

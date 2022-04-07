@@ -19,7 +19,7 @@ class Gates {
     {
         iop('gates_power')->up();
         pnotice("gates power enabled but wait 5seconds to starting...");
-        sleep(5);
+        sleep(7);
         pnotice("success\n");
         return 0;
     }

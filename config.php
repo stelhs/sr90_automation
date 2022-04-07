@@ -68,7 +68,7 @@ function conf_io()
                     'ip_addr' => '192.168.10.2',
                     'tcp_port' => 8890,
                     'in' => [
-                        6 => ['name' => 'in_test1', 'edge' => 'fall', 'delay' => 0],
+                        6 => ['name' => 'in_test1', 'edge' => 'fall', 'delay' => 3000],
                         12 => ['name' => 'vru_door', 'edge' => 'fall', 'delay' => 500],
                         13 => ['name' => 'guard_motion_sensor_1', 'edge' => 'fall', 'delay' => 3000],
                         15 => ['name' => 'RP_door', 'edge' => 'fall', 'delay' => 500],

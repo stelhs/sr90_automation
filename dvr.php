@@ -177,7 +177,7 @@ function main($argv)
         $dir = sprintf("%s/%s", date('Y-m/d', $start_time), $cname);
         $full_dir = sprintf("%s/%s", conf_dvr()['storage']['dir'], $dir);
         if (!file_exists($full_dir))
-            mkdir($full_dir, 0777, true);
+            system(sprintf("mkdir -p %s", $full_dir));
 
         $file_name = sprintf("%s/%s.mp4", $dir, date('H_i_s', $start_time));
         $full_file_name = sprintf('%s/%s', conf_dvr()['storage']['dir'], $file_name);
@@ -194,9 +194,9 @@ function main($argv)
 
             $log->err("can't encode video file %s: \n%s\n",
                                 $full_file_name, $ret['log']);
-            $cam->stop();
+//            $cam->stop();
             sleep(5);
-            $cam->start();
+  //          $cam->start();
             return -1;
         }
         preg_match_all('/time=(\d{2}):(\d{2}):(\d{2})/', $ret['log'], $m);

@@ -353,11 +353,6 @@ class Guard {
         if (is_array($user))
             $user_name = $user['name'];
 
-        iop('sk_power')->up();
-        iop('RP_sockets')->up();
-        iop('workshop_power')->up();
-        padlocks()->open();
-
         $state_id = db()->insert('guard_states', ['state' => 'sleep',
                                                   'user_id' => $user_id,
                                                   'method' => $method]);
@@ -368,6 +363,11 @@ class Guard {
 
         gates()->power_enable();
         gates()->open();
+
+        iop('sk_power')->up();
+        iop('RP_sockets')->up();
+        iop('workshop_power')->up();
+        padlocks()->open();
 
         $this->log->info("Guard stoped by %s throught %s", $user_name, $method);
 
