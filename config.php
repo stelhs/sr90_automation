@@ -35,7 +35,7 @@ function conf_io()
                     'ip_addr' => '192.168.10.3',
                     'tcp_port' => 8890,
                     'in' => [
-                        12 => ['name' => 'gates_closed'],
+                        12 => ['name' => 'gates_closed', 'edge' => 'all', 'delay' => 3000],
                         13 => ['name' => 'gates_motor_door', 'edge' => 'fall', 'delay' => 3000],
                         14 => ['name' => 'remote_gates_open_close', 'edge' => 'fall', 'delay' => 2000],
                         15 => ['name' => 'ups_220vac'],
@@ -134,8 +134,9 @@ function conf_io()
                         14 => ['name' => 'guard_motion_sensor_15', 'edge' => 'fall', 'delay' => 3000],
                         13 => ['name' => 'guard_motion_sensor_16', 'edge' => 'fall', 'delay' => 3000],
                         12 => ['name' => 'guard_motion_sensor_17', 'edge' => 'fall', 'delay' => 3000],
-                        5 =>  ['name' => 'guard_motion_sensor_18', 'edge' => 'fall', 'delay' => 3000],
+                        5 =>  ['name' => 'water_low_pressure', 'edge' => 'rise', 'delay' => 3000],
                         6 =>  ['name' => 'gates_op_cl_workshop', 'edge' => 'rise', 'delay' => 1000],
+                        7 =>  ['name' => 'guard_motion_sensor_18', 'edge' => 'fall', 'delay' => 3000],
                     ],
                     'out' => [
                         1 => 'workshop_power',

@@ -383,7 +383,8 @@ class Dvr_cron_events implements Cron_events {
             }
         }
         if ($str)
-            tn()->send_to_admin($str);
+            $this->log->err($str);
+            //tn()->send_to_admin($str);
     }
 
     function do_check_openRTSP()
@@ -402,7 +403,8 @@ class Dvr_cron_events implements Cron_events {
             $str .= sprintf("openRTSP '%s' остановлен\n", $cam->description());
         }
         if ($str)
-            tn()->send_to_admin($str);
+            $this->log->err($str);
+            //tn()->send_to_admin($str);
     }
 
     function do_remove()

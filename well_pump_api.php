@@ -45,7 +45,8 @@ class Well_pump_io_handler implements IO_handler {
 
     function trigger_ports() {
         return ['do_start_stop' => ['RP_water_pump_button' => 1,
-                                    'workshop_water_pump_button' => 1]];
+                                    'workshop_water_pump_button' => 1],
+                'do_pressurization' => ['water_low_pressure' => 1]];
     }
 
     function do_start_stop($port, $state)
@@ -70,6 +71,13 @@ class Well_pump_io_handler implements IO_handler {
 
         well_pump()->stop();
         well_pump()->log->info("Water pump disabled\n");
+    }
+
+    function do_pressurization($port, $state) {
+        if ($state) {
+            well_pump()->start();
+            return;
+        }
     }
 }
 
@@ -105,7 +113,10 @@ class Well_pump_cron_events implements Cron_events {
     {
         $stat = well_pump()->stat();
         $duration = $stat['duration'];
-        if ($duration < (30 * 60))
+        if ($duration < (30))
+            return;
+
+        if (iop('water_low_pressure')->state()[0] == 1)
             return;
 
         well_pump()->stop();
