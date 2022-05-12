@@ -624,7 +624,7 @@ class Guard {
         for($i = 0; $i < 180; $i++)
             $seq[] = ($i % 2) ? 150 : 500;
         io()->sequnce_start('guard_lamp', $seq);*/
-        iop('guard_lamp')->blink(150, 500, 180);
+        iop('guard_lamp')->blink(1 * 60 * 1000, 1000, 2);
 
         // send videos
         $this->send_screnshots('alarm');

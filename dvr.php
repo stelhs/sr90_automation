@@ -188,9 +188,9 @@ function main($argv)
         unlink_safe($full_file_name);
         $ret = run_cmd($cmd);
         if ($ret['rc']) {
-            if (!$cam->settings()['hide_errors'])
+/*            if (!$cam->settings()['hide_errors'])
                 tn()->send_to_admin("can't encode video file %s",
-                                    $full_file_name);
+                                    $full_file_name);*/
 
             $log->err("can't encode video file %s: \n%s\n",
                                 $full_file_name, $ret['log']);

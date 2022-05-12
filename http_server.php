@@ -24,8 +24,8 @@ function parse_http($http_content)
     global $log;
     $data_start = strpos($http_content, "\r\n\r\n");
     if ($data_start === false) {
-        $log->err("Http parsing error: Empty line has not found. content: %s",
-                    $http_content);
+     /*   $log->err("Http parsing error: Empty line has not found. content: %s",
+                    $http_content);*/
         return NULL;
     }
 
@@ -188,6 +188,10 @@ function main($argv)
     $http_query_text = stdin_get_http_query();
     $http_data = parse_http($http_query_text);
     if (!$http_data) {
+        if ($remote_host == '::1')
+            return_404_request();
+            return 0;
+
         $log->err("Can't parse http request from %s, request: %s\n",
                   $remote_host, $http_query_text);
         return_404_request();

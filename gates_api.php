@@ -6,7 +6,6 @@ require_once 'common_lib.php';
 require_once 'io_api.php';
 
 define("GATES_REMOTE_BUTTON_REVERSE", "/tmp/gates_remote_butt_reverse");
-define("GATES_WAIT_FOR_CLOSED", "/tmp/gates_wait_for_closed");
 
 class Gates {
     function __construct()
@@ -60,12 +59,7 @@ class Gates {
 
         iop('gates_open')->down();
         iop('gates_close')->blink(1000, 500, 1);
-        file_put_contents(GATES_WAIT_FOR_CLOSED, time() + $this->close_timeout());
         return 0;
-    }
-
-    function close_timeout() {
-        return 100;
     }
 
     function stat()
@@ -158,8 +152,10 @@ class Gates_io_handler implements IO_handler {
 
     function open_close($pname, $state)
     {
+        $this->log->info("call open_close callback, guard stooped %d seconds ago",
+                         time() - guard()->stoped_timestamp());
         if (guard()->state() == 'ready' or
-                (time() - guard()->stoped_timestamp()) < 60) {
+                (time() - guard()->stoped_timestamp()) < 100) {
             unlink_safe(GATES_REMOTE_BUTTON_REVERSE);
             return;
         }
@@ -195,12 +191,12 @@ class Gates_io_handler implements IO_handler {
     function gates_closed($pname, $state)
     {
         if ($state) {
-            unlink_safe(GATES_WAIT_FOR_CLOSED);
             $this->log->info("gates closed");
             tn()->send_to_admin("Ворота закрылись");
             return;
         }
         $this->log->info("gates opening");
+        tn()->send_to_admin("Ворота открылись");
    }
 }
 
