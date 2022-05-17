@@ -13,20 +13,23 @@ function print_help()
     global $app_name;
     perror("Usage: $app_name <command> <args>\n" .
              "\tcommands:\n" .
-                 "\t\t <port_name/port_id> [up|down]\n" .
+                 "\t\t <port_name/port_id> [up|down][lock][unlock]\n" .
                  "\t\t\texample: $app_name ext_power \n" .
                  "\t\t\texample: $app_name voice_power up \n" .
                  "\t\t\texample: $app_name sbio1.out.1 down \n" .
                  "\t\t\texample: $app_name sbio2.out \n" .
                  "\t\t\texample: $app_name sbio3 \n" .
 
+                 "\t\t\texample: $app_name gates_closed lock\n" .
+                 "\t\t\texample: $app_name gates_closed unlock\n" .
+
+                 "\t\t\texample: $app_name gates_motor_door lock_state 1\n" .
+                 "\t\t\texample: $app_name gates_motor_door lock_state 0\n" .
+
                  "\t\t list: listing all IO ports and handlers\n" .
 
                  "\t\t trig <in_port_name> <state>: emulate triggering in port\n" .
                  "\t\t\texample: $app_name trig vru_door 0\n" .
-
-                 "\t\t sequence <out_port_name> [interval1] [interval2] [interval3] ...: sequence up/down\n" .
-                 "\t\t\texample: $app_name sequence RP_exhaust_fan 1000 500 1000 500\n" .
 
                  "\t\t wdt_on: enable hardware watchdog\n" .
                  "\t\t wdt_off: disable hardware watchdog\n" .
@@ -123,35 +126,6 @@ function main($argv)
                 $port->str(), array_to_string($names, ", "));
         return 0;
 
-    case 'sequence':
-        $pname = $argv[2];
-        $port = io()->port($pname);
-        if (!$port) {
-            perror("Port name '%s' has not registred\n", $port->name());
-            return -EINVAL;
-        }
-
-        $sequence = $argv;
-        unset($sequence[0]);
-        unset($sequence[1]);
-        unset($sequence[2]);
-
-        if (count($sequence) == 1 && $sequence[3] == 0) {
-            iop($pname)->down();
-            return 0;
-        }
-
-        $mode = true;
-        foreach ($sequence as $interval) {
-            if ($mode)
-                iop($pname)->up();
-            else
-                iop($pname)->down();
-            $mode = !$mode;
-            usleep($interval * 1000);
-        }
-        return 0;
-
 
 
     default:
@@ -207,6 +181,37 @@ function main($argv)
                 $port->blink($d1, $d2, $cnt);
                 pnotice("%s blinked: d1=%d, d2=%d, cnt=%d\n",
                         $port->str(), $d1, $d2, $cnt);
+                return 0;
+
+            case 'lock':
+                $port->lock();
+                pnotice("%s success locked\n", $port->str());
+                return 0;
+
+            case 'unlock':
+                $port->unlock();
+                pnotice("%s success unlocked\n", $port->str());
+                return 0;
+
+            case 'lock_state':
+                if ($port->mode() != 'in') {
+                    perror("Incorrect port mode: lock_state success works only with 'in' ports\n");
+                    return -EINVAL;
+                }
+
+                if (!$port->is_blocked()) {
+                    perror("lock_state success works if this ports are blocked\n");
+                    return -EINVAL;
+                }
+
+                if (!isset($argv[3])) {
+                    perror("lock_state needs to another argument state: 1 or 0\n");
+                    return -EINVAL;
+                }
+
+                $state = (int)$argv[3];
+                $port->set_blocked_state($state);
+                pnotice("%s blocked state updated to %d\n", $port->str(), $state);
                 return 0;
 
             default:

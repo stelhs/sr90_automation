@@ -1,17 +1,22 @@
 #!/usr/bin/php
 <?php
+
 chdir(dirname($argv[0]));
 
 require_once '/usr/local/lib/php/common.php';
+
 require_once '/usr/local/lib/php/os.php';
 require_once '/usr/local/lib/php/database.php';
 
 require_once 'config.php';
+
 require_once 'common_lib.php';
+
 
 
 $log = new Plog('sr90:http_server');
 $php_errors = '';
+
 
 function printlog($data)
 {
@@ -98,34 +103,36 @@ function stdin_get_http_query()
 
 function return_ok($d = "")
 {
+    $payload = mb_convert_encoding($d, "ASCII");
     $str = '';
-    $str .= "HTTP/1.1 200 OK\n";
-    $str .= sprintf("Content-Type: text/plain\n");
-    $str .= sprintf("Content-Length: %s\n", strlen($d) + 1);
-    $str .= "\n\n";
-    $str .= $d;
-    return $str;
+    $str .= "HTTP/1.1 200 OK\r\n";
+    $str .= sprintf("Content-Type: text/plain\r\n");
+    $str .= sprintf("Content-Length: %s\r\n", strlen($payload));
+    $str .= "\r\n";
+    $headers = mb_convert_encoding($str, "ASCII");
+
+    return $headers . $payload;
 }
 
 function return_bad_request($d = "")
 {
     $str = '';
-    $str .= "HTTP/1.1 400 Bad Request\n";
-    $str .= sprintf("Content-Type: text/plain\n");
-    $str .= sprintf("Content-Length: %s\n", strlen($d) + 1);
-    $str .= "\n\n";
+    $str .= "HTTP/1.1 400 Bad Request\r\n";
+    $str .= sprintf("Content-Type: text/plain\r\n");
+    $str .= sprintf("Content-Length: %s\r\n", strlen($d));
+    $str .= "\r\n";
     $str .= $d;
     return $str;
 }
 
 function return_404_request()
 {
-    $c = "404 Page not found\n";
+    $c = "404 Page not found\r\n";
     $str = '';
-    $str .= "HTTP/1.1 404 Page Not Found\n";
-    $str .= sprintf("Content-Type: text/plain\n");
-    $str .= sprintf("Content-Length: %s\n", strlen($c) + 1);
-    $str .= "\n\n";
+    $str .= "HTTP/1.1 404 Page Not Found\r\n";
+    $str .= sprintf("Content-Type: text/plain\r\n");
+    $str .= sprintf("Content-Length: %s\r\n", strlen($c));
+    $str .= "\r\n";
     $str .= $c;
     return $str;
 }
@@ -133,6 +140,8 @@ function return_404_request()
 
 function do_handle_request($method, $query, $remote_host)
 {
+    global $log;
+
     $url_parts = parse_url($query);
     foreach (http_handlers() as $handler) {
         foreach ($handler->requests() as $rp => $params) {
@@ -152,12 +161,22 @@ function do_handle_request($method, $query, $remote_host)
 
             if (isset($params['required_args']) and
                     count($params['required_args'])) {
+
+                $missing_fields = '';
                 $fail = false;
+
                 foreach ($params['required_args'] as $arg)
-                    if (!isset($args_list[$arg]))
+                    if (!isset($args_list[$arg])) {
                         $fail = true;
-                if ($fail)
-                    continue;
+                        $missing_fields .= sprintf("'%s' ", $arg);
+                    }
+
+                if ($fail) {
+                    $err = sprintf("Required fields %s missing from request", $missing_fields);
+                    $log->err($err);
+                    return json_encode(['status' => 'error',
+                                        'reason' => $err]);
+                }
             }
 
             $f = $params['handler'];

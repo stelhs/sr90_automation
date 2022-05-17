@@ -77,16 +77,6 @@ class Io {
         return $list;
     }
 
-    function locked_ports()
-    {
-        $list = [];
-        foreach ($this->ports() as $port) {
-            if ($port->is_locked())
-                $list[] = $port;
-        }
-        return $list;
-    }
-
     function port_by_addr($io_name, $mode, $pn)
     {
         $conf = conf_io();
@@ -103,10 +93,10 @@ class Io {
     }
 
 
-    function trig_event($port, $state)
+    function trig_event($port, $state, $force = false)
     {
-        if ($port->is_locked()) {
-            $this->log->warn('%s is locked', $port->str());
+        if (!$force and $port->is_blocked()) {
+            $this->log->warn('%s is blocked', $port->str());
             return 0;
         }
 
@@ -204,7 +194,6 @@ class Io {
         }
     }
 
-
     function stat_text()
     {
         $tg = "Заблокированные порты:\n";
@@ -229,43 +218,14 @@ class Io {
         return [$tg, $sms];
     }
 
-    private function pid_sequence_file_by_pname($pname) {
-        return sprintf('/tmp/io_sequence_%s_pid', $pname);
-    }
-
-    private function pid_sequence_task($tname) {
-        $fname = $this->pid_sequence_file_by_pname($tname);
-        if (!file_exists($fname))
-            return 0;
-        $pid = file_get_contents($fname);
-        return $pid;
-    }
-
-    function sequnce_start($pname, $sequence)
+    function ui_update_blocked_ports()
     {
-        $pid = $this->pid_sequence_task($pname);
-        if ($pid)
+        $rows = db()->query_list('select * from blocked_io_ports');
+        if (!is_array($rows))
             return;
-
-        $seq_str = array_to_string($sequence, ' ');
-        $cmd = sprintf("./io_sequencer.sh %s %s \"%s\"",
-                       $this->pid_sequence_file_by_pname($pname),
-                       $pname, $seq_str);
-        dump($cmd);
-        run_cmd($cmd, true, '', false);
-        usleep(500 * 1000);
-        $pid = $this->pid_sequence_task($pname);
-        pnotice("IO sequence task %s/%d started\n", $pname, $pid);
+        ui()->notify('io', 'boardsBlokedPortsList', $rows);
     }
 
-    function sequnce_stop($pname)
-    {
-        $pid = $this->pid_sequence_task($pname);
-        if (!$pid)
-            return;
-        $pid_file = $this->pid_sequence_file_by_pname($pname);
-        stop_daemon($pid_file);
-    }
 }
 
 
@@ -766,16 +726,30 @@ class Io_port {
         $this->hide_logs = false;
     }
 
-    function is_locked()
+    function is_blocked()
     {
-        if (!count(settings_io()['locked_io']))
+        $row = db()->query("select state from blocked_io_ports " .
+                           "where port_name = '%s'", $this->pname);
+        if (!is_array($row) || !isset($row['state']))
             return false;
 
-        foreach (settings_io()['locked_io'] as $p) {
-            if ($p == $this->pname)
-                return true;
-        }
-        return false;
+        return true;
+    }
+
+    function lock()
+    {
+        if ($this->is_blocked())
+            return;
+        db()->insert('blocked_io_ports',
+                     ['port_name' => $this->name(),
+                      'type' => $this->mode(),
+                      'state' => 0]);
+        io()->ui_update_blocked_ports();
+    }
+
+    function unlock() {
+        db()->query('delete from blocked_io_ports where port_name = "%s"', $this->name());
+        io()->ui_update_blocked_ports();
     }
 
     function str() {
@@ -814,11 +788,40 @@ class Io_in_port extends Io_port {
         parent::__construct($board, 'in', $pn, $pname);
     }
 
-    function state() {
+    function blocked_state() {
+        if (!$this->is_blocked())
+            return NULL;
+        $row = db()->query('select state from blocked_io_ports where port_name = "%s"',
+                           $this->name());
+        if (!is_array($row))
+            return NULL;
+
+        return $row['state'];
+    }
+
+    function state($force = false) {
+        if (!$force and $this->is_blocked()) {
+            $s = $this->blocked_state();
+            if (!$this->hide_logs)
+                $this->log->info("blocked state %s -> %d\n", $this->str(), $s);
+            return [ $s,  'ok'];
+        }
+
         $s = $this->board->input_state($this);
         if (!$this->hide_logs)
             $this->log->info("state %s -> %d\n", $this->str(), $s[0]);
         return $s;
+    }
+
+    function set_blocked_state($state)
+    {
+        if (!$this->is_blocked())
+            return;
+
+        db()->query('update blocked_io_ports set state = %d where port_name = "%s"',
+                    $state, $this->name());
+        io()->ui_update_blocked_ports();
+        io()->trig_event($this, $state, true);
     }
 }
 
@@ -828,11 +831,19 @@ class Io_out_port extends Io_port {
         parent::__construct($board, 'out', $pn, $pname);
     }
 
-    function up() {
+    function up($force = false) {
+        if ($this->is_blocked() and !$force) {
+            $this->log->info("port is blocked, set state to '1' was ignored");
+            return [0, 'ok'];
+        }
         return $this->set_val(1);
     }
 
-    function down() {
+    function down($force = false) {
+        if ($this->is_blocked() and !$force) {
+            $this->log->info("port is blocked, set state to '0' was ignored");
+            return [0, 'ok'];
+        }
         return $this->set_val(0);
     }
 
@@ -961,22 +972,44 @@ class Http_io_handler implements Http_handler {
     }
 
     function requests() {
-        return ['/ioserver' => ['method' => 'GET',
+        return ['/io/send_event' => ['method' => 'GET',
                                 'required_args' => ['io',
                                                     'port',
                                                     'state'],
-                                'handler' => 'trig_io',
-                               ],
-                '/ioconfig' => ['method' => 'GET',
-                                'required_args' => ['io'],
-                                'handler' => 'io_config',
-                               ],
-                '/termosensor_config' => ['method' => 'GET',
-                                          'required_args' => ['io'],
-                                          'handler' => 'termosensor_config',
-                                         ],
+                                'handler' => 'trig_io'],
 
+                '/io/config' => ['method' => 'GET',
+                                'handler' => 'io_config'],
 
+                '/io/blocked_ports' => ['method' => 'GET',
+                                        'handler' => 'blocked_ports'],
+
+                '/io/ui_update' => ['method' => 'GET',
+                                                'handler' => 'ui_update'],
+
+                '/io/termosensor_config' => ['method' => 'GET',
+                                             'required_args' => ['io'],
+                                             'handler' => 'termosensor_config'],
+
+                '/io/port/lock' => ['method' => 'GET',
+                                    'required_args' => ['port_name'],
+                                    'handler' => 'lock_port'],
+
+                '/io/port/unlock' => ['method' => 'GET',
+                                      'required_args' => ['port_name'],
+                                      'handler' => 'unlock_port'],
+
+                '/io/port/set_blocked_state' => ['method' => 'GET',
+                                                 'required_args' => ['port_name', 'state'],
+                                                 'handler' => 'set_blocked_state'],
+
+                '/io/port/blink' => ['method' => 'GET',
+                                     'required_args' => ['port_name', 'd1', 'd2', 'number'],
+                                     'handler' => 'port_blink'],
+
+                '/io/port/toggle_state' => ['method' => 'GET',
+                                            'required_args' => ['port_name'],
+                                            'handler' => 'port_toggle_state'],
         ];
     }
 
@@ -992,14 +1025,14 @@ class Http_io_handler implements Http_handler {
 
         $port = io()->port_by_addr($io_name, 'in', $pn);
         if (!$port) {
-            $err = sprintf("port %s:%s is not registred\n", $io_name, $pn);
+            $err = sprintf("port %s:%s is not registred", $io_name, $pn);
             $this->log->err($err);
             return json_encode(['status' => 'error',
                                 'reason' => $err]);
         }
 
         if ($state < 0 || $state > 1) {
-            $err = sprintf("Incorrect port state %d. Port state must be 0 or 1\n", $state);
+            $err = sprintf("Incorrect port state %d. Port state must be 0 or 1", $state);
             $this->log->err($err);
             return json_encode(['status' => 'error',
                                 'reason' => $err]);
@@ -1011,20 +1044,46 @@ class Http_io_handler implements Http_handler {
 
     function io_config($args, $from, $request)
     {
-        $io_name = strtolower(trim($args['io']));
-        if (!isset(conf_io()[$io_name])) {
-            $err = sprintf("IO board %s does not exist\n", $io_name);
-            $this->log->err($err);
-            return json_encode(['status' => 'error',
-                                'reason' => $err]);
+        $io_name = NULL;
+        if (isset($args['io']))
+            $io_name = strtolower(trim($args['io']));
+
+        if ($io_name) {
+            if (!isset(conf_io()[$io_name])) {
+                $err = sprintf("IO board %s does not exist\n", $io_name);
+                $this->log->err($err);
+                return json_encode(['status' => 'error',
+                                    'reason' => $err]);
+            }
+
+            $in_list = conf_io()[$io_name]['in'];
+            $out_list = conf_io()[$io_name]['out'];
+            return json_encode(['status' => 'ok',
+                                'ports' => ['in' => $in_list,
+                                            'out' => $out_list]]);
         }
 
-        $in_list = conf_io()[$io_name]['in'];
-        $out_list = conf_io()[$io_name]['out'];
+        $boards = [];
+        foreach (conf_io() as $io_name => $info) {
+            $in_list = conf_io()[$io_name]['in'];
+            $out_list = conf_io()[$io_name]['out'];
+            $boards[$io_name] = ['in' => $in_list,
+                                 'out' => $out_list];
+        }
         return json_encode(['status' => 'ok',
-                            'ports' => ['in' => $in_list,
-                                        'out' => $out_list]]);
+                            'boards' => $boards]);
 
+    }
+
+    function blocked_ports($args, $from, $request)
+    {
+        $rows = db()->query_list('select * from blocked_io_ports');
+        if (!is_array($rows))
+            return json_encode(['status' => 'error',
+                                'reason' => 'Can`t get "blocked_io_ports" from MySQL']);
+
+        return json_encode(['status' => 'ok',
+                            'list' => $rows]);
     }
 
     function termosensor_config($args, $from, $request)
@@ -1043,6 +1102,120 @@ class Http_io_handler implements Http_handler {
         return json_encode(['status' => 'ok',
                             'list' => $list]);
     }
+
+    function lock_port($args, $from, $request)
+    {
+        $port_name = $args['port_name'];
+        $port = io()->port($port_name);
+        if (!$port) {
+            $err = sprintf("lock_port() failed: port '%s' not found", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $port->lock();
+        return json_encode(['status' => 'ok']);
+    }
+
+    function unlock_port($args, $from, $request)
+    {
+        $port_name = $args['port_name'];
+        $port = io()->port($port_name);
+        if (!$port) {
+            $err = sprintf("lock_port() failed: port '%s' not found", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $port->unlock();
+        return json_encode(['status' => 'ok']);
+    }
+
+    function set_blocked_state($args, $from, $request)
+    {
+        $port_name = $args['port_name'];
+        $state = (int)$args['state'];
+        $port = io()->port($port_name);
+        if (!$port) {
+            $err = sprintf("set_blocked_state() failed: port '%s' not found", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        if ($port->mode() != 'in') {
+            $err = sprintf("set_blocked_state() failed: port '%s' must be configured as input mode",
+                            $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        if (!$port->is_blocked()) {
+            $err = sprintf("set_blocked_state() failed: port '%s' must be marked as blocked",
+                            $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $port->set_blocked_state($state);
+        return json_encode(['status' => 'ok']);
+    }
+
+    function port_blink($args, $from, $request)
+    {
+        $port_name = $args['port_name'];
+        $d1 = $args['d1'];
+        $d2 = $args['d2'];
+        $number = $args['number'];
+
+        $port = io()->port($port_name);
+        if (!$port) {
+            $err = sprintf("port_blink() failed: port '%s' not found", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $port->blink($d1, $d2, $number);
+        return json_encode(['status' => 'ok']);
+    }
+
+    function port_toggle_state($args, $from, $request)
+    {
+        $port_name = $args['port_name'];
+        $port = io()->port($port_name);
+        if (!$port) {
+            $err = sprintf("port_toggle_state() failed: port '%s' not found", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        if ($port->mode() != 'out') {
+            $err = sprintf("port_toggle_state() failed: port '%s' must be configured as 'out'", $port_name);
+            $this->log->err($err);
+            return json_encode(['status' => 'error',
+                                'reason' => $err]);
+        }
+
+        $state = $port->state()[0];
+        if ($state)
+            $port->down(true);
+        else
+            $port->up(true);
+        return json_encode(['status' => 'ok']);
+    }
+
+    function ui_update($args, $from, $request)
+    {
+        io()->ui_update_blocked_ports();
+        return json_encode(['status' => 'ok']);
+    }
+
 }
 
 

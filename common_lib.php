@@ -11,7 +11,9 @@ require_once 'gates_api.php';
 require_once 'guard_api.php';
 require_once 'power_api.php';
 require_once 'dvr_api.php';
+require_once 'ui_api.php';
 require_once 'termosensors_api.php';
+
 
 
 define("PID_DIR", '/tmp/');
@@ -105,6 +107,7 @@ function http_handlers()
             new Stat_io_handler,
             new Dbg_io_handler,
             new Dvr_handler,
+            new Ui_io_handler,
             ];
 }
 

@@ -280,20 +280,20 @@ class Ups_periodically implements Periodically_events {
 
     function set_low_current_charge()
     {
-        iop('charger_1.5A')->down();
-        iop('charger_3A')->down();
+        iop('charger_1.5a')->down();
+        iop('charger_3a')->down();
     }
 
     function set_middle_current_charge()
     {
-        iop('charger_1.5A')->up();
-        iop('charger_3A')->down();
+        iop('charger_1.5a')->up();
+        iop('charger_3a')->down();
     }
 
     function set_high_current_charge()
     {
-        iop('charger_1.5A')->up();
-        iop('charger_3A')->up();
+        iop('charger_1.5a')->up();
+        iop('charger_3a')->up();
     }
 
     function enable_charge()

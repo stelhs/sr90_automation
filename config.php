@@ -32,8 +32,8 @@ function conf_io()
     return [
         'mbio1' => ['type' => 'mbio',
                     'location' => 'RP',
-                    'ip_addr' => '192.168.10.3',
-                    'tcp_port' => 8890,
+                    'ip_addr' => '127.0.0.1', // '192.168.10.3'
+                    'tcp_port' => 8892, // 8890
                     'in' => [
                         12 => ['name' => 'gates_closed', 'edge' => 'all', 'delay' => 3000],
                         13 => ['name' => 'gates_motor_door', 'edge' => 'fall', 'delay' => 3000],
@@ -49,9 +49,9 @@ function conf_io()
                     'out' => [
                         1 => 'voice_power',
                         2 => 'gates_power',
-                        3 => 'charger_1.5A',
+                        3 => 'charger_1.5a',
                         4 => 'gates_open',
-                        5 => 'charger_3A',
+                        5 => 'charger_3a',
                         6 => 'charger_en',
                         7 => 'ups_break_power',
                         8 => 'charge_discharge',
@@ -90,31 +90,15 @@ function conf_io()
                     'ip_addr' => '192.168.10.4',
                     'tcp_port' => 400,
                     'in' => [
-                        1 => ['name' => ''],
-                        2 => ['name' => ''],
                         3 => ['name' => 'guard_motion_sensor_3', 'edge' => 'fall', 'delay' => 3000],
                         4 => ['name' => 'guard_motion_sensor_4', 'edge' => 'fall', 'delay' => 3000],
                         5 => ['name' => 'guard_motion_sensor_5', 'edge' => 'fall', 'delay' => 3000],
                         6 => ['name' => 'guard_motion_sensor_6', 'edge' => 'fall', 'delay' => 3000],
-                        7 => ['name' => ''],
-                        8 => ['name' => ''],
-                        9 => ['name' => ''],
-                        10 => ['name' => ''],
-                        11 => ['name' => ''],
-                        12 => ['name' => '']
                     ],
                     'out' => [
                         1 => 'sk_power',
                         2 => 'sk_padlock',
                         3 => 'kk_padlock',
-                        4 => '',
-                        5 => '',
-                        6 => '',
-                        7 => '',
-                        8 => '',
-                        9 => '',
-                        10 => '',
-                        11 => ''
                     ]],
 
         'mbio3' => ['type' => 'mbio',
@@ -380,5 +364,11 @@ function conf_boiler()
             'port' => "8890"];
 }
 
+
+function conf_ui()
+{
+    return ['ip' => "127.0.0.1",
+            'port' => "8890"];
+}
 
 
